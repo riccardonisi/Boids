@@ -24,13 +24,13 @@ Point2D operator*(double u, Point2D const& a)
 
 class Boid
 {
-  Point2D vel_;
   Point2D pos_;
+  Point2D vel_;
 
  public:
-  Boid(Point2D v, Point2D p)
-      : vel_{v}
-      , pos_{p}
+  Boid(Point2D p, Point2D v)
+      : pos_{p}
+      , vel_{v}
   {}
   Point2D pos()
   {
@@ -47,7 +47,7 @@ Point2D separazione(std::vector<Boid> stormo, Point2D const& pi, double s)
   Point2D sum{0, 0};
   for (int i{0}, n = stormo.size(); i != n; ++i) {
     auto const& p = stormo[i].pos();
-    sum           = sum + (p - pi);
+    sum           = sum + p - pi;
   }
   return -s*sum; // questo è il termine correttivo v1
 }

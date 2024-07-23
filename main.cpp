@@ -3,7 +3,7 @@
 int main()
 {
   std::vector<pf::Boid> prova;
-  pf::Point2D p1{2., 3.};
+  pf::Point2D p1{2, 3};
   pf::Point2D v1{0, 0};
   pf::Point2D p2{4.5, 7.8};
   pf::Point2D v2{0, 0};
