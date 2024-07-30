@@ -53,4 +53,51 @@ TEST_CASE("Testing the operators of the struct Point2D")
     CHECK(p1.x == doctest::Approx(0));
     CHECK(p1.y == doctest::Approx(0));
   }
+
+  SUBCASE("Testing operator /")
+  {
+    auto u  = 2.1;
+    auto p1 = point1 / u;
+    CHECK(p1.x == doctest::Approx(0.6190476));
+    CHECK(p1.y == doctest::Approx(5.9047619));
+  }
+}
+
+TEST_CASE("Testing rules of flight")
+{
+  std::vector<pf::Boid> prova;
+
+  SUBCASE("Calling separazione() with 2 boids")
+  {
+    pf::Point2D p1{2, 3};
+    pf::Point2D v1{0, 0};
+    pf::Point2D p2{4.5, 7.8};
+    pf::Point2D v2{0, 0};
+    pf::Boid b1{p1, v1};
+    pf::Boid b2{p2, v2};
+    prova.push_back(b1);
+    prova.push_back(b2);
+    pf::Point2D v3 = separazione(prova, p1, 0.5);
+    CHECK(v3.x == doctest::Approx(-1.25));
+    CHECK(v3.y == doctest::Approx(-2.4));
+  }
+
+  SUBCASE("Calling allineamento() with 3 boids")
+  {
+    pf::Point2D v1{2, 3};
+    pf::Point2D p1{0, 0};
+    pf::Point2D v2{0.5, 6.2};
+    pf::Point2D p2{0, 0};
+    pf::Point2D v3{4.5, 7.8};
+    pf::Point2D p3{0, 0};
+    pf::Boid b1{p1, v1};
+    pf::Boid b2{p2, v2};
+    pf::Boid b3{p3, v3};
+    prova.push_back(b1);
+    prova.push_back(b2);
+    prova.push_back(b3);
+    pf::Point2D v4 = allineamento(prova, 1, 3);
+    CHECK(v4.x == doctest::Approx(8.25));
+    CHECK(v4.y == doctest::Approx(-2.4));
+  }
 }
