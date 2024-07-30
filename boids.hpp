@@ -9,13 +9,13 @@ struct Point2D
   double x;
   double y;
 };
-Point2D operator-(Point2D const& a, Point2D const& b)
-{
-  return {a.x - b.x, a.y - b.y};
-}
 Point2D operator+(Point2D const& a, Point2D const& b)
 {
   return {a.x + b.x, a.y + b.y};
+}
+Point2D operator-(Point2D const& a, Point2D const& b)
+{
+  return {a.x - b.x, a.y - b.y};
 }
 Point2D operator*(double u, Point2D const& a)
 {
