@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <numeric>
+#include <stdexcept>
 #include <vector>
 
 namespace pf {
@@ -52,7 +53,10 @@ class Boid
 Point2D separazione(std::vector<Boid> const& stormo, Point2D const& pi,
                     double s)
 {
-  assert(stormo.size() != 0 && stormo.size() != 1);
+  if (stormo.size() < 2) {
+    throw std::runtime_error{
+        "Non ci sono abbastanza uccelli per applicare le regole di volo"};
+  }
   Point2D sum{0, 0};
   for (int i{0}, n = stormo.size(); i != n; ++i) {
     Point2D p = stormo[i].pos();
@@ -63,7 +67,10 @@ Point2D separazione(std::vector<Boid> const& stormo, Point2D const& pi,
 
 Point2D allineamento(std::vector<Boid> const& stormo, int i, double a)
 {
-  assert(stormo.size() != 0 && stormo.size() != 1);
+  if (stormo.size() < 2) {
+    throw std::runtime_error{
+        "Non ci sono abbastanza uccelli per applicare le regole di volo"};
+  }
   Point2D sum{0, 0};
   for (int j{0}, n = stormo.size(); j != n; ++j) {
     if (j != i) {
@@ -77,7 +84,10 @@ Point2D allineamento(std::vector<Boid> const& stormo, int i, double a)
 
 Point2D coesione(std::vector<Boid> const& stormo, int i, double c)
 {
-  assert(stormo.size() != 0 && stormo.size() != 1);
+  if (stormo.size() < 2) {
+    throw std::runtime_error{
+        "Non ci sono abbastanza uccelli per applicare le regole di volo"};
+  }
   Point2D sum{0, 0};
   for (int j{0}, n = stormo.size(); j != n; ++j) {
     if (j != i) {

@@ -66,6 +66,7 @@ TEST_CASE("Testing the operators of the struct Point2D")
 TEST_CASE("Testing rules of flight")
 {
   std::vector<pf::Boid> prova;
+  REQUIRE(prova.size() == 0);
 
   SUBCASE("Calling separazione() with 2 boids")
   {
@@ -80,6 +81,22 @@ TEST_CASE("Testing rules of flight")
     pf::Point2D v3 = separazione(prova, p1, 0.5);
     CHECK(v3.x == doctest::Approx(-1.25));
     CHECK(v3.y == doctest::Approx(-2.4));
+  }
+
+  SUBCASE("Calling separazione() with 0 boids")
+  {
+    pf::Point2D p1{2, 3};
+    CHECK_THROWS(separazione(prova, p1, 0.5));
+  }
+
+  SUBCASE("Calling separazione() with 1 boid")
+  {
+    pf::Point2D p1{2, 3};
+    pf::Point2D p2{4.5, 7.8};
+    pf::Point2D v2{0, 0};
+    pf::Boid b2{p2, v2};
+    prova.push_back(b2);
+    CHECK_THROWS(separazione(prova, p1, 0.5));
   }
 
   SUBCASE("Calling allineamento() with 3 boids")
@@ -100,7 +117,21 @@ TEST_CASE("Testing rules of flight")
     CHECK(v4.x == doctest::Approx(8.25));
     CHECK(v4.y == doctest::Approx(-2.4));
   }
-  
+
+  SUBCASE("Calling allineamento() with 0 boids")
+  {
+    CHECK_THROWS(allineamento(prova, 0, 2));
+  }
+
+  SUBCASE("Calling allineamento() with 1 boid")
+  {
+    pf::Point2D v1{4.5, 7.8};
+    pf::Point2D p1{0, 0};
+    pf::Boid b1{p1, v1};
+    prova.push_back(b1);
+    CHECK_THROWS(allineamento(prova, 0, 2));
+  }
+
   SUBCASE("Calling coesione() with 3 boids")
   {
     pf::Point2D p1{2, 3};
@@ -118,5 +149,19 @@ TEST_CASE("Testing rules of flight")
     pf::Point2D v4 = coesione(prova, 0, 0.6);
     CHECK(v4.x == doctest::Approx(0.3));
     CHECK(v4.y == doctest::Approx(2.4));
+  }
+
+  SUBCASE("Calling coesione() with 0 boids")
+  {
+    CHECK_THROWS(coesione(prova, 0, 0.2));
+  }
+
+  SUBCASE("Calling coesione() with 1 boid")
+  {
+    pf::Point2D p1{4.5, 7};
+    pf::Point2D v1{0, 0};
+    pf::Boid b1{p1, v1};
+    prova.push_back(b1);
+    CHECK_THROWS(allineamento(prova, 0, 2));
   }
 }
