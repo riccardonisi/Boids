@@ -49,13 +49,14 @@ class Boid
   }
 };
 
-Point2D separazione(std::vector<Boid> const& stormo, Point2D const& pi, double s)
+Point2D separazione(std::vector<Boid> const& stormo, Point2D const& pi,
+                    double s)
 {
   assert(stormo.size() != 0 && stormo.size() != 1);
   Point2D sum{0, 0};
   for (int i{0}, n = stormo.size(); i != n; ++i) {
     Point2D p = stormo[i].pos();
-    sum           = sum + p - pi;
+    sum       = sum + p - pi;
   }
   return -s * sum; // questo è il termine correttivo v1
 }
@@ -74,5 +75,18 @@ Point2D allineamento(std::vector<Boid> const& stormo, int i, double a)
           - stormo[i].vel()); // questo è il termine correttivo v2
 }
 
+Point2D coesione(std::vector<Boid> const& stormo, int i, double c)
+{
+  assert(stormo.size() != 0 && stormo.size() != 1);
+  Point2D sum{0, 0};
+  for (int j{0}, n = stormo.size(); j != n; ++j) {
+    if (j != i) {
+      sum = sum + stormo[j].pos();
+    }
+  }
+  return c
+       * (sum / (stormo.size() - 1)
+          - stormo[i].pos()); // questo è il termine correttivo v3
+}
 } // namespace pf
 #endif

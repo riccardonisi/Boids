@@ -100,4 +100,23 @@ TEST_CASE("Testing rules of flight")
     CHECK(v4.x == doctest::Approx(8.25));
     CHECK(v4.y == doctest::Approx(-2.4));
   }
+  
+  SUBCASE("Calling coesione() with 3 boids")
+  {
+    pf::Point2D p1{2, 3};
+    pf::Point2D v1{0, 0};
+    pf::Point2D p2{0.5, 6.2};
+    pf::Point2D v2{0, 0};
+    pf::Point2D p3{4.5, 7.8};
+    pf::Point2D v3{0, 0};
+    pf::Boid b1{p1, v1};
+    pf::Boid b2{p2, v2};
+    pf::Boid b3{p3, v3};
+    prova.push_back(b1);
+    prova.push_back(b2);
+    prova.push_back(b3);
+    pf::Point2D v4 = coesione(prova, 0, 0.6);
+    CHECK(v4.x == doctest::Approx(0.3));
+    CHECK(v4.y == doctest::Approx(2.4));
+  }
 }
