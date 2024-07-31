@@ -1,6 +1,7 @@
 #ifndef BOIDS_HPP
 #define BOIDS_HPP
 
+#include <cassert>
 #include <numeric>
 #include <vector>
 
@@ -38,28 +39,30 @@ class Boid
       : pos_{p}
       , vel_{v}
   {}
-  Point2D const& pos()
+  Point2D pos() const
   {
     return pos_;
   }
-  Point2D const& vel()
+  Point2D vel() const
   {
     return vel_;
   }
 };
 
-Point2D separazione(std::vector<Boid> stormo, Point2D const& pi, double s)
+Point2D separazione(std::vector<Boid> const& stormo, Point2D const& pi, double s)
 {
+  assert(stormo.size() != 0 && stormo.size() != 1);
   Point2D sum{0, 0};
   for (int i{0}, n = stormo.size(); i != n; ++i) {
-    auto const& p = stormo[i].pos();
+    Point2D p = stormo[i].pos();
     sum           = sum + p - pi;
   }
   return -s * sum; // questo è il termine correttivo v1
 }
 
-Point2D allineamento(std::vector<Boid> stormo, int const& i, double a)
+Point2D allineamento(std::vector<Boid> const& stormo, int i, double a)
 {
+  assert(stormo.size() != 0 && stormo.size() != 1);
   Point2D sum{0, 0};
   for (int j{0}, n = stormo.size(); j != n; ++j) {
     if (j != i) {
