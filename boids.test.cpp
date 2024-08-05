@@ -165,7 +165,7 @@ TEST_CASE("Testing rules of flight")
 }
 TEST_CASE("Testing generation of boids")
 {
-  SUBCASE("Calling generazione_stormo() with 20 boids")
+  SUBCASE("Calling genera_stormo() with 20 boids")
   {
     int N{20};
     std::vector<pf::Boid> prova = pf::genera_stormo(N);
