@@ -50,17 +50,16 @@ class Boid
   }
 };
 
-Point2D separazione(std::vector<Boid> const& stormo, Point2D const& pi,
-                    double s)
+Point2D separazione(std::vector<Boid> const& stormo, int i, double s)
 {
   if (stormo.size() < 2) {
     throw std::runtime_error{
         "Non ci sono abbastanza uccelli per applicare le regole di volo"};
   }
   Point2D sum{0, 0};
-  for (int i{0}, n = stormo.size(); i != n; ++i) {
-    Point2D p = stormo[i].pos();
-    sum       = sum + p - pi;
+  for (int j{0}, n = stormo.size(); j != n; ++j) {
+    Point2D const& p = stormo[j].pos();
+    sum              = sum + p - stormo[i].pos();
   }
   return -s * sum; // questo è il termine correttivo v1
 }
@@ -74,12 +73,11 @@ Point2D allineamento(std::vector<Boid> const& stormo, int i, double a)
   Point2D sum{0, 0};
   for (int j{0}, n = stormo.size(); j != n; ++j) {
     if (j != i) {
-      sum = sum + stormo[j].vel();
+      Point2D const& v = stormo[j].vel();
+      sum = sum + v;
     }
   }
-  return a
-       * (sum / (stormo.size() - 1)
-          - stormo[i].vel()); // questo è il termine correttivo v2
+  return a * (sum / (stormo.size() - 1) - stormo[i].vel());
 }
 
 Point2D coesione(std::vector<Boid> const& stormo, int i, double c)
@@ -91,12 +89,11 @@ Point2D coesione(std::vector<Boid> const& stormo, int i, double c)
   Point2D sum{0, 0};
   for (int j{0}, n = stormo.size(); j != n; ++j) {
     if (j != i) {
-      sum = sum + stormo[j].pos();
+      Point2D const& p = stormo[j].pos();
+      sum = sum + p;
     }
   }
-  return c
-       * (sum / (stormo.size() - 1)
-          - stormo[i].pos()); // questo è il termine correttivo v3
+  return c * (sum / (stormo.size() - 1) - stormo[i].pos());
 }
 } // namespace pf
 #endif

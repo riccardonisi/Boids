@@ -78,25 +78,23 @@ TEST_CASE("Testing rules of flight")
     pf::Boid b2{p2, v2};
     prova.push_back(b1);
     prova.push_back(b2);
-    pf::Point2D v3 = separazione(prova, p1, 0.5);
+    pf::Point2D v3 = separazione(prova, 0, 0.5);
     CHECK(v3.x == doctest::Approx(-1.25));
     CHECK(v3.y == doctest::Approx(-2.4));
   }
 
   SUBCASE("Calling separazione() with 0 boids")
   {
-    pf::Point2D p1{2, 3};
-    CHECK_THROWS(separazione(prova, p1, 0.5));
+    CHECK_THROWS(separazione(prova, 0, 0.5));
   }
 
   SUBCASE("Calling separazione() with 1 boid")
   {
-    pf::Point2D p1{2, 3};
-    pf::Point2D p2{4.5, 7.8};
-    pf::Point2D v2{0, 0};
-    pf::Boid b2{p2, v2};
-    prova.push_back(b2);
-    CHECK_THROWS(separazione(prova, p1, 0.5));
+    pf::Point2D p1{4.5, 7.8};
+    pf::Point2D v1{0, 0};
+    pf::Boid b1{p1, v1};
+    prova.push_back(b1);
+    CHECK_THROWS(separazione(prova, 0, 0.5));
   }
 
   SUBCASE("Calling allineamento() with 3 boids")
