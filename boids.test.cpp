@@ -163,3 +163,12 @@ TEST_CASE("Testing rules of flight")
     CHECK_THROWS(allineamento(prova, 0, 2));
   }
 }
+TEST_CASE("Testing generation of boids")
+{
+  SUBCASE("Calling generazione_stormo() with 20 boids")
+  {
+    int N{20};
+    std::vector<pf::Boid> prova = pf::genera_stormo(N);
+    CHECK(prova.size() == 20);
+  }
+}
