@@ -4,10 +4,11 @@
 
 int main()
 {
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  std::uniform_real_distribution<> dis(0.0, 1.0);
-  for (int n = 0; n < 50; ++n)
-    std::cout << dis(gen) << ' ';
-  std::cout << '\n';
+ int n = 20;
+ std::vector<pf::Boid> prova = pf::genera_stormo(n);
+ std::cout << prova.size() << '\n';
+ std::cout << prova[1].pos().x << ';' << prova[1].pos().y << ';'  << prova[1].vel().x << ';'  << prova[1].vel().y << '\n';
+ /* for (int i{0}; i < n; ++i){
+ std::cout << prova[i].pos().x << '\n'; 
+} */
 }

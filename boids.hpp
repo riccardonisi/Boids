@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <numeric>
+#include <random>
 #include <stdexcept>
 #include <vector>
 
@@ -74,7 +75,7 @@ Point2D allineamento(std::vector<Boid> const& stormo, int i, double a)
   for (int j{0}, n = stormo.size(); j != n; ++j) {
     if (j != i) {
       Point2D const& v = stormo[j].vel();
-      sum = sum + v;
+      sum              = sum + v;
     }
   }
   return a * (sum / (stormo.size() - 1) - stormo[i].vel());
@@ -90,10 +91,26 @@ Point2D coesione(std::vector<Boid> const& stormo, int i, double c)
   for (int j{0}, n = stormo.size(); j != n; ++j) {
     if (j != i) {
       Point2D const& p = stormo[j].pos();
-      sum = sum + p;
+      sum              = sum + p;
     }
   }
   return c * (sum / (stormo.size() - 1) - stormo[i].pos());
+}
+
+std::vector<Boid> genera_stormo(int n)
+{
+  std::vector<Boid> stormo;
+  for (int i{0}; i < n; ++i) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+    Boid x{{0, 0}, {0, 0}};
+    for (int j = 0; j < 4; ++j) {
+      x = {{dis(gen), dis(gen)}, {dis(gen), dis(gen)}};
+    }
+    stormo.push_back(x);
+  }
+  return stormo;
 }
 } // namespace pf
 #endif
