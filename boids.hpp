@@ -71,7 +71,7 @@ Point2D separazione(std::vector<Boid> const& stormo, int i, double s)
   Point2D sum{0, 0};
   for (int j{0}; j != n; ++j) {
     Point2D const& p = stormo[static_cast<long unsigned int>(j)].pos();
-    sum              = sum + p - stormo[static_cast<long unsigned int>(i)].pos();
+    sum = sum + p - stormo[static_cast<long unsigned int>(i)].pos();
   }
   return -s * sum; // questo è il termine correttivo v1
 }
@@ -126,10 +126,7 @@ std::vector<Boid> genera_stormo(double n)
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(0.0, 1.0);
-    Boid x{{0, 0}, {0, 0}};
-    for (int j = 0; j < 4; ++j) {
-      x = {{dis(gen), dis(gen)}, {dis(gen), dis(gen)}};
-    }
+    Boid x{{dis(gen), dis(gen)}, {dis(gen), dis(gen)}};
     stormo.push_back(x);
   }
   return stormo;

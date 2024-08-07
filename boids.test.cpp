@@ -198,6 +198,9 @@ TEST_CASE("Testing generation of boids")
     CHECK(prova.size() == 5);
     CHECK(!(prova[0] == prova[1] && prova[0] == prova[2] && prova[0] == prova[3]
             && prova[0] == prova[4]));
+    CHECK(!(prova[0].pos().x == prova[0].pos().y
+            && prova[0].pos().x == prova[0].vel().x
+            && prova[0].pos().x == prova[0].vel().y));
   }
   SUBCASE("Calling genera_stormo() with 50 boids")
   {
