@@ -62,7 +62,19 @@ TEST_CASE("Testing the operators of the struct Point2D")
     CHECK(p1.y == doctest::Approx(5.9047619));
   }
 }
-
+TEST_CASE("Testing the operators of the class Boid")
+{
+  SUBCASE("Testing operator ==")
+  {
+    pf::Boid a{{3.2, 9.4}, {2, 4.8}};
+    pf::Boid b{{3.2, 9.4}, {2, 4.8}};
+    pf::Boid c{{6.1, 134}, {5.4, 0.4}};
+    pf::Boid d{{3.1, 9.4}, {2, 4.8}};
+    CHECK(a == b);
+    CHECK(!(a == c));
+    CHECK(!(b == d));
+  }
+}
 TEST_CASE("Testing rules of flight")
 {
   std::vector<pf::Boid> prova;
@@ -160,15 +172,36 @@ TEST_CASE("Testing rules of flight")
     pf::Point2D v1{0, 0};
     pf::Boid b1{p1, v1};
     prova.push_back(b1);
-    CHECK_THROWS(allineamento(prova, 0, 2));
+    CHECK_THROWS(coesione(prova, 0, 2));
   }
 }
 TEST_CASE("Testing generation of boids")
 {
-  SUBCASE("Calling genera_stormo() with 20 boids")
+  SUBCASE("Calling genera_stormo() with 0 ore less boids")
   {
-    int N{20};
-    std::vector<pf::Boid> prova = pf::genera_stormo(N);
-    CHECK(prova.size() == 20);
+    CHECK_THROWS(pf::genera_stormo(0));
+    CHECK_THROWS(pf::genera_stormo(-2));
+    CHECK_THROWS(pf::genera_stormo(-46));
+    CHECK_THROWS(pf::genera_stormo(-57));
+    CHECK_THROWS(pf::genera_stormo(-1234));
+  }
+  SUBCASE("Calling genera_stormo() with a non integer number of boids")
+  {
+    CHECK_THROWS(pf::genera_stormo(0.5));
+    CHECK_THROWS(pf::genera_stormo(23.45));
+    CHECK_THROWS(pf::genera_stormo(-1.4));
+    CHECK_THROWS(pf::genera_stormo(1234.56));
+  }
+  SUBCASE("Calling genera_stormo() with 5 boids")
+  {
+    std::vector<pf::Boid> prova = pf::genera_stormo(5);
+    CHECK(prova.size() == 5);
+    CHECK(!(prova[0] == prova[1] && prova[0] == prova[2] && prova[0] == prova[3]
+            && prova[0] == prova[4]));
+  }
+  SUBCASE("Calling genera_stormo() with 50 boids")
+  {
+    std::vector<pf::Boid> prova = pf::genera_stormo(50);
+    CHECK(prova.size() == 50);
   }
 }
