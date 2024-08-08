@@ -61,6 +61,15 @@ TEST_CASE("Testing the operators of the struct Point2D")
     CHECK(p1.x == doctest::Approx(0.6190476));
     CHECK(p1.y == doctest::Approx(5.9047619));
   }
+  SUBCASE("Testing distance function")
+  {
+    pf::Point2D a{2, 5};
+    pf::Point2D b{0.3, 6.8};
+    pf::Point2D c{-15, 100};
+    CHECK(pf::distanza(a, b) == doctest::Approx(2.47589));
+    CHECK(pf::distanza(b, c) == doctest::Approx(94.4475));
+    CHECK(pf::distanza(a, c) == doctest::Approx(96.5091));
+  }
 }
 TEST_CASE("Testing the operators of the class Boid")
 {
@@ -206,5 +215,27 @@ TEST_CASE("Testing generation of boids")
   {
     std::vector<pf::Boid> prova = pf::genera_stormo(50);
     CHECK(prova.size() == 50);
+  }
+  SUBCASE("Calling boid_vicini() with 10 boids")
+  {
+    double dist{2};
+    pf::Boid a{{1, 2}, {3, 4}};
+    pf::Boid b{{0.4, 2}, {7, 10}};
+    pf::Boid c{{5.7, 3}, {3, 4}};
+    pf::Boid d{{0.15, 23}, {3, 4}};
+    pf::Boid e{{3, 2}, {3, 4}};
+    pf::Boid f{{5.3, 1.1}, {3, 4}};
+    pf::Boid g{{1.3, 2.7}, {3, 4}};
+    pf::Boid h{{1.8, 3.1}, {3, 4}};
+    pf::Boid i{{1.4, 2.56}, {3, 4}};
+    pf::Boid l{{1, 2}, {3, 4}};
+    std::vector<pf::Boid> stormo{a, b, c, d, e, f, g, h, i, l};
+    std::vector<pf::Boid> stormo_vicino = boid_vicini(stormo, 0, dist);
+    CHECK(stormo_vicino.size() == 5);
+    CHECK(stormo_vicino[0] == b);
+    CHECK(stormo_vicino[1] == g);
+    CHECK(stormo_vicino[2] == h);
+    CHECK(stormo_vicino[3] == i);
+    CHECK(stormo_vicino[4] == l);
   }
 }
