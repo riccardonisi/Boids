@@ -26,3 +26,14 @@ find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 
 add_executable(sfmlplay main.cpp)
 target_link_libraries(sfmlplay PRIVATE sfml-graphics)
+
+# se il testing e' abilitato...
+#   per disabilitare il testing, passare -DBUILD_TESTING=OFF a cmake durante la fase di configurazione
+if (BUILD_TESTING)
+
+  # aggiungi l'eseguibile boids.t
+  add_executable(boids.t boids.test.cpp)
+  # aggiungi l'eseguibile boids.t alla lista dei test
+  add_test(NAME boids.t COMMAND boids.t)
+
+endif()

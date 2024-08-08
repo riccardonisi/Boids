@@ -2,8 +2,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
-#include <random>
-#include <vector>
 
 // Funzione per convertire un valore reale in pixel
 sf::Vector2f realeToPixel(float x, float y, float scaleFactorX,
