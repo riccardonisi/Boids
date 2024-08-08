@@ -71,7 +71,6 @@ TEST_CASE("Testing the operators of the struct Point2D")
     CHECK(pf::distanza(a, c) == doctest::Approx(96.5091));
   }
 }
-
 TEST_CASE("Testing the operators of the class Boid")
 {
   SUBCASE("Testing operator ==")
@@ -85,7 +84,6 @@ TEST_CASE("Testing the operators of the class Boid")
     CHECK(!(b == d));
   }
 }
-
 TEST_CASE("Testing rules of flight")
 {
   std::vector<pf::Boid> prova;
@@ -186,7 +184,6 @@ TEST_CASE("Testing rules of flight")
     CHECK_THROWS(coesione(prova, 0, 2));
   }
 }
-
 TEST_CASE("Testing generation of boids")
 {
   SUBCASE("Calling genera_stormo() with 0 ore less boids")

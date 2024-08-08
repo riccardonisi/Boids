@@ -10,23 +10,19 @@
 #include <vector>
 
 namespace pf {
-
 struct Point2D
 {
   double x;
   double y;
 };
-
 Point2D operator+(Point2D const& a, Point2D const& b)
 {
   return {a.x + b.x, a.y + b.y};
 }
-
 Point2D operator-(Point2D const& a, Point2D const& b)
 {
   return {a.x - b.x, a.y - b.y};
 }
-
 Point2D operator*(double u, Point2D const& a)
 {
   return {u * a.x, u * a.y};
@@ -59,7 +55,6 @@ class Boid
     return vel_;
   }
 };
-
 bool operator==(Boid const& a, Boid const& b)
 {
   if (a.pos().x == b.pos().x && a.pos().y == b.pos().y && a.vel().x == b.vel().x
@@ -86,7 +81,8 @@ Point2D separazione(std::vector<Boid> const& stormo, unsigned long int i,
   return -s * sum; // questo è il termine correttivo v1
 }
 
-Point2D allineamento(std::vector<Boid> const& stormo, int i, double a)
+Point2D allineamento(std::vector<Boid> const& stormo, unsigned long int i,
+                     double a)
 
 {
   unsigned long int n = stormo.size();
@@ -141,5 +137,39 @@ std::vector<Boid> genera_stormo(double n)
   }
   return stormo;
 }
+std::vector<Boid> boid_vicini(std::vector<Boid> const& stormo,
+                              unsigned long int i, double d)
+{
+  unsigned long int n = stormo.size();
+  std::vector<Boid> stormo_vicino;
+  for (unsigned long int j{0}; j != n; ++j) {
+    if (distanza(stormo[j].pos(), stormo[i].pos()) < d && i != j) {
+      stormo_vicino.push_back(stormo[j]);
+    }
+  }
+  return stormo_vicino;
+}
+void movimento(std::vector<Boid>& stormo, double t)
+{
+  for (unsigned long int i{0}; i != stormo.size(); ++i) {
+    stormo[i].pos() = stormo[i].pos() + t * stormo[i].vel();
+  }
+}
+void applicazione_regole(std::vector<Boid>& stormo, double d, double ds,
+                         double s, double a, double c)
+{
+  std::vector<Point2D> correzione_velocità;
+  for (unsigned long int i{0}; i != stormo.size(); ++i) {
+    std::vector<Boid> stormo_vicino      = boid_vicini(stormo, i, d);
+    std::vector<Boid> stormo_vicinissimo = boid_vicini(stormo, i, ds);
+    correzione_velocità.push_back(separazione(stormo_vicinissimo, i, s)
+                                  + allineamento(stormo_vicino, i, a)
+                                  + coesione(stormo_vicino, i, c));
+  }
+  for (unsigned long int i{0}; i != stormo.size(); ++i) {
+    stormo[i].vel() = stormo[i].vel() + correzione_velocità[i];
+  }
+}
+
 } // namespace pf
 #endif
