@@ -9,19 +9,23 @@
 #include <vector>
 
 namespace pf {
+
 struct Point2D
 {
   double x;
   double y;
 };
+
 Point2D operator+(Point2D const& a, Point2D const& b)
 {
   return {a.x + b.x, a.y + b.y};
 }
+
 Point2D operator-(Point2D const& a, Point2D const& b)
 {
   return {a.x - b.x, a.y - b.y};
 }
+
 Point2D operator*(double u, Point2D const& a)
 {
   return {u * a.x, u * a.y};
@@ -51,6 +55,7 @@ class Boid
     return vel_;
   }
 };
+
 bool operator==(Boid const& a, Boid const& b)
 {
   if (a.pos().x == b.pos().x && a.pos().y == b.pos().y && a.vel().x == b.vel().x
@@ -77,7 +82,6 @@ Point2D separazione(std::vector<Boid> const& stormo, int i, double s)
 }
 
 Point2D allineamento(std::vector<Boid> const& stormo, int i, double a)
-
 {
   int n = static_cast<int>(stormo.size());
   if (n < 2) {
@@ -131,5 +135,6 @@ std::vector<Boid> genera_stormo(double n)
   }
   return stormo;
 }
+
 } // namespace pf
 #endif
