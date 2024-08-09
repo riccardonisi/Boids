@@ -71,6 +71,7 @@ TEST_CASE("Testing the operators of the struct Point2D")
     CHECK(pf::distanza(a, c) == doctest::Approx(96.5091));
   }
 }
+
 TEST_CASE("Testing the operators of the class Boid")
 {
   SUBCASE("Testing operator ==")
@@ -84,6 +85,7 @@ TEST_CASE("Testing the operators of the class Boid")
     CHECK(!(b == d));
   }
 }
+
 TEST_CASE("Testing rules of flight")
 {
   std::vector<pf::Boid> prova;
@@ -184,6 +186,7 @@ TEST_CASE("Testing rules of flight")
     CHECK_THROWS(coesione(prova, 0, 2));
   }
 }
+
 TEST_CASE("Testing generation of boids")
 {
   SUBCASE("Calling genera_stormo() with 0 ore less boids")
@@ -194,6 +197,7 @@ TEST_CASE("Testing generation of boids")
     CHECK_THROWS(pf::genera_stormo(-57));
     CHECK_THROWS(pf::genera_stormo(-1234));
   }
+
   SUBCASE("Calling genera_stormo() with a non integer number of boids")
   {
     CHECK_THROWS(pf::genera_stormo(0.5));
@@ -201,6 +205,7 @@ TEST_CASE("Testing generation of boids")
     CHECK_THROWS(pf::genera_stormo(-1.4));
     CHECK_THROWS(pf::genera_stormo(1234.56));
   }
+
   SUBCASE("Calling genera_stormo() with 5 boids")
   {
     std::vector<pf::Boid> prova = pf::genera_stormo(5);
@@ -211,11 +216,13 @@ TEST_CASE("Testing generation of boids")
             && prova[0].pos().x == prova[0].vel().x
             && prova[0].pos().x == prova[0].vel().y));
   }
+
   SUBCASE("Calling genera_stormo() with 50 boids")
   {
     std::vector<pf::Boid> prova = pf::genera_stormo(50);
     CHECK(prova.size() == 50);
   }
+
   SUBCASE("Calling boid_vicini() with 10 boids")
   {
     double dist{2};
@@ -238,4 +245,59 @@ TEST_CASE("Testing generation of boids")
     CHECK(stormo_vicino[3] == i);
     CHECK(stormo_vicino[4] == l);
   }
+}
+
+TEST_CASE("Testing application of the rules of flight")
+{
+  /*SUBCASE("Calling applicazione_regole()")
+  {
+    double d{2};
+    double ds{1};
+    pf::Boid b1{{1, 2}, {3, 4}};
+    pf::Boid b2{{0.4, 2}, {-7, -0.8}};
+    pf::Boid b3{{5.7, 3}, {1, 4}};
+    pf::Boid b4{{1.3, 2.7}, {2.2, -1}};
+    std::vector<pf::Boid> stormo{b1, b2, b4};
+    double s{0.5};
+    double a{1.2};
+    double c{0.75};
+    pf::applicazione_regole(stormo, d, ds, s, a, c);
+    CHECK(stormo[0].pos().x == doctest::Approx(1));
+    CHECK(stormo[0].pos().y == doctest::Approx(2));
+    CHECK(stormo[0].vel().x == doctest::Approx(-3.44));
+    CHECK(stormo[0].vel().y == doctest::Approx(-1.9657));
+    CHECK(stormo[1].pos().x == doctest::Approx(0.4));
+    CHECK(stormo[1].pos().y == doctest::Approx(2));
+    CHECK(stormo[1].vel().x == doctest::Approx(4.78));
+    CHECK(stormo[1].vel().y == doctest::Approx(2.2225));
+    CHECK(stormo[2].pos().x == doctest::Approx(5.7));
+    CHECK(stormo[2].pos().y == doctest::Approx(3));
+    CHECK(stormo[2].vel().x == doctest::Approx(1));
+    CHECK(stormo[2].vel().y == doctest::Approx(4));
+    CHECK(stormo[3].pos().x == doctest::Approx(1.3));
+    CHECK(stormo[3].pos().y == doctest::Approx(2.7));
+    CHECK(stormo[3].vel().x == doctest::Approx(-3.14));
+    CHECK(stormo[3].vel().y == doctest::Approx(1.945));
+  }*/
+
+  /*SUBCASE("Calling movimento()")
+  {
+    pf::Boid b1{{1, 2}, {3, 4}};
+    pf::Boid b2{{0.4, 2}, {0, -0.8}};
+    pf::Boid b3{{5.7, 3}, {-1, 4}};
+    std::vector<pf::Boid> stormo{b1, b2, b3};
+    movimento(stormo, 0.5);
+    CHECK(stormo[0].pos().x == doctest::Approx(2.5));
+    CHECK(stormo[0].pos().y == doctest::Approx(4));
+    CHECK(stormo[0].vel().x == doctest::Approx(3));
+    CHECK(stormo[0].vel().y == doctest::Approx(4));
+    CHECK(stormo[1].pos().x == doctest::Approx(0.4));
+    CHECK(stormo[1].pos().y == doctest::Approx(1.6));
+    CHECK(stormo[1].vel().x == doctest::Approx(0));
+    CHECK(stormo[1].vel().y == doctest::Approx(-0.8));
+    CHECK(stormo[2].pos().x == doctest::Approx(5.2));
+    CHECK(stormo[2].pos().y == doctest::Approx(5));
+    CHECK(stormo[2].vel().x == doctest::Approx(-1));
+    CHECK(stormo[2].vel().y == doctest::Approx(4));
+  }*/
 }
