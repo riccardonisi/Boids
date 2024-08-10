@@ -10,19 +10,23 @@
 #include <vector>
 
 namespace pf {
+
 struct Point2D
 {
   double x;
   double y;
 };
+
 Point2D operator+(Point2D const& a, Point2D const& b)
 {
   return {a.x + b.x, a.y + b.y};
 }
+
 Point2D operator-(Point2D const& a, Point2D const& b)
 {
   return {a.x - b.x, a.y - b.y};
 }
+
 Point2D operator*(double u, Point2D const& a)
 {
   return {u * a.x, u * a.y};
@@ -32,10 +36,12 @@ Point2D operator/(Point2D const& a, double u)
 {
   return {a.x / u, a.y / u};
 }
+
 double distanza(Point2D const& a, Point2D const& b)
 {
   return std::sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
+
 class Boid
 {
   Point2D pos_;
@@ -46,15 +52,24 @@ class Boid
       : pos_{p}
       , vel_{v}
   {}
-  Point2D pos() const
+  const Point2D& pos() const
   {
     return pos_;
   }
-  Point2D vel() const
+  const Point2D& vel() const
+  {
+    return vel_;
+  }
+  Point2D& pos2()
+  {
+    return pos_;
+  }
+  Point2D& vel2()
   {
     return vel_;
   }
 };
+
 bool operator==(Boid const& a, Boid const& b)
 {
   if (a.pos().x == b.pos().x && a.pos().y == b.pos().y && a.vel().x == b.vel().x
@@ -66,7 +81,7 @@ bool operator==(Boid const& a, Boid const& b)
 };
 
 Point2D separazione(std::vector<Boid> const& stormo, unsigned long int i,
-                    double s)
+                    double s, double ds)
 {
   unsigned long int n = stormo.size();
   if (n < 2) {
@@ -75,46 +90,58 @@ Point2D separazione(std::vector<Boid> const& stormo, unsigned long int i,
   }
   Point2D sum{0, 0};
   for (unsigned long int j{0}; j != n; ++j) {
-    Point2D const& p = stormo[j].pos();
-    sum              = sum + p - stormo[i].pos();
+    if (distanza(stormo[j].pos(), stormo[i].pos()) < ds) {
+      Point2D const& p = stormo[j].pos();
+      sum              = sum + p - stormo[i].pos();
+    }
   }
   return -s * sum; // questo è il termine correttivo v1
 }
 
 Point2D allineamento(std::vector<Boid> const& stormo, unsigned long int i,
-                     double a)
-
+                     double a, double d)
 {
-  unsigned long int n = stormo.size();
-  if (n < 2) {
-    throw std::runtime_error{
-        "Non ci sono abbastanza uccelli per applicare le regole di volo"};
-  }
-  Point2D sum{0, 0};
-  for (unsigned long int j{0}; j != n; ++j) {
-    if (j != i) {
-      Point2D const& v = stormo[j].vel();
-      sum              = sum + v;
-    }
-  }
-  return a * (sum / static_cast<double>(n - 1) - stormo[i].vel());
-}
-
-Point2D coesione(std::vector<Boid> const& stormo, unsigned long int i, double c)
-{
-  unsigned long int n = stormo.size();
+  int n{0};
   if (stormo.size() < 2) {
     throw std::runtime_error{
         "Non ci sono abbastanza uccelli per applicare le regole di volo"};
   }
   Point2D sum{0, 0};
-  for (unsigned long int j{0}; j != n; ++j) {
-    if (j != i) {
+  for (unsigned long int j{0}; j != stormo.size(); ++j) {
+    if (j != i && distanza(stormo[j].pos(), stormo[i].pos()) < d) {
+      ++n;
+      Point2D const& v = stormo[j].vel();
+      sum              = sum + v;
+    }
+  }
+  if (n != 0) {
+    return a * (sum / static_cast<double>(n) - stormo[i].vel());
+  } else {
+    return {0, 0};
+  }
+}
+
+Point2D coesione(std::vector<Boid> const& stormo, unsigned long int i, double c,
+                 double d)
+{
+  int n{0};
+  if (stormo.size() < 2) {
+    throw std::runtime_error{
+        "Non ci sono abbastanza uccelli per applicare le regole di volo"};
+  }
+  Point2D sum{0, 0};
+  for (unsigned long int j{0}; j != stormo.size(); ++j) {
+    if (j != i && distanza(stormo[j].pos(), stormo[i].pos()) < d) {
+      ++n;
       Point2D const& p = stormo[j].pos();
       sum              = sum + p;
     }
   }
-  return c * (sum / static_cast<double>(n - 1) - stormo[i].pos());
+  if (n != 0) {
+    return c * (sum / static_cast<double>(n) - stormo[i].pos());
+  } else {
+    return {0, 0};
+  }
 }
 
 std::vector<Boid> genera_stormo(double n)
@@ -137,7 +164,8 @@ std::vector<Boid> genera_stormo(double n)
   }
   return stormo;
 }
-std::vector<Boid> boid_vicini(std::vector<Boid> const& stormo,
+
+/*std::vector<Boid> boid_vicini(std::vector<Boid> const& stormo,
                               unsigned long int i, double d)
 {
   unsigned long int n = stormo.size();
@@ -148,14 +176,16 @@ std::vector<Boid> boid_vicini(std::vector<Boid> const& stormo,
     }
   }
   return stormo_vicino;
-}
+}*/
+
 void movimento(std::vector<Boid>& stormo, double t)
 {
   for (unsigned long int i{0}; i != stormo.size(); ++i) {
-    stormo[i].pos() = stormo[i].pos() + t * stormo[i].vel();
+    stormo[i].pos2() = stormo[i].pos2() + t * stormo[i].vel();
   }
 }
-void applicazione_regole(std::vector<Boid>& stormo, double d, double ds,
+
+/*void applicazione_regole(std::vector<Boid>& stormo, double d, double ds,
                          double s, double a, double c)
 {
   std::vector<Point2D> correzione_velocità;
@@ -168,6 +198,20 @@ void applicazione_regole(std::vector<Boid>& stormo, double d, double ds,
   }
   for (unsigned long int i{0}; i != stormo.size(); ++i) {
     stormo[i].vel() = stormo[i].vel() + correzione_velocità[i];
+  }
+}*/
+
+void applicazione_regole(std::vector<Boid>& stormo, double d, double ds,
+                         double s, double a, double c)
+{
+  std::vector<Point2D> correzione_velocità;
+  for (unsigned long int i{0}; i != stormo.size(); ++i) {
+    correzione_velocità.push_back(separazione(stormo, i, s, ds)
+                                  + allineamento(stormo, i, a, d)
+                                  + coesione(stormo, i, c, d));
+  }
+  for (unsigned long int i{0}; i != stormo.size(); ++i) {
+    stormo[i].vel2() = stormo[i].vel2() + correzione_velocità[i];
   }
 }
 
