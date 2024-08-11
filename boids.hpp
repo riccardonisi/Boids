@@ -214,6 +214,22 @@ void applicazione_regole(std::vector<Boid>& stormo, double d, double ds,
     stormo[i].vel2() = stormo[i].vel2() + correzione_velocità[i];
   }
 }
-
+void comportamento_bordi(std::vector<Boid>& stormo)
+{
+  for (unsigned long int i{0}; i != stormo.size(); ++i) {
+    if (stormo[i].pos().x > 1) {
+      stormo[i].pos2().x = 0;
+    }
+    if (stormo[i].pos2().y > 1) {
+      stormo[i].pos2().y = 0;
+    }
+    if (stormo[i].pos().x < 0) {
+      stormo[i].pos2().x = 1;
+    }
+    if (stormo[i].pos().y < 0) {
+      stormo[i].pos2().y = 1;
+    }
+  }
+}
 } // namespace pf
 #endif

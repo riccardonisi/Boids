@@ -393,7 +393,7 @@ TEST_CASE("Testing application of the rules of flight")
     CHECK(stormo[3].vel().y == doctest::Approx(1.945));
   }
 
-  SUBCASE("Calling movimento()")
+  SUBCASE("Calling movimento() with 3 boids")
   {
     pf::Boid b1{{1, 2}, {3, 4}};
     pf::Boid b2{{0.4, 2}, {0, -0.8}};
@@ -412,5 +412,36 @@ TEST_CASE("Testing application of the rules of flight")
     CHECK(stormo[2].pos().y == doctest::Approx(5));
     CHECK(stormo[2].vel().x == doctest::Approx(-1));
     CHECK(stormo[2].vel().y == doctest::Approx(4));
+  }
+  SUBCASE("Calling comportamento_bordi() with 5 boids")
+  {
+    pf::Boid b1{{0.2, 0.5}, {1, 2}};
+    pf::Boid b2{{0.3, 12}, {1, 2}};
+    pf::Boid b3{{2, 0.5}, {1, 2}};
+    pf::Boid b4{{100, 23}, {1, 2}};
+    pf::Boid b5{{-2,-3},{1,2}};
+    std::vector<pf::Boid> stormo{b1, b2, b3, b4,b5};
+    pf::comportamento_bordi(stormo);
+    CHECK(stormo.size() == 5);
+    CHECK(stormo[0].pos().x == 0.2);
+    CHECK(stormo[0].pos().y == 0.5);
+    CHECK(stormo[0].vel().x == 1);
+    CHECK(stormo[0].vel().y == 2);
+    CHECK(stormo[1].pos2().x == 0.3);
+    CHECK(stormo[1].pos().y == 0);
+    CHECK(stormo[1].vel().x == 1);
+    CHECK(stormo[1].vel().y == 2);
+    CHECK(stormo[2].pos().x == 0);
+    CHECK(stormo[2].pos().y == 0.5);
+    CHECK(stormo[2].vel().x == 1);
+    CHECK(stormo[2].vel().y == 2);
+    CHECK(stormo[3].pos().x == 0);
+    CHECK(stormo[3].pos().y == 0);
+    CHECK(stormo[3].vel().x == 1);
+    CHECK(stormo[3].vel().y == 2);
+    CHECK(stormo[4].pos().x == 1);
+    CHECK(stormo[4].pos().y == 1);
+    CHECK(stormo[4].vel().x == 1);
+    CHECK(stormo[4].vel().y == 2);
   }
 }
