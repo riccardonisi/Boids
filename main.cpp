@@ -39,6 +39,7 @@ int main()
       sf::Vector2f pixelPos = realeToPixel(stormo[i].pos().x, stormo[i].pos().y,
                                            scaleFactorX, scaleFactorY);
       sf::CircleShape shape(1); // Crea un cerchio di raggio 1
+      shape.setPointCount(3);
       shape.setPosition(pixelPos);
       shape.setFillColor(sf::Color::White);
       window.draw(shape);
@@ -46,7 +47,7 @@ int main()
 
     pf::movimento(stormo, 0.0025);
     pf::comportamento_bordi(stormo);
-    pf::applicazione_regole(stormo, 0.02, 0.0025, 1, 0.5, 0.5);
+    pf::applicazione_regole(stormo, 0.02, 0.005, 1, 0.5, 0.5);
 
     window.display();
   }
