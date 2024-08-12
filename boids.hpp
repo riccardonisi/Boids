@@ -159,7 +159,8 @@ std::vector<Boid> genera_stormo(double n)
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(0.0, 1.0);
-    Boid x{{dis(gen), dis(gen)}, {dis(gen), dis(gen)}};
+    std::uniform_real_distribution<> dis2(-1.0, 1.0);
+    Boid x{{dis(gen), dis(gen)}, {dis2(gen), dis2(gen)}};
     stormo.push_back(x);
   }
   return stormo;
@@ -214,13 +215,14 @@ void applicazione_regole(std::vector<Boid>& stormo, double d, double ds,
     stormo[i].vel2() = stormo[i].vel2() + correzione_velocità[i];
   }
 }
+
 void comportamento_bordi(std::vector<Boid>& stormo)
 {
   for (unsigned long int i{0}; i != stormo.size(); ++i) {
     if (stormo[i].pos().x > 1) {
       stormo[i].pos2().x = 0;
     }
-    if (stormo[i].pos2().y > 1) {
+    if (stormo[i].pos().y > 1) {
       stormo[i].pos2().y = 0;
     }
     if (stormo[i].pos().x < 0) {
