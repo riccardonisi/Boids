@@ -413,7 +413,7 @@ TEST_CASE("Testing application of the rules of flight")
     CHECK(stormo[2].vel().x == doctest::Approx(-1));
     CHECK(stormo[2].vel().y == doctest::Approx(4));
   }
-  
+
   SUBCASE("Calling comportamento_bordi() with 5 boids")
   {
     pf::Boid b1{{0.2, 0.5}, {1, 2}};
@@ -444,5 +444,19 @@ TEST_CASE("Testing application of the rules of flight")
     CHECK(stormo[4].pos().y == 1);
     CHECK(stormo[4].vel().x == 1);
     CHECK(stormo[4].vel().y == 2);
+  }
+}
+TEST_CASE("Testing boids parameters")
+{
+  SUBCASE("Calling mean_velocity() with 5 boids")
+  {
+    pf::Boid b1{{1, 2}, {0.3, 0.8}};
+    pf::Boid b2{{1, 2}, {2, 4.1}};
+    pf::Boid b3{{1, 2}, {0.2, 1.1}};
+    pf::Boid b4{{1, 2}, {4, 0.2}};
+    pf::Boid b5{{1, 2}, {0.1, 0.5}};
+    std::vector<pf::Boid> prova{b1, b2, b3, b4, b5};
+    double mv = pf::mean_velocity(prova);
+    CHECK(mv == doctest::Approx(2.2098262));
   }
 }

@@ -233,5 +233,14 @@ void comportamento_bordi(std::vector<Boid>& stormo)
     }
   }
 }
+double mean_velocity(std::vector<Boid> stormo)
+{
+  double sum{0};
+  for (unsigned long int i; i != stormo.size(); ++i) {
+    sum += distanza(stormo[i].vel(), {0, 0});
+  }
+  return sum / static_cast<double>(stormo.size());
+}
+
 } // namespace pf
 #endif
