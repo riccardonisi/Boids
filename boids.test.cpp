@@ -1,6 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include "boids.hpp"
+#include "boids2.hpp"
 
 #include "doctest.h"
 
@@ -458,5 +459,25 @@ TEST_CASE("Testing boids parameters")
     std::vector<pf::Boid> prova{b1, b2, b3, b4, b5};
     double mv = pf::mean_velocity(prova);
     CHECK(mv == doctest::Approx(2.2098262));
+  }
+  SUBCASE("Calling mean_position() with 4 boids")
+  {
+    pf::Boid b1{{0.5, 0.1}, {1, 2}};
+    pf::Boid b2{{0.9, 1.4}, {1, 2}};
+    pf::Boid b3{{3, 0.2}, {1, 2}};
+    pf::Boid b4{{2.3, 1.1}, {1, 2}};
+    std::vector<pf::Boid> prova{b1, b2, b3, b4};
+    double mp = pf::mean_position(prova);
+    CHECK(mp == doctest::Approx(1.9326));
+  }
+  SUBCASE("Calling standdev_velocity() with 5 boids")
+  {
+    pf::Boid b1{{1, 2}, {0.3, 0.8}};
+    pf::Boid b2{{1, 2}, {2, 4.1}};
+    pf::Boid b3{{1, 2}, {0.2, 1.1}};
+    pf::Boid b4{{1, 2}, {4, 0.2}};
+    pf::Boid b5{{1, 2}, {0.1, 0.5}};
+    std::vector<pf::Boid> prova{b1, b2, b3, b4, b5};
+    double sv = pf::standdev_velocity(prova);
   }
 }

@@ -39,7 +39,7 @@ Point2D operator/(Point2D const& a, double u)
 
 double distanza(Point2D const& a, Point2D const& b)
 {
-  return std::sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+  return std::sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
 }
 
 class Boid
@@ -232,14 +232,6 @@ void comportamento_bordi(std::vector<Boid>& stormo)
       stormo[i].pos2().y = 1;
     }
   }
-}
-double mean_velocity(std::vector<Boid> stormo)
-{
-  double sum{0};
-  for (unsigned long int i{0}; i != stormo.size(); ++i) {
-    sum += distanza(stormo[i].vel(), {0, 0});
-  }
-  return sum / static_cast<double>(stormo.size());
 }
 
 } // namespace pf
