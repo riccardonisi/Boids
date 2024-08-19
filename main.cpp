@@ -18,7 +18,7 @@ int main()
       "Simulazione del comportamento di uno stormo, di Nisi, Rosini, Seren");
 
   // Esempio di vettore di posizioni reali
-  std::vector<pf::Boid> stormo = pf::genera_stormo(500);
+  std::vector<pf::Boid> stormo = pf::genera_stormo(20);
 
   // Fattori di scala per la conversione
   float scaleFactorX = 1000.0f / 1.0f; // Scala l'intervallo
@@ -38,16 +38,16 @@ int main()
     for (unsigned long int i{0}; i != stormo.size(); ++i) {
       sf::Vector2f pixelPos = realeToPixel(stormo[i].pos().x, stormo[i].pos().y,
                                            scaleFactorX, scaleFactorY);
-      sf::CircleShape shape(2);
+      sf::CircleShape shape(5);
       shape.setPointCount(3);
       shape.setPosition(pixelPos);
       shape.setFillColor(sf::Color::Black);
       window.draw(shape);
     }
 
-    pf::movimento(stormo, 0.0025);
+    pf::movimento(stormo, 0.001);
     pf::comportamento_bordi(stormo);
-    pf::applicazione_regole(stormo, 0.03, 0.005, 0.85, 0.5, 0.75);
+    pf::applicazione_regole(stormo, 0.03, 0.01, 0.85, 0.5, 0.75);
 
     window.display();
   }
