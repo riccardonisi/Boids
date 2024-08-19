@@ -447,6 +447,7 @@ TEST_CASE("Testing application of the rules of flight")
     CHECK(stormo[4].vel().y == 2);
   }
 }
+
 TEST_CASE("Testing boids parameters")
 {
   SUBCASE("Calling mean_velocity() with 5 boids")
@@ -460,6 +461,7 @@ TEST_CASE("Testing boids parameters")
     double mv = pf::mean_velocity(prova);
     CHECK(mv == doctest::Approx(2.2098262));
   }
+
   SUBCASE("Calling mean_position() with 4 boids")
   {
     pf::Boid b1{{0.5, 0.1}, {1, 2}};
@@ -470,6 +472,7 @@ TEST_CASE("Testing boids parameters")
     double mp = pf::mean_position(prova);
     CHECK(mp == doctest::Approx(1.9326));
   }
+
   SUBCASE("Calling standdev_velocity() with 5 boids")
   {
     pf::Boid b1{{1, 2}, {0.3, 0.8}};
@@ -479,5 +482,39 @@ TEST_CASE("Testing boids parameters")
     pf::Boid b5{{1, 2}, {0.1, 0.5}};
     std::vector<pf::Boid> prova{b1, b2, b3, b4, b5};
     double sv = pf::standdev_velocity(prova);
+    CHECK(sv == doctest::Approx(1.91529));
+  }
+
+  SUBCASE("Calling standdev_position() with 4 boids")
+  {
+    pf::Boid b1{{0.5, 0.1}, {1, 2}};
+    pf::Boid b2{{0.9, 1.4}, {1, 2}};
+    pf::Boid b3{{3, 0.2}, {1, 2}};
+    pf::Boid b4{{2.3, 1.1}, {1, 2}};
+    std::vector<pf::Boid> prova{b1, b2, b3, b4};
+    double sp = pf::standdev_position(prova);
+    CHECK(sp == doctest::Approx(1.10003));
+  }
+
+  SUBCASE("Calling mean_distance() with 4 boids")
+  {
+    pf::Boid b1{{0.5, 0.1}, {1, 2}};
+    pf::Boid b2{{0.9, 1.4}, {1, 2}};
+    pf::Boid b3{{3, 0.2}, {1, 2}};
+    pf::Boid b4{{2.3, 1.1}, {1, 2}};
+    std::vector<pf::Boid> prova{b1, b2, b3, b4};
+    double md = pf::mean_distance(prova);
+    CHECK(md == doctest::Approx(1.8186511));
+  }
+
+  SUBCASE("Calling standdev_distance() with 4 boids")
+  {
+    pf::Boid b1{{0.5, 0.1}, {1, 2}};
+    pf::Boid b2{{0.9, 1.4}, {1, 2}};
+    pf::Boid b3{{3, 0.2}, {1, 2}};
+    pf::Boid b4{{2.3, 1.1}, {1, 2}};
+    std::vector<pf::Boid> prova{b1, b2, b3, b4};
+    double sd = pf::standdev_distance(prova);
+    CHECK(sd == doctest::Approx(0.58396));
   }
 }
