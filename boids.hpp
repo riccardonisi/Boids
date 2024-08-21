@@ -252,5 +252,40 @@ void controllo_velocità(std::vector<Boid>& stormo, double v)
   }
 }
 
+Point2D separazione_altro_stormo(std::vector<Boid> const& stormo,
+                                 Boid const& uccello, double s, double ds)
+{
+  unsigned long int n = stormo.size();
+  if (n < 2) {
+    throw std::runtime_error{
+        "Non ci sono abbastanza uccelli per applicare le regole di volo"};
+  }
+  Point2D sum{0, 0};
+  for (unsigned long int j{0}; j != n; ++j) {
+    if (distanza(stormo[j].pos(), uccello.pos()) < ds) {
+      Point2D const& p = stormo[j].pos();
+      sum              = sum + p - uccello.pos();
+    }
+  }
+  return -s * sum;
+}
+
+void applicazione_regole_due_stormi(std::vector<Boid>& stormo,
+                                    std::vector<Boid> const& stormo_altro,
+                                    double d, double ds, double s, double a,
+                                    double c, double ds2, double s2)
+{
+  std::vector<Point2D> correzione_velocità;
+  for (unsigned long int i{0}; i != stormo.size(); ++i) {
+    correzione_velocità.push_back(
+        separazione(stormo, i, s, ds)
+        + separazione_altro_stormo(stormo_altro, stormo[i], s2, ds2)
+        + allineamento(stormo, i, a, d) + coesione(stormo, i, c, d));
+  }
+  for (unsigned long int i{0}; i != stormo.size(); ++i) {
+    stormo[i].vel2() = stormo[i].vel2() + correzione_velocità[i];
+  }
+}
+
 } // namespace pf
 #endif
