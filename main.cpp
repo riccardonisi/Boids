@@ -47,10 +47,17 @@ int main()
 
     pf::movimento(stormo, 0.001);
     pf::comportamento_bordi(stormo);
-    pf::applicazione_regole(stormo, 0.03, 0.01, 0.85, 0.5, 0.75);
+    pf::applicazione_regole(stormo, 0.03, 0.001, 0.85, 0.5, 0.75);
+    pf::controllo_velocità(stormo, 2);
 
     window.display();
   }
+
+  /*std::cout << '\n';
+  for (pf::Boid& b : stormo) {
+    std::cout << b.pos().x << ' ' << b.pos().y << '\n';
+  }
+  std::cout << '\n';*/
 
   return 0;
 }

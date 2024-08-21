@@ -446,6 +446,46 @@ TEST_CASE("Testing application of the rules of flight")
     CHECK(stormo[4].vel().x == 1);
     CHECK(stormo[4].vel().y == 2);
   }
+
+  SUBCASE("Calling controllo_velocità() with 5 boids")
+  {
+    std::vector<pf::Boid> stormo;
+    pf::Point2D p{0, 0};
+    pf::Point2D v{2, 3};
+    stormo.push_back({p, v});
+    p = {1, 1};
+    v = {0.5, 1.2};
+    stormo.push_back({p, v});
+    v = {2.3, 1};
+    stormo.push_back({p, v});
+    p = {2, 1};
+    v = {1.5, 2.8};
+    stormo.push_back({p, v});
+    v = {1.2, 0.8};
+    stormo.push_back({p, v});
+    pf::controllo_velocità(stormo, 2);
+    CHECK(stormo.size() == 5);
+    CHECK(stormo[0].pos().x == 0);
+    CHECK(stormo[0].pos().y == 0);
+    CHECK(stormo[0].vel().x == 2);
+    CHECK(stormo[0].vel().y == 2);
+    CHECK(stormo[1].pos().x == 1);
+    CHECK(stormo[1].pos().y == 1);
+    CHECK(stormo[1].vel().x == 0.5);
+    CHECK(stormo[1].vel().y == 1.2);
+    CHECK(stormo[2].pos().x == 1);
+    CHECK(stormo[2].pos().y == 1);
+    CHECK(stormo[2].vel().x == 2);
+    CHECK(stormo[2].vel().y == 1);
+    CHECK(stormo[3].pos().x == 2);
+    CHECK(stormo[3].pos().y == 1);
+    CHECK(stormo[3].vel().x == 1.5);
+    CHECK(stormo[3].vel().y == 2);
+    CHECK(stormo[4].pos().x == 2);
+    CHECK(stormo[4].pos().y == 1);
+    CHECK(stormo[4].vel().x == 1.2);
+    CHECK(stormo[4].vel().y == 0.8);
+  }
 }
 
 TEST_CASE("Testing boids parameters")

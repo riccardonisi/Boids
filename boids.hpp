@@ -234,5 +234,23 @@ void comportamento_bordi(std::vector<Boid>& stormo)
   }
 }
 
+void controllo_velocità(std::vector<Boid>& stormo, double v)
+{
+  for (unsigned long int i{0}; i != stormo.size(); ++i) {
+    if (stormo[i].vel().x > v) {
+      stormo[i].vel2().x = v;
+    }
+    if (stormo[i].vel().y > v) {
+      stormo[i].vel2().y = v;
+    }
+    if (stormo[i].vel().x < -v) {
+      stormo[i].vel2().x = -v;
+    }
+    if (stormo[i].vel().y < -v) {
+      stormo[i].vel2().y = -v;
+    }
+  }
+}
+
 } // namespace pf
 #endif
