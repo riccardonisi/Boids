@@ -18,7 +18,7 @@ int main()
       "Simulazione del comportamento di uno stormo, di Nisi, Rosini, Seren");
 
   // Esempio di vettore di posizioni reali
-  std::vector<pf::Boid> stormo = pf::genera_stormo(20);
+  std::vector<pf::Boid> stormo = pf::genera_stormo(100);
 
   // Fattori di scala per la conversione
   float scaleFactorX = 1000.0f / 1.0f; // Scala l'intervallo
@@ -38,7 +38,7 @@ int main()
     for (unsigned long int i{0}; i != stormo.size(); ++i) {
       sf::Vector2f pixelPos = realeToPixel(stormo[i].pos().x, stormo[i].pos().y,
                                            scaleFactorX, scaleFactorY);
-      sf::CircleShape shape(5);
+      sf::CircleShape shape(2.5);
       shape.setPointCount(3);
       shape.setPosition(pixelPos);
       shape.setFillColor(sf::Color::Black);
@@ -47,7 +47,7 @@ int main()
 
     pf::movimento(stormo, 0.001);
     pf::comportamento_bordi(stormo);
-    pf::applicazione_regole(stormo, 0.02, 0.001, 1.5, 0.15, 0.10);
+    pf::applicazione_regole(stormo, 0.02, 0.005, 0.05, 0.15, 0.05);
     pf::controllo_velocità(stormo, 2);
 
     window.display();
@@ -56,8 +56,8 @@ int main()
   return 0;
 }
 
-
-/*#include "boids.hpp"
+/*
+#include "boids.hpp"
 #include "boids2.hpp"
 #include <SFML/Graphics.hpp>
 #include <cassert>
@@ -187,11 +187,13 @@ int main()
   std::cout << "      di Riccardo Nisi, Emanuele Rosini, Federico Seren\n\n";
   std::cout << "Opzioni:\n"
             << "a. Visualizzare sul piano il comportamento di uno stormo\n";
-  std::cout << "b. Visualizzare l'andamento di velocità, posizione e distanza "
+  std::cout << "b. Visualizzare sul piano il comportamento di uno stormo "
+               "usando i parametri consigiati\n";
+  std::cout << "c. Visualizzare l'andamento di velocità, posizione e distanza "
                "medie in funzione del tempo con dei graifici\n";
-  std::cout << "c. Visualizzare sul piano il comportamento di due stormi (di "
+  std::cout << "d. Visualizzare sul piano il comportamento di due stormi (di "
                "specie diverse)\n";
-  std::cout << "d. Visualizzare sul piano il comportamento di due stormi "
+  std::cout << "e. Visualizzare sul piano il comportamento di due stormi "
                "usando i parametri consigiati\n";
   char op;
   std::cin >> op;
@@ -216,6 +218,9 @@ int main()
     simulazione_piano(n, d, ds, s, a, c);
     break;
   case 'b':
+    simulazione_piano(200, 0.02, 0.005, 0.05, 0.15, 0.05);
+    break;
+  case 'c':
     std::cout << "Inserire il numero di uccelli: ";
     std::cin >> n;
     assert(n > 1);
@@ -228,7 +233,7 @@ int main()
     assert(c > 0);
     grafici(n, d, ds, s, a, c);
     break;
-  case 'c':
+  case 'd':
     std::cout
         << "Inserire il numero di uccelli che compongono il primo stormo: ";
     std::cin >> n;
@@ -254,7 +259,7 @@ int main()
     assert(ds2 >= 0 && ds2 <= 1);
     simulazione_piano_due_stormi(n, n2, d, ds, s, a, c, ds2, s2);
     break;
-  case 'd':
+  case 'e':
     simulazione_piano_due_stormi(100, 100, 0.03, 0.0025, 0.75, 0.5, 0.5, 0.02,
                                  0.95);
     break;
