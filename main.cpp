@@ -47,7 +47,7 @@ int main()
 
     pf::movimento(stormo, 0.001);
     pf::comportamento_bordi(stormo);
-    pf::applicazione_regole(stormo, 0.03, 0.001, 0.85, 0.5, 0.75);
+    pf::applicazione_regole(stormo, 0.02, 0.001, 1.5, 0.15, 0.10);
     pf::controllo_velocità(stormo, 2);
 
     window.display();
