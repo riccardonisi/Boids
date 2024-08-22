@@ -16,28 +16,31 @@ int main()
   sf::RenderWindow window(
       sf::VideoMode(1000, 600),
       "Simulazione del comportamento di uno stormo, di Nisi, Rosini, Seren");
+  constexpr int frame_rate{60};
+  window.setFramerateLimit(frame_rate);
 
   // Esempio di vettore di posizioni reali
   std::vector<pf::Boid> stormo = pf::genera_stormo(100);
 
   // Fattori di scala per la conversione
-  float scaleFactorX = 1000.0f / 1.0f; // Scala l'intervallo
-  float scaleFactorY = 600.0f / 1.0f;  // Scala l'intervallo
+  float scaleFactorX = 1000.0f / 1.0f;
+  float scaleFactorY = 600.0f / 1.0f;
 
   // Eseguire il loop della finestra finché è aperta
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed)
+      if (event.type == sf::Event::Closed) {
         window.close();
+      }
     }
 
     window.clear(sf::Color::Cyan);
 
     // Disegnare i punti convertiti in pixel
-    for (unsigned long int i{0}; i != stormo.size(); ++i) {
-      sf::Vector2f pixelPos = realeToPixel(stormo[i].pos().x, stormo[i].pos().y,
-                                           scaleFactorX, scaleFactorY);
+    for (pf::Boid const& boid : stormo) {
+      sf::Vector2f pixelPos =
+          realeToPixel(boid.pos().x, boid.pos().y, scaleFactorX, scaleFactorY);
       sf::CircleShape shape(2.5);
       shape.setPointCount(3);
       shape.setPosition(pixelPos);
