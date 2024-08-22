@@ -1,4 +1,4 @@
-#include "boids.hpp"
+/*#include "boids.hpp"
 #include "boids2.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -59,7 +59,7 @@ int main()
   return 0;
 }
 
-/*
+*/
 #include "boids.hpp"
 #include "boids2.hpp"
 #include <SFML/Graphics.hpp>
@@ -271,4 +271,4 @@ int main()
     break;
   }
   std::cout << '\n' << '\n';
-}*/
+}
