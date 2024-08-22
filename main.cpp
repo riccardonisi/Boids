@@ -58,8 +58,8 @@ int main()
 
   return 0;
 }
-
 */
+
 #include "boids.hpp"
 #include "boids2.hpp"
 #include <SFML/Graphics.hpp>
@@ -79,28 +79,31 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c)
   sf::RenderWindow window(
       sf::VideoMode(1000, 600),
       "Simulazione del comportamento di uno stormo, di Nisi, Rosini, Seren");
+  constexpr int frame_rate{60};
+  window.setFramerateLimit(frame_rate);
 
   // Esempio di vettore di posizioni reali
   std::vector<pf::Boid> stormo = pf::genera_stormo(n);
 
   // Fattori di scala per la conversione
-  float scaleFactorX = 1000.0f / 1.0f; // Scala l'intervallo
-  float scaleFactorY = 600.0f / 1.0f;  // Scala l'intervallo
+  float scaleFactorX = 1000.0f / 1.0f;
+  float scaleFactorY = 600.0f / 1.0f;
 
   // Eseguire il loop della finestra finché è aperta
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed)
+      if (event.type == sf::Event::Closed) {
         window.close();
+      }
     }
 
     window.clear(sf::Color::Cyan);
 
     // Disegnare i punti convertiti in pixel
-    for (unsigned long int i{0}; i != stormo.size(); ++i) {
-      sf::Vector2f pixelPos = realeToPixel(stormo[i].pos().x, stormo[i].pos().y,
-                                           scaleFactorX, scaleFactorY);
+    for (pf::Boid const& boid : stormo) {
+      sf::Vector2f pixelPos =
+          realeToPixel(boid.pos().x, boid.pos().y, scaleFactorX, scaleFactorY);
       sf::CircleShape shape(3);
       shape.setPointCount(3);
       shape.setPosition(pixelPos);
@@ -129,6 +132,8 @@ void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
   sf::RenderWindow window(
       sf::VideoMode(1000, 600),
       "Simulazione del comportamento di uno stormo, di Nisi, Rosini, Seren");
+  constexpr int frame_rate{60};
+  window.setFramerateLimit(frame_rate);
 
   std::vector<pf::Boid> stormo1 = pf::genera_stormo(n1);
   std::vector<pf::Boid> stormo2 = pf::genera_stormo(n2);
@@ -139,15 +144,16 @@ void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed)
+      if (event.type == sf::Event::Closed) {
         window.close();
+      }
     }
 
     window.clear(sf::Color::Cyan);
 
-    for (unsigned long int i{0}; i != stormo1.size(); ++i) {
-      sf::Vector2f pixelPos = realeToPixel(
-          stormo1[i].pos().x, stormo1[i].pos().y, scaleFactorX, scaleFactorY);
+    for (pf::Boid const& boid : stormo1) {
+      sf::Vector2f pixelPos =
+          realeToPixel(boid.pos().x, boid.pos().y, scaleFactorX, scaleFactorY);
       sf::CircleShape shape(3);
       shape.setPointCount(3);
       shape.setPosition(pixelPos);
@@ -160,9 +166,9 @@ void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
                                        s2);
     pf::controllo_velocità(stormo1, 2);
 
-    for (unsigned long int i{0}; i != stormo2.size(); ++i) {
-      sf::Vector2f pixelPos = realeToPixel(
-          stormo2[i].pos().x, stormo2[i].pos().y, scaleFactorX, scaleFactorY);
+    for (pf::Boid const& boid : stormo2) {
+      sf::Vector2f pixelPos =
+          realeToPixel(boid.pos().x, boid.pos().y, scaleFactorX, scaleFactorY);
       sf::CircleShape shape(3);
       shape.setPointCount(3);
       shape.setPosition(pixelPos);
@@ -213,8 +219,8 @@ int main()
     double a;
     double c;
     std::cin >> d >> ds >> s >> a >> c;
-    assert(d >= 0 && d <= 1);
-    assert(ds >= 0 && ds <= 1);
+    assert(d >= 0 && d <= std::sqrt(2));
+    assert(ds >= 0 && ds <= std::sqrt(2));
     assert(s > 0);
     assert(a > 0);
     assert(c > 0);
@@ -229,8 +235,8 @@ int main()
     assert(n > 1);
     std::cout << "Inserire d, ds, s, a, c: ";
     std::cin >> d >> ds >> s >> a >> c;
-    assert(d >= 0 && d <= 1);
-    assert(ds >= 0 && ds <= 1);
+    assert(d >= 0 && d <= std::sqrt(2));
+    assert(ds >= 0 && ds <= std::sqrt(2));
     assert(s > 0);
     assert(a > 0);
     assert(c > 0);
@@ -249,17 +255,17 @@ int main()
     std::cout << "Inserire d, ds, s, a, c, che si applicano tra gli uccelli di "
                  "una stessa specie: ";
     std::cin >> d >> ds >> s >> a >> c;
-    assert(d >= 0 && d <= 1);
-    assert(ds >= 0 && ds <= 1);
+    assert(d >= 0 && d <= std::sqrt(2));
+    assert(ds >= 0 && ds <= std::sqrt(2));
     assert(s > 0);
     assert(a > 0);
     assert(c > 0);
     std::cout << "Inserire ds2 , s2, che si applicano tra specie diverse: ";
-    int ds2;
-    int s2;
+    double ds2;
+    double s2;
     std::cin >> ds2 >> s2;
     assert(s2 > 0);
-    assert(ds2 >= 0 && ds2 <= 1);
+    assert(ds2 >= 0 && ds2 <= std::sqrt(2));
     simulazione_piano_due_stormi(n, n2, d, ds, s, a, c, ds2, s2);
     break;
   case 'e':
