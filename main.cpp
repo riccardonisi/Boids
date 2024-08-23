@@ -214,13 +214,13 @@ int main()
   std::cout << "Opzioni:\n"
             << "a. Visualizzare sul piano il comportamento di uno stormo\n";
   std::cout << "b. Visualizzare sul piano il comportamento di uno stormo "
-               "usando i parametri consigiati\n";
+               "usando i parametri consigliati\n";
   std::cout << "c. Visualizzare l'andamento di velocità, posizione e distanza "
-               "medie in funzione del tempo con dei graifici\n";
+               "medie in funzione del tempo con dei grafici\n";
   std::cout << "d. Visualizzare sul piano il comportamento di due stormi (di "
                "specie diverse)\n";
   std::cout << "e. Visualizzare sul piano il comportamento di due stormi "
-               "usando i parametri consigiati\n";
+               "usando i parametri consigliati\n";
   char op;
   std::cin >> op;
   switch (op) {
