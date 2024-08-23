@@ -1,5 +1,5 @@
-#ifndef BOIDS2_HPP
-#define BOIDS2_HPP
+#ifndef STATISTICS_HPP
+#define STATISTICS_HPP
 
 #include "boids.hpp"
 #include <cmath>

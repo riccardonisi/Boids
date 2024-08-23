@@ -1,5 +1,5 @@
 /*#include "boids.hpp"
-#include "boids2.hpp"
+#include "statistics.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
@@ -61,7 +61,7 @@ int main()
 */
 
 #include "boids.hpp"
-#include "boids2.hpp"
+#include "statistics.hpp"
 #include <SFML/Graphics.hpp>
 #include <cassert>
 #include <iostream>

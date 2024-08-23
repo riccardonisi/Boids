@@ -48,7 +48,7 @@ class Boid
   Point2D vel_;
 
  public:
-  Boid(Point2D p, Point2D v)
+  explicit Boid(Point2D p, Point2D v)
       : pos_{p}
       , vel_{v}
   {}

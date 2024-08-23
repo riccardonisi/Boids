@@ -1,7 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include "boids.hpp"
-#include "boids2.hpp"
+#include "statistics.hpp"
 
 #include "doctest.h"
 
@@ -128,13 +128,13 @@ TEST_CASE("Testing rules of flight")
     pf::Boid b{p, v};
     prova.push_back(b);
     p = {4.5, 7.8};
-    b = {p, v};
+    b = pf::Boid{p, v};
     prova.push_back(b);
     p = {100, 7.8};
-    b = {p, v};
+    b = pf::Boid{p, v};
     prova.push_back(b);
     p = {12, 11.5};
-    b = {p, v};
+    b = pf::Boid{p, v};
     prova.push_back(b);
     pf::Point2D v3 = separazione(prova, 0, 0.5, 10);
     CHECK(v3.x == doctest::Approx(-1.25));
@@ -148,13 +148,13 @@ TEST_CASE("Testing rules of flight")
     pf::Boid b{p, v};
     prova.push_back(b);
     p = {4.5, 7.8};
-    b = {p, v};
+    b = pf::Boid{p, v};
     prova.push_back(b);
     p = {1, 7.8};
-    b = {p, v};
+    b = pf::Boid{p, v};
     prova.push_back(b);
     p = {12, 11.5};
-    b = {p, v};
+    b = pf::Boid{p, v};
     prova.push_back(b);
     pf::Point2D v3 = separazione(prova, 0, 0.5, 10);
     CHECK(v3.x == doctest::Approx(0));
@@ -198,18 +198,18 @@ TEST_CASE("Testing rules of flight")
   {
     pf::Point2D v{2, 3};
     pf::Point2D p{0, 0};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     v = {0.5, 6.2};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     p = {23, 18};
     v = {23, 18};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     p = {0, 1};
     v = {4.5, 7.8};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     p = {15, 8};
     v = {1.2, 0.8};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     pf::Point2D v4 = allineamento(prova, 1, 3, 17);
     CHECK(v4.x == doctest::Approx(8.25));
     CHECK(v4.y == doctest::Approx(-2.4));
@@ -219,17 +219,17 @@ TEST_CASE("Testing rules of flight")
   {
     pf::Point2D v{2, 3};
     pf::Point2D p{0, 0};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     p = {50, 50};
     v = {0.5, 6.2};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     p = {2, 1};
     v = {23, 18};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     v = {4.5, 7.8};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     v = {1.2, 0.8};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     pf::Point2D v4 = allineamento(prova, 1, 3, 17);
     CHECK(v4.x == doctest::Approx(0));
     CHECK(v4.y == doctest::Approx(0));
@@ -272,13 +272,13 @@ TEST_CASE("Testing rules of flight")
   {
     pf::Point2D p{2, 3};
     pf::Point2D v{0, 0};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     p = {0.5, 6.2};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     p = {12, 11.5};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     p = {4.5, 7.8};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     pf::Point2D v4 = coesione(prova, 0, 0.6, 9);
     CHECK(v4.x == doctest::Approx(0.3));
     CHECK(v4.y == doctest::Approx(2.4));
@@ -288,13 +288,13 @@ TEST_CASE("Testing rules of flight")
   {
     pf::Point2D p{2, 3};
     pf::Point2D v{0, 0};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     p = {0.5, 6.2};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     p = {12, 11.5};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     p = {25, 7.8};
-    prova.push_back({p, v});
+    prova.push_back(pf::Boid{p, v});
     pf::Point2D v4 = coesione(prova, 3, 0.6, 8.5);
     CHECK(v4.x == doctest::Approx(0));
     CHECK(v4.y == doctest::Approx(0));
@@ -452,17 +452,17 @@ TEST_CASE("Testing application of the rules of flight")
     std::vector<pf::Boid> stormo;
     pf::Point2D p{0, 0};
     pf::Point2D v{2, 3};
-    stormo.push_back({p, v});
+    stormo.push_back(pf::Boid{p, v});
     p = {1, 1};
     v = {0.5, 1.2};
-    stormo.push_back({p, v});
+    stormo.push_back(pf::Boid{p, v});
     v = {2.3, 1};
-    stormo.push_back({p, v});
+    stormo.push_back(pf::Boid{p, v});
     p = {2, 1};
     v = {1.5, 2.8};
-    stormo.push_back({p, v});
+    stormo.push_back(pf::Boid{p, v});
     v = {1.2, 0.8};
-    stormo.push_back({p, v});
+    stormo.push_back(pf::Boid{p, v});
     pf::controllo_velocità(stormo, 2);
     CHECK(stormo.size() == 5);
     CHECK(stormo[0].pos().x == 0);
@@ -575,7 +575,7 @@ TEST_CASE("Testing rules of flight with 2 storms")
     prova.push_back(b2);
     p2 = {11, 7.8};
     v2 = {0, 0};
-    b2 = {p2, v2};
+    b2 = pf::Boid{p2, v2};
     prova.push_back(b2);
     pf::Point2D v3 = pf::separazione_altro_stormo(prova, b1, 0.5, 10);
     CHECK(v3.x == doctest::Approx(-1.25));
@@ -609,13 +609,13 @@ TEST_CASE("Testing rules of flight with 2 storms")
     pf::Boid b{p, v};
     prova.push_back(b);
     p = {100, 7.8};
-    b = {p, v};
+    b = pf::Boid{p, v};
     prova.push_back(b);
     p = {12, 11.5};
-    b = {p, v};
+    b = pf::Boid{p, v};
     prova.push_back(b);
     p              = {2, 3};
-    b              = {p, v};
+    b              = pf::Boid{p, v};
     pf::Point2D v3 = separazione_altro_stormo(prova, b, 0.5, 10);
     CHECK(v3.x == doctest::Approx(-1.25));
     CHECK(v3.y == doctest::Approx(-2.4));
@@ -628,13 +628,13 @@ TEST_CASE("Testing rules of flight with 2 storms")
     pf::Boid b{p, v};
     prova.push_back(b);
     p = {1, 7.8};
-    b = {p, v};
+    b = pf::Boid{p, v};
     prova.push_back(b);
     p = {12, 11.5};
-    b = {p, v};
+    b = pf::Boid{p, v};
     prova.push_back(b);
     p              = {20, 18.3};
-    b              = {p, v};
+    b              = pf::Boid{p, v};
     pf::Point2D v3 = separazione_altro_stormo(prova, b, 0.5, 10);
     CHECK(v3.x == doctest::Approx(0));
     CHECK(v3.y == doctest::Approx(0));
@@ -649,8 +649,8 @@ TEST_CASE("Testing rules of flight with 2 storms")
     pf::Boid b3{{5.7, 3}, {1, 4}};
     pf::Boid b4{{1.3, 2.7}, {2.2, -1}};
     std::vector<pf::Boid> stormo{b1, b2, b3, b4};
-    b1 = {{12, 23}, {1, 2}};
-    b2 = {{5.4, 3.1}, {0.2, 1.3}};
+    b1 = pf::Boid{{12, 23}, {1, 2}};
+    b2 = pf::Boid{{5.4, 3.1}, {0.2, 1.3}};
     std::vector<pf::Boid> stormo2{b1, b2};
     double s{0.5};
     double a{1.2};
