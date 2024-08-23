@@ -1,6 +1,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include "boids.hpp"
+#include "Point2D.hpp"
 #include "statistics.hpp"
 
 #include "doctest.h"
@@ -326,9 +327,9 @@ TEST_CASE("Testing generation of boids")
     CHECK(prova.size() == 5);
     CHECK(!(prova[0] == prova[1] && prova[0] == prova[2] && prova[0] == prova[3]
             && prova[0] == prova[4]));
-    CHECK(!(prova[0].pos().x == prova[0].pos().y
-            && prova[0].pos().x == prova[0].vel().x
-            && prova[0].pos().x == prova[0].vel().y));
+    CHECK(!(prova[0].get_pos().x == prova[0].get_pos().y
+            && prova[0].get_pos().x == prova[0].get_vel().x
+            && prova[0].get_pos().x == prova[0].get_vel().y));
   }
 
   SUBCASE("Calling genera_stormo() with 50 boids")
@@ -376,22 +377,22 @@ TEST_CASE("Testing application of the rules of flight")
     double a{1.2};
     double c{0.75};
     pf::applicazione_regole(stormo, d, ds, s, a, c);
-    CHECK(stormo[0].pos().x == doctest::Approx(1));
-    CHECK(stormo[0].pos().y == doctest::Approx(2));
-    CHECK(stormo[0].vel().x == doctest::Approx(-3.4425));
-    CHECK(stormo[0].vel().y == doctest::Approx(-1.9675));
-    CHECK(stormo[1].pos().x == doctest::Approx(0.4));
-    CHECK(stormo[1].pos().y == doctest::Approx(2));
-    CHECK(stormo[1].vel().x == doctest::Approx(4.7825));
-    CHECK(stormo[1].vel().y == doctest::Approx(2.2225));
-    CHECK(stormo[2].pos().x == doctest::Approx(5.7));
-    CHECK(stormo[2].pos().y == doctest::Approx(3));
-    CHECK(stormo[2].vel().x == doctest::Approx(1));
-    CHECK(stormo[2].vel().y == doctest::Approx(4));
-    CHECK(stormo[3].pos().x == doctest::Approx(1.3));
-    CHECK(stormo[3].pos().y == doctest::Approx(2.7));
-    CHECK(stormo[3].vel().x == doctest::Approx(-3.14));
-    CHECK(stormo[3].vel().y == doctest::Approx(1.945));
+    CHECK(stormo[0].get_pos().x == doctest::Approx(1));
+    CHECK(stormo[0].get_pos().y == doctest::Approx(2));
+    CHECK(stormo[0].get_vel().x == doctest::Approx(-3.4425));
+    CHECK(stormo[0].get_vel().y == doctest::Approx(-1.9675));
+    CHECK(stormo[1].get_pos().x == doctest::Approx(0.4));
+    CHECK(stormo[1].get_pos().y == doctest::Approx(2));
+    CHECK(stormo[1].get_vel().x == doctest::Approx(4.7825));
+    CHECK(stormo[1].get_vel().y == doctest::Approx(2.2225));
+    CHECK(stormo[2].get_pos().x == doctest::Approx(5.7));
+    CHECK(stormo[2].get_pos().y == doctest::Approx(3));
+    CHECK(stormo[2].get_vel().x == doctest::Approx(1));
+    CHECK(stormo[2].get_vel().y == doctest::Approx(4));
+    CHECK(stormo[3].get_pos().x == doctest::Approx(1.3));
+    CHECK(stormo[3].get_pos().y == doctest::Approx(2.7));
+    CHECK(stormo[3].get_vel().x == doctest::Approx(-3.14));
+    CHECK(stormo[3].get_vel().y == doctest::Approx(1.945));
   }
 
   SUBCASE("Calling movimento() with 3 boids")
@@ -401,18 +402,18 @@ TEST_CASE("Testing application of the rules of flight")
     pf::Boid b3{{5.7, 3}, {-1, 4}};
     std::vector<pf::Boid> stormo{b1, b2, b3};
     pf::movimento(stormo, 0.5);
-    CHECK(stormo[0].pos().x == doctest::Approx(2.5));
-    CHECK(stormo[0].pos().y == doctest::Approx(4));
-    CHECK(stormo[0].vel().x == doctest::Approx(3));
-    CHECK(stormo[0].vel().y == doctest::Approx(4));
-    CHECK(stormo[1].pos().x == doctest::Approx(0.4));
-    CHECK(stormo[1].pos().y == doctest::Approx(1.6));
-    CHECK(stormo[1].vel().x == doctest::Approx(0));
-    CHECK(stormo[1].vel().y == doctest::Approx(-0.8));
-    CHECK(stormo[2].pos().x == doctest::Approx(5.2));
-    CHECK(stormo[2].pos().y == doctest::Approx(5));
-    CHECK(stormo[2].vel().x == doctest::Approx(-1));
-    CHECK(stormo[2].vel().y == doctest::Approx(4));
+    CHECK(stormo[0].get_pos().x == doctest::Approx(2.5));
+    CHECK(stormo[0].get_pos().y == doctest::Approx(4));
+    CHECK(stormo[0].get_vel().x == doctest::Approx(3));
+    CHECK(stormo[0].get_vel().y == doctest::Approx(4));
+    CHECK(stormo[1].get_pos().x == doctest::Approx(0.4));
+    CHECK(stormo[1].get_pos().y == doctest::Approx(1.6));
+    CHECK(stormo[1].get_vel().x == doctest::Approx(0));
+    CHECK(stormo[1].get_vel().y == doctest::Approx(-0.8));
+    CHECK(stormo[2].get_pos().x == doctest::Approx(5.2));
+    CHECK(stormo[2].get_pos().y == doctest::Approx(5));
+    CHECK(stormo[2].get_vel().x == doctest::Approx(-1));
+    CHECK(stormo[2].get_vel().y == doctest::Approx(4));
   }
 
   SUBCASE("Calling comportamento_bordi() with 5 boids")
@@ -425,26 +426,26 @@ TEST_CASE("Testing application of the rules of flight")
     std::vector<pf::Boid> stormo{b1, b2, b3, b4, b5};
     pf::comportamento_bordi(stormo);
     CHECK(stormo.size() == 5);
-    CHECK(stormo[0].pos().x == 0.2);
-    CHECK(stormo[0].pos().y == 0.5);
-    CHECK(stormo[0].vel().x == 1);
-    CHECK(stormo[0].vel().y == 2);
-    CHECK(stormo[1].pos2().x == 0.3);
-    CHECK(stormo[1].pos().y == 0);
-    CHECK(stormo[1].vel().x == 1);
-    CHECK(stormo[1].vel().y == 2);
-    CHECK(stormo[2].pos().x == 0);
-    CHECK(stormo[2].pos().y == 0.5);
-    CHECK(stormo[2].vel().x == 1);
-    CHECK(stormo[2].vel().y == 2);
-    CHECK(stormo[3].pos().x == 0);
-    CHECK(stormo[3].pos().y == 0);
-    CHECK(stormo[3].vel().x == 1);
-    CHECK(stormo[3].vel().y == 2);
-    CHECK(stormo[4].pos().x == 1);
-    CHECK(stormo[4].pos().y == 1);
-    CHECK(stormo[4].vel().x == 1);
-    CHECK(stormo[4].vel().y == 2);
+    CHECK(stormo[0].get_pos().x == 0.2);
+    CHECK(stormo[0].get_pos().y == 0.5);
+    CHECK(stormo[0].get_vel().x == 1);
+    CHECK(stormo[0].get_vel().y == 2);
+    CHECK(stormo[1].get_pos().x == 0.3);
+    CHECK(stormo[1].get_pos().y == 0);
+    CHECK(stormo[1].get_vel().x == 1);
+    CHECK(stormo[1].get_vel().y == 2);
+    CHECK(stormo[2].get_pos().x == 0);
+    CHECK(stormo[2].get_pos().y == 0.5);
+    CHECK(stormo[2].get_vel().x == 1);
+    CHECK(stormo[2].get_vel().y == 2);
+    CHECK(stormo[3].get_pos().x == 0);
+    CHECK(stormo[3].get_pos().y == 0);
+    CHECK(stormo[3].get_vel().x == 1);
+    CHECK(stormo[3].get_vel().y == 2);
+    CHECK(stormo[4].get_pos().x == 1);
+    CHECK(stormo[4].get_pos().y == 1);
+    CHECK(stormo[4].get_vel().x == 1);
+    CHECK(stormo[4].get_vel().y == 2);
   }
 
   SUBCASE("Calling controllo_velocità() with 5 boids")
@@ -465,26 +466,26 @@ TEST_CASE("Testing application of the rules of flight")
     stormo.push_back(pf::Boid{p, v});
     pf::controllo_velocità(stormo, 2);
     CHECK(stormo.size() == 5);
-    CHECK(stormo[0].pos().x == 0);
-    CHECK(stormo[0].pos().y == 0);
-    CHECK(stormo[0].vel().x == 2);
-    CHECK(stormo[0].vel().y == 2);
-    CHECK(stormo[1].pos().x == 1);
-    CHECK(stormo[1].pos().y == 1);
-    CHECK(stormo[1].vel().x == 0.5);
-    CHECK(stormo[1].vel().y == 1.2);
-    CHECK(stormo[2].pos().x == 1);
-    CHECK(stormo[2].pos().y == 1);
-    CHECK(stormo[2].vel().x == 2);
-    CHECK(stormo[2].vel().y == 1);
-    CHECK(stormo[3].pos().x == 2);
-    CHECK(stormo[3].pos().y == 1);
-    CHECK(stormo[3].vel().x == 1.5);
-    CHECK(stormo[3].vel().y == 2);
-    CHECK(stormo[4].pos().x == 2);
-    CHECK(stormo[4].pos().y == 1);
-    CHECK(stormo[4].vel().x == 1.2);
-    CHECK(stormo[4].vel().y == 0.8);
+    CHECK(stormo[0].get_pos().x == 0);
+    CHECK(stormo[0].get_pos().y == 0);
+    CHECK(stormo[0].get_vel().x == 2);
+    CHECK(stormo[0].get_vel().y == 2);
+    CHECK(stormo[1].get_pos().x == 1);
+    CHECK(stormo[1].get_pos().y == 1);
+    CHECK(stormo[1].get_vel().x == 0.5);
+    CHECK(stormo[1].get_vel().y == 1.2);
+    CHECK(stormo[2].get_pos().x == 1);
+    CHECK(stormo[2].get_pos().y == 1);
+    CHECK(stormo[2].get_vel().x == 2);
+    CHECK(stormo[2].get_vel().y == 1);
+    CHECK(stormo[3].get_pos().x == 2);
+    CHECK(stormo[3].get_pos().y == 1);
+    CHECK(stormo[3].get_vel().x == 1.5);
+    CHECK(stormo[3].get_vel().y == 2);
+    CHECK(stormo[4].get_pos().x == 2);
+    CHECK(stormo[4].get_pos().y == 1);
+    CHECK(stormo[4].get_vel().x == 1.2);
+    CHECK(stormo[4].get_vel().y == 0.8);
   }
 }
 
@@ -656,21 +657,21 @@ TEST_CASE("Testing rules of flight with 2 storms")
     double a{1.2};
     double c{0.75};
     pf::applicazione_regole_due_stormi(stormo, stormo2, d, ds, s, a, c, ds, s);
-    CHECK(stormo[0].pos().x == doctest::Approx(1));
-    CHECK(stormo[0].pos().y == doctest::Approx(2));
-    CHECK(stormo[0].vel().x == doctest::Approx(-3.4425));
-    CHECK(stormo[0].vel().y == doctest::Approx(-1.9675));
-    CHECK(stormo[1].pos().x == doctest::Approx(0.4));
-    CHECK(stormo[1].pos().y == doctest::Approx(2));
-    CHECK(stormo[1].vel().x == doctest::Approx(4.7825));
-    CHECK(stormo[1].vel().y == doctest::Approx(2.2225));
-    CHECK(stormo[2].pos().x == doctest::Approx(5.7));
-    CHECK(stormo[2].pos().y == doctest::Approx(3));
-    CHECK(stormo[2].vel().x == doctest::Approx(1.15));
-    CHECK(stormo[2].vel().y == doctest::Approx(3.95));
-    CHECK(stormo[3].pos().x == doctest::Approx(1.3));
-    CHECK(stormo[3].pos().y == doctest::Approx(2.7));
-    CHECK(stormo[3].vel().x == doctest::Approx(-3.14));
-    CHECK(stormo[3].vel().y == doctest::Approx(1.945));
+    CHECK(stormo[0].get_pos().x == doctest::Approx(1));
+    CHECK(stormo[0].get_pos().y == doctest::Approx(2));
+    CHECK(stormo[0].get_vel().x == doctest::Approx(-3.4425));
+    CHECK(stormo[0].get_vel().y == doctest::Approx(-1.9675));
+    CHECK(stormo[1].get_pos().x == doctest::Approx(0.4));
+    CHECK(stormo[1].get_pos().y == doctest::Approx(2));
+    CHECK(stormo[1].get_vel().x == doctest::Approx(4.7825));
+    CHECK(stormo[1].get_vel().y == doctest::Approx(2.2225));
+    CHECK(stormo[2].get_pos().x == doctest::Approx(5.7));
+    CHECK(stormo[2].get_pos().y == doctest::Approx(3));
+    CHECK(stormo[2].get_vel().x == doctest::Approx(1.15));
+    CHECK(stormo[2].get_vel().y == doctest::Approx(3.95));
+    CHECK(stormo[3].get_pos().x == doctest::Approx(1.3));
+    CHECK(stormo[3].get_pos().y == doctest::Approx(2.7));
+    CHECK(stormo[3].get_vel().x == doctest::Approx(-3.14));
+    CHECK(stormo[3].get_vel().y == doctest::Approx(1.945));
   }
 }

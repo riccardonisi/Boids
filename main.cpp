@@ -60,6 +60,7 @@ int main()
 }
 */
 
+#include "Point2D.hpp"
 #include "boids.hpp"
 #include "statistics.hpp"
 #include <SFML/Graphics.hpp>
@@ -72,6 +73,11 @@ sf::Vector2f realeToPixel(float x, float y, float scaleFactorX,
                           float scaleFactorY)
 {
   return sf::Vector2f(x * scaleFactorX, y * scaleFactorY);
+}
+
+float calculateRotationAngle(float dx, float dy)
+{
+  return std::atan2(dy, dx) * 180.0 / M_PI; // In gradi
 }
 
 void simulazione_piano(int n, double d, double ds, double s, double a, double c)
@@ -101,14 +107,25 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c)
     window.clear(sf::Color::Cyan);
 
     // Disegnare i punti convertiti in pixel
+
     for (pf::Boid const& boid : stormo) {
-      sf::Vector2f pixelPos =
-          realeToPixel(boid.pos().x, boid.pos().y, scaleFactorX, scaleFactorY);
-      sf::CircleShape shape(3);
-      shape.setPointCount(3);
-      shape.setPosition(pixelPos);
-      shape.setFillColor(sf::Color::Black);
-      window.draw(shape);
+      sf::Vector2f pixelPos = realeToPixel(boid.get_pos().x, boid.get_pos().y,
+                                           scaleFactorX, scaleFactorY);
+      sf::ConvexShape triangle;
+      triangle.setPointCount(3);
+      triangle.setPoint(0, sf::Vector2f(0, -5.0)); // Vertice superiore (punta)
+      triangle.setPoint(1,
+                        sf::Vector2f(-3.0, 5.0)); // Punto a sinistra della base
+      triangle.setPoint(2, sf::Vector2f(3.0, 5.0)); // Punto a destra della base
+      triangle.setPosition(pixelPos);
+      triangle.setFillColor(sf::Color::Black);
+      triangle.setOrigin(0, -5.0);
+
+      float targetAngle = calculateRotationAngle(boid.get_vel().norm().x,
+                                                 boid.get_vel().norm().y);
+      triangle.setRotation(targetAngle);
+
+      window.draw(triangle);
     }
 
     pf::movimento(stormo, 0.001);
@@ -118,13 +135,13 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c)
 
     window.display();
   }
-
-  // std::cout << '\n';
-  // for (pf::Boid& b : stormo) {
-  //   std::cout << b.pos().x << ' ' << b.pos().y << '\n';
-  // }
-  // std::cout << '\n';
 }
+
+// std::cout << '\n';
+// for (pf::Boid& b : stormo) {
+//   std::cout << b.pos().x << ' ' << b.pos().y << '\n';
+// }
+// std::cout << '\n';
 
 void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
                                   double a, double c, double ds2, double s2)
@@ -152,8 +169,8 @@ void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
     window.clear(sf::Color::Cyan);
 
     for (pf::Boid const& boid : stormo1) {
-      sf::Vector2f pixelPos =
-          realeToPixel(boid.pos().x, boid.pos().y, scaleFactorX, scaleFactorY);
+      sf::Vector2f pixelPos = realeToPixel(boid.get_pos().x, boid.get_pos().y,
+                                           scaleFactorX, scaleFactorY);
       sf::CircleShape shape(3);
       shape.setPointCount(3);
       shape.setPosition(pixelPos);
@@ -167,8 +184,8 @@ void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
     pf::controllo_velocità(stormo1, 2);
 
     for (pf::Boid const& boid : stormo2) {
-      sf::Vector2f pixelPos =
-          realeToPixel(boid.pos().x, boid.pos().y, scaleFactorX, scaleFactorY);
+      sf::Vector2f pixelPos = realeToPixel(boid.get_pos().x, boid.get_pos().y,
+                                           scaleFactorX, scaleFactorY);
       sf::CircleShape shape(3);
       shape.setPointCount(3);
       shape.setPosition(pixelPos);

@@ -24,15 +24,15 @@ string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " -fsanitize=address,undefined -fno-o
 #   le dipendenze vengono identificate automaticamente
 find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 
-add_executable(sfmlplay main.cpp)
-target_link_libraries(sfmlplay PRIVATE sfml-graphics)
+add_executable(game main.cpp boids.cpp statistics.cpp)
+target_link_libraries(game PRIVATE sfml-graphics)
 
 # se il testing e' abilitato...
 #   per disabilitare il testing, passare -DBUILD_TESTING=OFF a cmake durante la fase di configurazione
 if (BUILD_TESTING)
 
   # aggiungi l'eseguibile boids.t
-  add_executable(boids.t boids.test.cpp)
+  add_executable(boids.t boids.cpp statistics.cpp boids.test.cpp)
   # aggiungi l'eseguibile boids.t alla lista dei test
   add_test(NAME boids.t COMMAND boids.t)
 
