@@ -102,15 +102,15 @@ TEST_CASE("Testing the operators of the struct Point2D")
     pf::Point2D a1{2, 3};
     pf::Point2D b1{-1, 0};
     pf::dot(a1, b1);
-    CHECK(pf::dot(a1,b1)==doctest::Approx(-2));
+    CHECK(pf::dot(a1, b1) == doctest::Approx(-2));
     pf::Point2D a2{0, 3};
     pf::Point2D b2{-1, 0};
     pf::dot(a2, b2);
-    CHECK(pf::dot(a2,b2)==doctest::Approx(0));
+    CHECK(pf::dot(a2, b2) == doctest::Approx(0));
     pf::Point2D a3{-1, -3};
     pf::Point2D b3{-1, -2};
     pf::dot(a3, b3);
-    CHECK(pf::dot(a3,b3)==doctest::Approx(7));
+    CHECK(pf::dot(a3, b3) == doctest::Approx(7));
   }
 }
 
@@ -143,14 +143,14 @@ TEST_CASE("Testing rules of flight")
     pf::Boid b2{p2, v2};
     prova.push_back(b1);
     prova.push_back(b2);
-    pf::Point2D v3 = separazione(prova, 0, 0.5, 10);
+    pf::Point2D v3 = separazione(prova, 0, 0.5, 10, 360);
     CHECK(v3.x == doctest::Approx(-1.25));
     CHECK(v3.y == doctest::Approx(-2.4));
   }
 
   SUBCASE("Calling separazione() with 0 boids")
   {
-    CHECK_THROWS(separazione(prova, 0, 0.5, 1));
+    CHECK_THROWS(separazione(prova, 0, 0.5, 1, 360));
   }
 
   SUBCASE("Calling separazione() with 1 boid")
@@ -159,7 +159,7 @@ TEST_CASE("Testing rules of flight")
     pf::Point2D v1{0, 0};
     pf::Boid b1{p1, v1};
     prova.push_back(b1);
-    CHECK_THROWS(separazione(prova, 0, 0.5, 12));
+    CHECK_THROWS(separazione(prova, 0, 0.5, 12, 360));
   }
 
   SUBCASE("Calling separazione() with 2 near boids, and 2 far boids")
@@ -177,7 +177,7 @@ TEST_CASE("Testing rules of flight")
     p = {12, 11.5};
     b = pf::Boid{p, v};
     prova.push_back(b);
-    pf::Point2D v3 = separazione(prova, 0, 0.5, 10);
+    pf::Point2D v3 = separazione(prova, 0, 0.5, 10, 360);
     CHECK(v3.x == doctest::Approx(-1.25));
     CHECK(v3.y == doctest::Approx(-2.4));
   }
@@ -197,7 +197,7 @@ TEST_CASE("Testing rules of flight")
     p = {12, 11.5};
     b = pf::Boid{p, v};
     prova.push_back(b);
-    pf::Point2D v3 = separazione(prova, 0, 0.5, 10);
+    pf::Point2D v3 = separazione(prova, 0, 0.5, 10, 360);
     CHECK(v3.x == doctest::Approx(0));
     CHECK(v3.y == doctest::Approx(0));
   }
@@ -216,14 +216,14 @@ TEST_CASE("Testing rules of flight")
     prova.push_back(b1);
     prova.push_back(b2);
     prova.push_back(b3);
-    pf::Point2D v4 = allineamento(prova, 1, 3, 10);
+    pf::Point2D v4 = allineamento(prova, 1, 3, 10, 360);
     CHECK(v4.x == doctest::Approx(8.25));
     CHECK(v4.y == doctest::Approx(-2.4));
   }
 
   SUBCASE("Calling allineamento() with 0 boids")
   {
-    CHECK_THROWS(allineamento(prova, 0, 2, 10));
+    CHECK_THROWS(allineamento(prova, 0, 2, 10, 360));
   }
 
   SUBCASE("Calling allineamento() with 1 boid")
@@ -232,7 +232,7 @@ TEST_CASE("Testing rules of flight")
     pf::Point2D p1{0, 0};
     pf::Boid b1{p1, v1};
     prova.push_back(b1);
-    CHECK_THROWS(allineamento(prova, 0, 2, 20));
+    CHECK_THROWS(allineamento(prova, 0, 2, 20, 360));
   }
 
   SUBCASE("Calling allineamento() with 3 near boids and 2 far boids")
@@ -251,7 +251,7 @@ TEST_CASE("Testing rules of flight")
     p = {15, 8};
     v = {1.2, 0.8};
     prova.push_back(pf::Boid{p, v});
-    pf::Point2D v4 = allineamento(prova, 1, 3, 17);
+    pf::Point2D v4 = allineamento(prova, 1, 3, 17, 360);
     CHECK(v4.x == doctest::Approx(8.25));
     CHECK(v4.y == doctest::Approx(-2.4));
   }
@@ -271,7 +271,7 @@ TEST_CASE("Testing rules of flight")
     prova.push_back(pf::Boid{p, v});
     v = {1.2, 0.8};
     prova.push_back(pf::Boid{p, v});
-    pf::Point2D v4 = allineamento(prova, 1, 3, 17);
+    pf::Point2D v4 = allineamento(prova, 1, 3, 17, 360);
     CHECK(v4.x == doctest::Approx(0));
     CHECK(v4.y == doctest::Approx(0));
   }
@@ -290,14 +290,14 @@ TEST_CASE("Testing rules of flight")
     prova.push_back(b1);
     prova.push_back(b2);
     prova.push_back(b3);
-    pf::Point2D v4 = coesione(prova, 0, 0.6, 11);
+    pf::Point2D v4 = coesione(prova, 0, 0.6, 11, 360);
     CHECK(v4.x == doctest::Approx(0.3));
     CHECK(v4.y == doctest::Approx(2.4));
   }
 
   SUBCASE("Calling coesione() with 0 boids")
   {
-    CHECK_THROWS(coesione(prova, 0, 0.2, 2));
+    CHECK_THROWS(coesione(prova, 0, 0.2, 2, 360));
   }
 
   SUBCASE("Calling coesione() with 1 boid")
@@ -306,7 +306,7 @@ TEST_CASE("Testing rules of flight")
     pf::Point2D v1{0, 0};
     pf::Boid b1{p1, v1};
     prova.push_back(b1);
-    CHECK_THROWS(coesione(prova, 0, 2, 10));
+    CHECK_THROWS(coesione(prova, 0, 2, 10, 360));
   }
 
   SUBCASE("Calling coesione() with 3 near boids, and 1 far boid")
@@ -320,7 +320,7 @@ TEST_CASE("Testing rules of flight")
     prova.push_back(pf::Boid{p, v});
     p = {4.5, 7.8};
     prova.push_back(pf::Boid{p, v});
-    pf::Point2D v4 = coesione(prova, 0, 0.6, 9);
+    pf::Point2D v4 = coesione(prova, 0, 0.6, 9, 360);
     CHECK(v4.x == doctest::Approx(0.3));
     CHECK(v4.y == doctest::Approx(2.4));
   }
@@ -336,7 +336,7 @@ TEST_CASE("Testing rules of flight")
     prova.push_back(pf::Boid{p, v});
     p = {25, 7.8};
     prova.push_back(pf::Boid{p, v});
-    pf::Point2D v4 = coesione(prova, 3, 0.6, 8.5);
+    pf::Point2D v4 = coesione(prova, 3, 0.6, 8.5, 360);
     CHECK(v4.x == doctest::Approx(0));
     CHECK(v4.y == doctest::Approx(0));
   }
@@ -416,7 +416,7 @@ TEST_CASE("Testing application of the rules of flight")
     double s{0.5};
     double a{1.2};
     double c{0.75};
-    pf::applicazione_regole(stormo, d, ds, s, a, c);
+    pf::applicazione_regole(stormo, d, ds, s, a, c, 360);
     CHECK(stormo[0].get_pos().x == doctest::Approx(1));
     CHECK(stormo[0].get_pos().y == doctest::Approx(2));
     CHECK(stormo[0].get_vel().x == doctest::Approx(-3.4425));

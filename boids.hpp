@@ -22,13 +22,12 @@ class Boid
       , vel_{v}
   {}
   const Point2D& get_pos() const;
-  
+
   const Point2D& get_vel() const;
-  
+
   void set_pos(Point2D p);
-  
+
   void set_vel(Point2D v);
-  
 };
 
 double dot(Point2D const& a, Point2D const& b);
@@ -37,21 +36,16 @@ bool operator==(Boid const& a, Boid const& b);
 
 bool campo_visivo(Boid const& a, Boid const& b, double angolo);
 
-
 Point2D separazione(std::vector<Boid> const& stormo, unsigned long int i,
-                    double s, double ds);
-
+                    double s, double ds, double angolo);
 
 Point2D allineamento(std::vector<Boid> const& stormo, unsigned long int i,
-                     double a, double d);
-
+                     double a, double d, double angolo);
 
 Point2D coesione(std::vector<Boid> const& stormo, unsigned long int i, double c,
-                 double d);
-
+                 double d, double angolo);
 
 std::vector<Boid> genera_stormo(double n);
-
 
 /*std::vector<Boid> boid_vicini(std::vector<Boid> const& stormo,
                               unsigned long int i, double d)
@@ -85,18 +79,20 @@ void movimento(std::vector<Boid>& stormo, double t);
 }*/
 
 void applicazione_regole(std::vector<Boid>& stormo, double d, double ds,
-                         double s, double a, double c);
+                         double s, double a, double c, double angolo);
 
 void comportamento_bordi(std::vector<Boid>& stormo);
 
 void controllo_velocità(std::vector<Boid>& stormo, double v);
 
 Point2D separazione_altro_stormo(std::vector<Boid> const& stormo,
-                                 Boid const& uccello, double s, double ds);
+                                 Boid const& uccello, double s, double ds,
+                                 double angolo);
 
 void applicazione_regole_due_stormi(std::vector<Boid>& stormo,
                                     std::vector<Boid> const& stormo_altro,
                                     double d, double ds, double s, double a,
-                                    double c, double ds2, double s2);
+                                    double c, double ds2, double s2,
+                                    double angolo);
 } // namespace pf
 #endif

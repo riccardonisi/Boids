@@ -80,13 +80,15 @@ float calculateRotationAngle(float dx, float dy)
   return std::atan2(dy, dx) * 180.0 / M_PI; // In gradi
 }
 
-void simulazione_piano(int n, double d, double ds, double s, double a, double c)
+void simulazione_piano(int n, double d, double ds, double s, double a, double c,
+                       double angolo)
 {
   constexpr int pixelx = 1000;
   constexpr int pixely = 600;
   sf::RenderWindow window(
       sf::VideoMode(pixelx, pixely),
       "Simulazione del comportamento di uno stormo, di Nisi, Rosini, Seren");
+  window.setPosition(sf::Vector2i(50, 70));
   constexpr int frame_rate{60};
   window.setFramerateLimit(frame_rate);
 
@@ -114,7 +116,7 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c)
       }
     }
 
-    window.clear(sf::Color::Cyan);
+    window.clear(sf::Color(0, 160, 200, 200));
     window.draw(sprite);
 
     // Disegnare i punti convertiti in pixel
@@ -131,8 +133,8 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c)
       triangle.setFillColor(sf::Color::Black);
       triangle.setOrigin(0, -5.0);
 
-      float targetAngle = calculateRotationAngle(normalizzazione(boid.get_vel()).x,
-                                                 normalizzazione(boid.get_vel()).y);
+      float targetAngle = calculateRotationAngle(
+          normalizzazione(boid.get_vel()).x, normalizzazione(boid.get_vel()).y);
       triangle.setRotation(targetAngle + 90);
 
       window.draw(triangle);
@@ -140,18 +142,12 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c)
 
     pf::movimento(stormo, 0.001);
     pf::comportamento_bordi(stormo);
-    pf::applicazione_regole(stormo, d, ds, s, a, c);
+    pf::applicazione_regole(stormo, d, ds, s, a, c, angolo);
     pf::controllo_velocità(stormo, 2);
 
     window.display();
   }
 }
-
-// std::cout << '\n';
-// for (pf::Boid& b : stormo) {
-//   std::cout << b.pos().x << ' ' << b.pos().y << '\n';
-// }
-// std::cout << '\n';
 
 void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
                                   double a, double c, double ds2, double s2)
@@ -190,7 +186,7 @@ void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
     pf::movimento(stormo1, 0.001);
     pf::comportamento_bordi(stormo1);
     pf::applicazione_regole_due_stormi(stormo1, stormo2, d, ds, s, a, c, ds2,
-                                       s2);
+                                       s2, 360);
     pf::controllo_velocità(stormo1, 2);
 
     for (pf::Boid const& boid : stormo2) {
@@ -205,7 +201,7 @@ void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
     pf::movimento(stormo2, 0.001);
     pf::comportamento_bordi(stormo2);
     pf::applicazione_regole_due_stormi(stormo2, stormo1, d, ds, s, a, c, ds2,
-                                       s2);
+                                       s2, 360);
     pf::controllo_velocità(stormo2, 3.0);
 
     window.display();
@@ -251,10 +247,14 @@ int main()
     assert(s > 0);
     assert(a > 0);
     assert(c > 0);
-    simulazione_piano(n, d, ds, s, a, c);
+    std::cout << "Inserire l'angolo di visuale (in gradi): ";
+    double angolo;
+    std::cin >> angolo;
+    assert(angolo >= 0 && d <= 360);
+    simulazione_piano(n, d, ds, s, a, c, angolo);
     break;
   case 'b':
-    simulazione_piano(300, 0.02, 0.005, 0.05, 0.15, 0.05);
+    simulazione_piano(300, 0.02, 0.005, 0.05, 0.15, 0.05, 150.0);
     break;
   case 'c':
     std::cout << "Inserire il numero di uccelli: ";
