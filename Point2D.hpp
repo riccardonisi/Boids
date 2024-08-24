@@ -10,15 +10,19 @@ struct Point2D
   double y;
 };
 
-inline double lunghezza(Point2D const& a) 
+inline double lunghezza(Point2D const& a)
 {
   return std::sqrt(a.x * a.x + a.y * a.y);
 }
 
-inline Point2D normalizzazione(Point2D const& a) 
+inline Point2D normalizzazione(Point2D const& a)
 {
   double len = lunghezza(a);
-  return {a.x / len, a.y / len};
+  if (len == 0) {
+    return a;
+  } else {
+    return {a.x / len, a.y / len};
+  }
 }
 
 inline double dot(Point2D const& a, Point2D const& b)
