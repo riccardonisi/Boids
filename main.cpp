@@ -82,8 +82,10 @@ float calculateRotationAngle(float dx, float dy)
 
 void simulazione_piano(int n, double d, double ds, double s, double a, double c)
 {
+  constexpr int pixelx = 1000;
+  constexpr int pixely = 600;
   sf::RenderWindow window(
-      sf::VideoMode(1000, 600),
+      sf::VideoMode(pixelx, pixely),
       "Simulazione del comportamento di uno stormo, di Nisi, Rosini, Seren");
   constexpr int frame_rate{60};
   window.setFramerateLimit(frame_rate);
@@ -92,8 +94,16 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c)
   std::vector<pf::Boid> stormo = pf::genera_stormo(n);
 
   // Fattori di scala per la conversione
-  float scaleFactorX = 1000.0f / 1.0f;
-  float scaleFactorY = 600.0f / 1.0f;
+  float scaleFactorX = static_cast<float>(pixelx) / 1.0f;
+  float scaleFactorY = static_cast<float>(pixely) / 1.0f;
+
+  // crea una texture (e poi una sprite) con lo sfondo
+  sf::Texture texture;
+  if (!texture.loadFromFile("sfondo.png")) {
+    throw std::runtime_error{"Impossibile caricare l'immagine di sfondo"};
+  }
+  sf::Sprite sprite;
+  sprite.setTexture(texture);
 
   // Eseguire il loop della finestra finché è aperta
   while (window.isOpen()) {
@@ -105,9 +115,9 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c)
     }
 
     window.clear(sf::Color::Cyan);
+    window.draw(sprite);
 
     // Disegnare i punti convertiti in pixel
-
     for (pf::Boid const& boid : stormo) {
       sf::Vector2f pixelPos = realeToPixel(boid.get_pos().x, boid.get_pos().y,
                                            scaleFactorX, scaleFactorY);
@@ -123,7 +133,7 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c)
 
       float targetAngle = calculateRotationAngle(boid.get_vel().norm().x,
                                                  boid.get_vel().norm().y);
-      triangle.setRotation(targetAngle);
+      triangle.setRotation(targetAngle + 90);
 
       window.draw(triangle);
     }
@@ -244,7 +254,7 @@ int main()
     simulazione_piano(n, d, ds, s, a, c);
     break;
   case 'b':
-    simulazione_piano(200, 0.02, 0.005, 0.05, 0.15, 0.05);
+    simulazione_piano(50, 0.02, 0.005, 0.05, 0.15, 0.05);
     break;
   case 'c':
     std::cout << "Inserire il numero di uccelli: ";
