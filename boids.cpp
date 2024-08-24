@@ -30,8 +30,8 @@ bool operator==(Boid const& a, Boid const& b)
 
 bool campo_visivo(Boid const& a, Boid const& b, double angolo)
 {
- Point2D direzione = a.get_vel().norm();
- Point2D dir_verso_altro = (b.get_pos() - a.get_pos()).norm();
+ Point2D direzione = normalizzazione(a.get_vel());
+ Point2D dir_verso_altro = normalizzazione(b.get_pos() - a.get_pos());
  double dotProduct = dot(direzione, dir_verso_altro);
  double angle = std::acos(dotProduct) * 180.0 / M_PI;
  return angle <= angolo / 2.0;
@@ -47,7 +47,7 @@ Point2D separazione(std::vector<Boid> const& stormo, unsigned long int i,
   }
   Point2D sum{0, 0};
   for (unsigned long int j{0}; j != n; ++j) {
-    if (distanza(stormo[j].get_pos(), stormo[i].get_pos()) < ds && campo_visivo(stormo[j], stormo[i], 120.0) == true) {
+    if (distanza(stormo[j].get_pos(), stormo[i].get_pos()) < ds && campo_visivo(stormo[j], stormo[i], 150.0) == true) {
       Point2D const& p = stormo[j].get_pos();
       sum              = sum + p - stormo[i].get_pos();
     }
@@ -65,7 +65,7 @@ Point2D allineamento(std::vector<Boid> const& stormo, unsigned long int i,
   }
   Point2D sum{0, 0};
   for (unsigned long int j{0}; j != stormo.size(); ++j) {
-    if (j != i && distanza(stormo[j].get_pos(), stormo[i].get_pos()) < d && campo_visivo(stormo[j], stormo[i], 120.0) == true) {
+    if (j != i && distanza(stormo[j].get_pos(), stormo[i].get_pos()) < d && campo_visivo(stormo[j], stormo[i], 150.0) == true) {
       ++n;
       Point2D const& v = stormo[j].get_vel();
       sum              = sum + v;
@@ -88,7 +88,7 @@ Point2D coesione(std::vector<Boid> const& stormo, unsigned long int i, double c,
   }
   Point2D sum{0, 0};
   for (unsigned long int j{0}; j != stormo.size(); ++j) {
-    if (j != i && distanza(stormo[j].get_pos(), stormo[i].get_pos()) < d && campo_visivo(stormo[j], stormo[i], 120.0) == true) {
+    if (j != i && distanza(stormo[j].get_pos(), stormo[i].get_pos()) < d && campo_visivo(stormo[j], stormo[i], 150.0) == true) {
       ++n;
       Point2D const& p = stormo[j].get_pos();
       sum              = sum + p;
@@ -176,6 +176,13 @@ void controllo_velocità(std::vector<Boid>& stormo, double v)
     }
     if (stormo[i].get_vel().y < -v) {
       stormo[i].set_vel({stormo[i].get_vel().x, -v});
+    }
+
+    if (abs(stormo[i].get_vel().x) < 0.3) {
+      stormo[i].set_vel({0.3, stormo[i].get_vel().y});
+    }
+    if (abs(stormo[i].get_vel().y) < 0.3) {
+      stormo[i].set_vel({stormo[i].get_vel().y, 0.3});
     }
   }
 }

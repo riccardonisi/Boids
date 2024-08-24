@@ -72,6 +72,46 @@ TEST_CASE("Testing the operators of the struct Point2D")
     CHECK(pf::distanza(b, c) == doctest::Approx(94.4475));
     CHECK(pf::distanza(a, c) == doctest::Approx(96.5091));
   }
+  SUBCASE("Testing lunghezza() function")
+  {
+    pf::Point2D a{1, 2};
+    pf::lunghezza(a);
+    CHECK(pf::lunghezza(a) == doctest::Approx(2.23607));
+    pf::Point2D b{0, 0};
+    pf::lunghezza(b);
+    CHECK(pf::lunghezza(b) == doctest::Approx(0));
+    pf::Point2D c{-2, -5};
+    pf::lunghezza(c);
+    CHECK(pf::lunghezza(c) == doctest::Approx(5.38516));
+  }
+  SUBCASE("Testing normalizzazione() function")
+  {
+    pf::Point2D a{2, 3};
+    pf::normalizzazione(a);
+    CHECK(pf::normalizzazione(a).x == doctest::Approx(0.55470));
+    CHECK(pf::normalizzazione(a).y == doctest::Approx(0.83205));
+    CHECK(pf::lunghezza(normalizzazione(a)) == doctest::Approx(0.99999));
+    pf::Point2D b{-3, -1};
+    pf::normalizzazione(b);
+    CHECK(pf::normalizzazione(b).x == doctest::Approx(-0.94868));
+    CHECK(pf::normalizzazione(b).y == doctest::Approx(-0.31623));
+    CHECK(pf::lunghezza(normalizzazione(b)) == doctest::Approx(0.99999));
+  }
+  SUBCASE("Testing dot() function")
+  {
+    pf::Point2D a1{2, 3};
+    pf::Point2D b1{-1, 0};
+    pf::dot(a1, b1);
+    CHECK(pf::dot(a1,b1)==doctest::Approx(-2));
+    pf::Point2D a2{0, 3};
+    pf::Point2D b2{-1, 0};
+    pf::dot(a2, b2);
+    CHECK(pf::dot(a2,b2)==doctest::Approx(0));
+    pf::Point2D a3{-1, -3};
+    pf::Point2D b3{-1, -2};
+    pf::dot(a3, b3);
+    CHECK(pf::dot(a3,b3)==doctest::Approx(7));
+  }
 }
 
 TEST_CASE("Testing the operators of the class Boid")
@@ -486,6 +526,24 @@ TEST_CASE("Testing application of the rules of flight")
     CHECK(stormo[4].get_pos().y == 1);
     CHECK(stormo[4].get_vel().x == 1.2);
     CHECK(stormo[4].get_vel().y == 0.8);
+  }
+
+  SUBCASE("Calling campo_visivo()")
+  {
+    pf::Boid a1{{0, 0}, {1, 1}};
+    pf::Boid b1{{1, 1}, {0, 0}};
+    double angolo1 = 120.0;
+    double angolo2 = 60.0;
+    CHECK(campo_visivo(a1, b1, angolo1) == true);
+    CHECK(campo_visivo(a1, b1, angolo2) == false);
+    pf::Boid a2{{0, 0}, {1, 1}};
+    pf::Boid b2{{0, 0}, {2, -1}};
+    CHECK(campo_visivo(a2, b2, angolo1) == true);
+    CHECK(campo_visivo(a2, b2, angolo2) == true);
+    pf::Boid a3{{1, 1}, {1, 1}};
+    pf::Boid b3{{-1, 2}, {1, 3}};
+    CHECK(campo_visivo(a3, b3, angolo1) == false);
+    CHECK(campo_visivo(a3, b3, angolo2) == false);
   }
 }
 

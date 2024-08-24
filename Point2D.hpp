@@ -8,23 +8,23 @@ struct Point2D
 {
   double x;
   double y;
+};
 
-  inline double lunghezza() const
-  {
-    return std::sqrt(x * x + y * y);
-  }
+inline double lunghezza(Point2D const& a) 
+{
+  return std::sqrt(a.x * a.x + a.y * a.y);
+}
 
-  inline Point2D norm() const
-  {
-    double len = lunghezza();
-    return {x / len, y / len};
-  }
-  };
+inline Point2D normalizzazione(Point2D const& a) 
+{
+  double len = lunghezza(a);
+  return {a.x / len, a.y / len};
+}
 
-
-inline double dot(Point2D const& a, Point2D const& b){
-    return a.x * b.x + a.y * b.y;}
-
+inline double dot(Point2D const& a, Point2D const& b)
+{
+  return a.x * b.x + a.y * b.y;
+}
 
 inline Point2D operator+(Point2D const& a, Point2D const& b)
 {

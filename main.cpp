@@ -131,8 +131,8 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c)
       triangle.setFillColor(sf::Color::Black);
       triangle.setOrigin(0, -5.0);
 
-      float targetAngle = calculateRotationAngle(boid.get_vel().norm().x,
-                                                 boid.get_vel().norm().y);
+      float targetAngle = calculateRotationAngle(normalizzazione(boid.get_vel()).x,
+                                                 normalizzazione(boid.get_vel()).y);
       triangle.setRotation(targetAngle + 90);
 
       window.draw(triangle);
@@ -206,7 +206,7 @@ void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
     pf::comportamento_bordi(stormo2);
     pf::applicazione_regole_due_stormi(stormo2, stormo1, d, ds, s, a, c, ds2,
                                        s2);
-    pf::controllo_velocità(stormo2, 2);
+    pf::controllo_velocità(stormo2, 3.0);
 
     window.display();
   }
@@ -254,7 +254,7 @@ int main()
     simulazione_piano(n, d, ds, s, a, c);
     break;
   case 'b':
-    simulazione_piano(50, 0.02, 0.005, 0.05, 0.15, 0.05);
+    simulazione_piano(300, 0.02, 0.005, 0.05, 0.15, 0.05);
     break;
   case 'c':
     std::cout << "Inserire il numero di uccelli: ";
