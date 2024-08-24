@@ -2,9 +2,6 @@
 #define STATISTICS_HPP
 
 #include "boids.hpp"
-#include <cmath>
-#include <iostream>
-#include <vector>
 
 namespace pf {
 

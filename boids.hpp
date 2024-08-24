@@ -2,11 +2,6 @@
 #define BOIDS_HPP
 
 #include "Point2D.hpp"
-#include <cassert>
-#include <iostream>
-#include <numeric>
-#include <random>
-#include <stdexcept>
 #include <vector>
 
 namespace pf {
