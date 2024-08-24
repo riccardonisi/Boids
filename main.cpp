@@ -1,4 +1,4 @@
-/*#include "boids.hpp"
+/*
 #include "statistics.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -60,8 +60,6 @@ int main()
 }
 */
 
-#include "Point2D.hpp"
-#include "boids.hpp"
 #include "statistics.hpp"
 #include <SFML/Graphics.hpp>
 #include <cassert>
@@ -150,19 +148,30 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c,
 }
 
 void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
-                                  double a, double c, double ds2, double s2)
+                                  double a, double c, double ds2, double s2,
+                                  double angolo)
 {
+  constexpr int pixelx = 1000;
+  constexpr int pixely = 600;
   sf::RenderWindow window(
-      sf::VideoMode(1000, 600),
+      sf::VideoMode(pixelx, pixely),
       "Simulazione del comportamento di uno stormo, di Nisi, Rosini, Seren");
+  window.setPosition(sf::Vector2i(50, 70));
   constexpr int frame_rate{60};
   window.setFramerateLimit(frame_rate);
 
   std::vector<pf::Boid> stormo1 = pf::genera_stormo(n1);
   std::vector<pf::Boid> stormo2 = pf::genera_stormo(n2);
 
-  float scaleFactorX = 1000.0f / 1.0f;
-  float scaleFactorY = 600.0f / 1.0f;
+  float scaleFactorX = static_cast<float>(pixelx) / 1.0f;
+  float scaleFactorY = static_cast<float>(pixely) / 1.0f;
+
+  sf::Texture texture;
+  if (!texture.loadFromFile("sfondo.png")) {
+    throw std::runtime_error{"Impossibile caricare l'immagine di sfondo"};
+  }
+  sf::Sprite sprite;
+  sprite.setTexture(texture);
 
   while (window.isOpen()) {
     sf::Event event;
@@ -172,37 +181,52 @@ void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
       }
     }
 
-    window.clear(sf::Color::Cyan);
+    window.clear(sf::Color(0, 160, 200, 200));
+    window.draw(sprite);
 
     for (pf::Boid const& boid : stormo1) {
       sf::Vector2f pixelPos = realeToPixel(boid.get_pos().x, boid.get_pos().y,
                                            scaleFactorX, scaleFactorY);
-      sf::CircleShape shape(3);
-      shape.setPointCount(3);
-      shape.setPosition(pixelPos);
-      shape.setFillColor(sf::Color::Black);
-      window.draw(shape);
+      sf::ConvexShape triangle;
+      triangle.setPointCount(3);
+      triangle.setPoint(0, sf::Vector2f(0, -5.0));
+      triangle.setPoint(1, sf::Vector2f(-3.0, 5.0));
+      triangle.setPoint(2, sf::Vector2f(3.0, 5.0));
+      triangle.setPosition(pixelPos);
+      triangle.setFillColor(sf::Color::Black);
+      triangle.setOrigin(0, -5.0);
+      float targetAngle = calculateRotationAngle(
+          normalizzazione(boid.get_vel()).x, normalizzazione(boid.get_vel()).y);
+      triangle.setRotation(targetAngle + 90);
+      window.draw(triangle);
     }
     pf::movimento(stormo1, 0.001);
     pf::comportamento_bordi(stormo1);
     pf::applicazione_regole_due_stormi(stormo1, stormo2, d, ds, s, a, c, ds2,
-                                       s2, 360);
-    pf::controllo_velocità(stormo1, 2);
+                                       s2, angolo);
+    pf::controllo_velocità(stormo1, 2.0);
 
     for (pf::Boid const& boid : stormo2) {
       sf::Vector2f pixelPos = realeToPixel(boid.get_pos().x, boid.get_pos().y,
                                            scaleFactorX, scaleFactorY);
-      sf::CircleShape shape(3);
-      shape.setPointCount(3);
-      shape.setPosition(pixelPos);
-      shape.setFillColor(sf::Color::Red);
-      window.draw(shape);
+      sf::ConvexShape triangle;
+      triangle.setPointCount(3);
+      triangle.setPoint(0, sf::Vector2f(0, -5.0));
+      triangle.setPoint(1, sf::Vector2f(-3.0, 5.0));
+      triangle.setPoint(2, sf::Vector2f(3.0, 5.0));
+      triangle.setPosition(pixelPos);
+      triangle.setFillColor(sf::Color::Red);
+      triangle.setOrigin(0, -5.0);
+      float targetAngle = calculateRotationAngle(
+          normalizzazione(boid.get_vel()).x, normalizzazione(boid.get_vel()).y);
+      triangle.setRotation(targetAngle + 90);
+      window.draw(triangle);
     }
     pf::movimento(stormo2, 0.001);
     pf::comportamento_bordi(stormo2);
     pf::applicazione_regole_due_stormi(stormo2, stormo1, d, ds, s, a, c, ds2,
-                                       s2, 360);
-    pf::controllo_velocità(stormo2, 3.0);
+                                       s2, angolo);
+    pf::controllo_velocità(stormo2, 2.0);
 
     window.display();
   }
@@ -254,7 +278,7 @@ int main()
     simulazione_piano(n, d, ds, s, a, c, angolo);
     break;
   case 'b':
-    simulazione_piano(300, 0.02, 0.005, 0.05, 0.15, 0.05, 150.0);
+    simulazione_piano(200, 0.02, 0.005, 0.05, 0.15, 0.05, 150.0);
     break;
   case 'c':
     std::cout << "Inserire il numero di uccelli: ";
@@ -293,11 +317,14 @@ int main()
     std::cin >> ds2 >> s2;
     assert(s2 > 0);
     assert(ds2 >= 0 && ds2 <= std::sqrt(2));
-    simulazione_piano_due_stormi(n, n2, d, ds, s, a, c, ds2, s2);
+    std::cout << "Inserire l'angolo di visuale (in gradi): ";
+    std::cin >> angolo;
+    assert(angolo >= 0 && d <= 360);
+    simulazione_piano_due_stormi(n, n2, d, ds, s, a, c, ds2, s2, angolo);
     break;
   case 'e':
     simulazione_piano_due_stormi(100, 100, 0.03, 0.0025, 0.75, 0.5, 0.5, 0.02,
-                                 0.95);
+                                 0.95, 360.0);
     break;
   default:
     std::cout << "Carattere non valido";
