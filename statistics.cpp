@@ -1,71 +1,71 @@
 #include "statistics.hpp"
 
 namespace pf {
-double mean_velocity(std::vector<Boid> const& stormo)
+float mean_velocity(std::vector<Boid> const& stormo)
 {
-  double sum{0};
+  float sum{0};
   for (unsigned long int i{0}; i != stormo.size(); ++i) {
     sum += distanza(stormo[i].get_vel(), {0, 0});
   }
-  return sum / static_cast<double>(stormo.size());
+  return sum / (stormo.size());
 }
 
-double mean_position(std::vector<Boid> const& stormo)
+float mean_position(std::vector<Boid> const& stormo)
 {
-  double sum{0};
+  float sum{0};
   for (unsigned long int i{0}; i != stormo.size(); ++i) {
     sum += distanza(stormo[i].get_pos(), {0, 0});
   }
-  return sum / static_cast<double>(stormo.size());
+  return sum / (stormo.size());
 }
 
-double standdev_velocity(std::vector<Boid> const& stormo)
+float standdev_velocity(std::vector<Boid> const& stormo)
 {
-  double sum{0};
+  float sum{0};
   for (unsigned long int i{0}; i != stormo.size(); ++i) {
     sum +=
-        pow((distanza(stormo[i].get_vel(), {0, 0}) - mean_velocity(stormo)), 2);
+        powf((distanza(stormo[i].get_vel(), {0, 0}) - mean_velocity(stormo)), 2);
   }
-  return std::sqrt(sum / static_cast<double>(stormo.size() - 1));
+  return std::sqrtf(sum / (stormo.size() - 1));
 }
 
-double standdev_position(std::vector<Boid> const& stormo)
+float standdev_position(std::vector<Boid> const& stormo)
 {
-  double sum{0};
+  float sum{0};
   for (unsigned long int i{0}; i != stormo.size(); ++i) {
     sum +=
-        pow((distanza(stormo[i].get_pos(), {0, 0}) - mean_position(stormo)), 2);
+        powf((distanza(stormo[i].get_pos(), {0, 0}) - mean_position(stormo)), 2);
   }
-  return std::sqrt(sum / static_cast<double>(stormo.size() - 1));
+  return std::sqrtf(sum / (stormo.size() - 1));
 }
 
-double mean_distance(std::vector<Boid> const& stormo)
+float mean_distance(std::vector<Boid> const& stormo)
 {
-  double sum{0};
+  float sum{0};
   for (unsigned long int i{0}; i != stormo.size(); ++i) {
     for (unsigned long int j{0}; j != i; ++j) {
       sum += distanza(stormo[i].get_pos(), stormo[j].get_pos());
     }
   }
-  return 2.0 * sum
-       / (static_cast<double>(stormo.size())
-          * (static_cast<double>(stormo.size()) - 1));
+  return 2.0f * sum
+       / (static_cast<float>(stormo.size())
+          * (static_cast<float>(stormo.size()) - 1));
 }
 
-double standdev_distance(std::vector<Boid> const& stormo)
+float standdev_distance(std::vector<Boid> const& stormo)
 {
-  double sum{0};
+  float sum{0};
   for (unsigned long int i{0}; i != stormo.size(); ++i) {
     for (unsigned long int j{0}; j != i; ++j) {
-      sum += pow((distanza(stormo[i].get_pos(), stormo[j].get_pos())
+      sum += powf((distanza(stormo[i].get_pos(), stormo[j].get_pos())
                   - mean_distance(stormo)),
                  2);
     }
   }
-  return std::sqrt(sum
-                   / ((static_cast<double>(stormo.size())
-                       * (static_cast<double>(stormo.size()) - 1))
-                          / 2.0
-                      - 1.0));
+  return std::sqrtf(sum
+                   / ((static_cast<float>(stormo.size())
+                       * (static_cast<float>(stormo.size()) - 1))
+                          / 2.0f
+                      - 1.0f));
 }
 } // namespace pf

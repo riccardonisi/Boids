@@ -25,25 +25,25 @@ class Boid
   void set_vel(Point2D v);
 };
 
-double dot(Point2D const& a, Point2D const& b);
+float dot(Point2D const& a, Point2D const& b);
 
 bool operator==(Boid const& a, Boid const& b);
 
-bool campo_visivo(Boid const& a, Boid const& b, double angolo);
+bool campo_visivo(Boid const& a, Boid const& b, float angolo);
 
 Point2D separazione(std::vector<Boid> const& stormo, unsigned long int i,
-                    double s, double ds, double angolo);
+                    float s, float ds, float angolo);
 
 Point2D allineamento(std::vector<Boid> const& stormo, unsigned long int i,
-                     double a, double d, double angolo);
+                     float a, float d, float angolo);
 
-Point2D coesione(std::vector<Boid> const& stormo, unsigned long int i, double c,
-                 double d, double angolo);
+Point2D coesione(std::vector<Boid> const& stormo, unsigned long int i, float c,
+                 float d, float angolo);
 
-std::vector<Boid> genera_stormo(double n);
+std::vector<Boid> genera_stormo(float n);
 
 /*std::vector<Boid> boid_vicini(std::vector<Boid> const& stormo,
-                              unsigned long int i, double d)
+                              unsigned long int i, float d)
 {
   unsigned long int n = stormo.size();
   std::vector<Boid> stormo_vicino;
@@ -55,10 +55,10 @@ std::vector<Boid> genera_stormo(double n);
   return stormo_vicino;
 }*/
 
-void movimento(std::vector<Boid>& stormo, double t);
+void movimento(std::vector<Boid>& stormo, float t);
 
-/*void applicazione_regole(std::vector<Boid>& stormo, double d, double ds,
-                         double s, double a, double c)
+/*void applicazione_regole(std::vector<Boid>& stormo, float d, float ds,
+                         float s, float a, float c)
 {
   std::vector<Point2D> correzione_velocità;
   for (unsigned long int i{0}; i != stormo.size(); ++i) {
@@ -73,21 +73,21 @@ void movimento(std::vector<Boid>& stormo, double t);
   }
 }*/
 
-void applicazione_regole(std::vector<Boid>& stormo, double d, double ds,
-                         double s, double a, double c, double angolo);
+void applicazione_regole(std::vector<Boid>& stormo, float d, float ds,
+                         float s, float a, float c, float angolo);
 
 void comportamento_bordi(std::vector<Boid>& stormo);
 
-void controllo_velocità(std::vector<Boid>& stormo, double v);
+void controllo_velocità(std::vector<Boid>& stormo, float v);
 
 Point2D separazione_altro_stormo(std::vector<Boid> const& stormo,
-                                 Boid const& uccello, double s, double ds,
-                                 double angolo);
+                                 Boid const& uccello, float s, float ds,
+                                 float angolo);
 
 void applicazione_regole_due_stormi(std::vector<Boid>& stormo,
                                     std::vector<Boid> const& stormo_altro,
-                                    double d, double ds, double s, double a,
-                                    double c, double ds2, double s2,
-                                    double angolo);
+                                    float d, float ds, float s, float a,
+                                    float c, float ds2, float s2,
+                                    float angolo);
 } // namespace pf
 #endif

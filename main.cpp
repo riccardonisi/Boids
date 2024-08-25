@@ -65,6 +65,7 @@ int main()
 #include <cassert>
 #include <iostream>
 #include <memory>
+#include <numbers>
 
 // Funzione per convertire un valore reale in pixel
 sf::Vector2f realeToPixel(float x, float y, float scaleFactorX,
@@ -73,13 +74,15 @@ sf::Vector2f realeToPixel(float x, float y, float scaleFactorX,
   return sf::Vector2f(x * scaleFactorX, y * scaleFactorY);
 }
 
+constexpr float pi_f = 3.14159265358979323846f;
+
 float calculateRotationAngle(float dx, float dy)
 {
-  return std::atan2(dy, dx) * 180.0 / M_PI; // In gradi
+  return std::atan2f(dy, dx) * 180.0f / pi_f ; // In gradi
 }
 
-void simulazione_piano(int n, double d, double ds, double s, double a, double c,
-                       double angolo)
+void simulazione_piano(int n, float d, float ds, float s, float a, float c,
+                       float angolo)
 {
   constexpr int pixelx = 1000;
   constexpr int pixely = 600;
@@ -138,7 +141,7 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c,
       window.draw(triangle);
     }
 
-    pf::movimento(stormo, 0.001);
+    pf::movimento(stormo, 0.001f);
     pf::comportamento_bordi(stormo);
     pf::applicazione_regole(stormo, d, ds, s, a, c, angolo);
     pf::controllo_velocità(stormo, 2);
@@ -147,9 +150,9 @@ void simulazione_piano(int n, double d, double ds, double s, double a, double c,
   }
 }
 
-void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
-                                  double a, double c, double ds2, double s2,
-                                  double angolo)
+void simulazione_piano_due_stormi(int n1, int n2, float d, float ds, float s,
+                                  float a, float c, float ds2, float s2,
+                                  float angolo)
 {
   constexpr int pixelx = 1000;
   constexpr int pixely = 600;
@@ -200,7 +203,7 @@ void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
       triangle.setRotation(targetAngle + 90);
       window.draw(triangle);
     }
-    pf::movimento(stormo1, 0.001);
+    pf::movimento(stormo1, 0.001f);
     pf::comportamento_bordi(stormo1);
     pf::applicazione_regole_due_stormi(stormo1, stormo2, d, ds, s, a, c, ds2,
                                        s2, angolo);
@@ -222,7 +225,7 @@ void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
       triangle.setRotation(targetAngle + 90);
       window.draw(triangle);
     }
-    pf::movimento(stormo2, 0.001);
+    pf::movimento(stormo2, 0.001f);
     pf::comportamento_bordi(stormo2);
     pf::applicazione_regole_due_stormi(stormo2, stormo1, d, ds, s, a, c, ds2,
                                        s2, angolo);
@@ -232,7 +235,7 @@ void simulazione_piano_due_stormi(int n1, int n2, double d, double ds, double s,
   }
 }
 
-void grafici(int n, double d, double ds, double s, double a, double c)
+void grafici(int n, float d, float ds, float s, float a, float c)
 {}
 
 int main()
@@ -260,11 +263,11 @@ int main()
     std::cin >> n;
     assert(n > 1);
     std::cout << "Inserire d, ds, s, a, c: ";
-    double d;
-    double ds;
-    double s;
-    double a;
-    double c;
+    float d;
+    float ds;
+    float s;
+    float a;
+    float c;
     std::cin >> d >> ds >> s >> a >> c;
     assert(d >= 0 && d <= std::sqrt(2));
     assert(ds >= 0 && ds <= std::sqrt(2));
@@ -272,13 +275,13 @@ int main()
     assert(a > 0);
     assert(c > 0);
     std::cout << "Inserire l'angolo di visuale (in gradi): ";
-    double angolo;
+    float angolo;
     std::cin >> angolo;
     assert(angolo >= 0 && d <= 360);
     simulazione_piano(n, d, ds, s, a, c, angolo);
     break;
   case 'b':
-    simulazione_piano(200, 0.02, 0.005, 0.05, 0.15, 0.05, 150.0);
+    simulazione_piano(200, 0.02f, 0.005f, 0.05f, 0.15f, 0.05f, 150.0f);
     break;
   case 'c':
     std::cout << "Inserire il numero di uccelli: ";
@@ -312,8 +315,8 @@ int main()
     assert(a > 0);
     assert(c > 0);
     std::cout << "Inserire ds2 , s2, che si applicano tra specie diverse: ";
-    double ds2;
-    double s2;
+    float ds2;
+    float s2;
     std::cin >> ds2 >> s2;
     assert(s2 > 0);
     assert(ds2 >= 0 && ds2 <= std::sqrt(2));
@@ -323,8 +326,8 @@ int main()
     simulazione_piano_due_stormi(n, n2, d, ds, s, a, c, ds2, s2, angolo);
     break;
   case 'e':
-    simulazione_piano_due_stormi(100, 100, 0.03, 0.0025, 0.75, 0.5, 0.5, 0.02,
-                                 0.95, 360.0);
+    simulazione_piano_due_stormi(100, 100, 0.03f, 0.0025f, 0.75f, 0.5f, 0.5f, 0.02f,
+                                 0.95f, 360.0f);
     break;
   default:
     std::cout << "Carattere non valido";
