@@ -78,7 +78,7 @@ constexpr float pi_f = 3.14159265358979323846f;
 
 float calculateRotationAngle(float dx, float dy)
 {
-  return std::atan2f(dy, dx) * 180.0f / pi_f ; // In gradi
+  return std::atan2f(dy, dx) * 180.0f / pi_f; // In gradi
 }
 
 void simulazione_piano(int n, float d, float ds, float s, float a, float c,
@@ -235,8 +235,185 @@ void simulazione_piano_due_stormi(int n1, int n2, float d, float ds, float s,
   }
 }
 
-void grafici(int n, float d, float ds, float s, float a, float c)
-{}
+namespace pf {
+sf::Vector2f set_graph_point(int i, float valore, int size, float scaleFactorX,
+                             float scaleFactorY, float max_y)
+{
+  float y = valore / max_y;
+  float x = static_cast<float>(i) / static_cast<float>(size);
+  return sf::Vector2f(realeToPixel(x, 1.f - y, scaleFactorX, scaleFactorY));
+}
+} // namespace pf
+
+void grafici(int n, float d, float ds, float s, float a, float c, float angolo)
+{
+  constexpr int pixelx = 1200;
+  constexpr int pixely = 650;
+  sf::RenderWindow window(
+      sf::VideoMode(pixelx, pixely),
+      "Simulazione del comportamento di uno stormo, di Nisi, Rosini, Seren");
+  window.setPosition(sf::Vector2i(10, 40));
+  constexpr int frame_rate{120};
+  window.setFramerateLimit(frame_rate);
+
+  std::vector<pf::Boid> stormo = pf::genera_stormo(n);
+
+  float scaleFactorX = 300.0f / 1.0f;
+  float scaleFactorY = 250.0f / 1.0f;
+
+  std::vector<float> meanpos;
+  meanpos.push_back(pf::mean_position(stormo));
+  std::vector<float> meanvel;
+  meanvel.push_back(pf::mean_velocity(stormo));
+  std::vector<float> meandist;
+  meandist.push_back(pf::mean_distance(stormo));
+  std::vector<float> devpos;
+  devpos.push_back(pf::standdev_position(stormo));
+  std::vector<float> devvel;
+  devvel.push_back(pf::standdev_velocity(stormo));
+  std::vector<float> devdist;
+  devdist.push_back(pf::standdev_distance(stormo));
+
+  sf::Texture sfondo_texture;
+  if (!sfondo_texture.loadFromFile("sfondo_grafici.png")) {
+    throw std::runtime_error{"Impossibile caricare l'immagine di sfondo"};
+  }
+  sf::Sprite sfondo_sprite;
+  sfondo_sprite.setTexture(sfondo_texture);
+
+  sf::RenderTexture renderTexture;
+  if (!renderTexture.create(300, 250)) {
+    throw std::runtime_error{
+        "Impossibile creare la texture su cui disegnare i grafici"};
+  }
+
+  while (window.isOpen()) {
+    sf::Event event;
+    while (window.pollEvent(event)) {
+      if (event.type == sf::Event::Closed) {
+        window.close();
+      }
+    }
+    window.clear(sf::Color::White);
+    window.draw(sfondo_sprite);
+
+    renderTexture.clear(sf::Color(230, 190, 80));
+    float max_y = 1.0F;
+    for (int i{0}, size = static_cast<int>(meanpos.size()); i != size; ++i) {
+      sf::Vector2f pixelPos =
+          pf::set_graph_point(i, meanpos[static_cast<long unsigned int>(i)],
+                              size, scaleFactorX, scaleFactorY, max_y);
+      sf::CircleShape shape(2);
+      shape.setPosition(pixelPos);
+      shape.setFillColor(sf::Color::Black);
+      renderTexture.draw(shape);
+    }
+    renderTexture.display();
+    const sf::Texture& texture1 = renderTexture.getTexture();
+    sf::Sprite sprite1(texture1);
+    sprite1.setPosition(51.f, 40.f);
+    window.draw(sprite1);
+
+    renderTexture.clear(sf::Color(230, 190, 80));
+    max_y = 1.0F;
+    for (int i{0}, size = static_cast<int>(meanvel.size()); i != size; ++i) {
+      sf::Vector2f pixelPos =
+          pf::set_graph_point(i, meanvel[static_cast<long unsigned int>(i)],
+                              size, scaleFactorX, scaleFactorY, max_y);
+      sf::CircleShape shape(2);
+      shape.setPosition(pixelPos);
+      shape.setFillColor(sf::Color::Black);
+      renderTexture.draw(shape);
+    }
+    renderTexture.display();
+    const sf::Texture& texture2 = renderTexture.getTexture();
+    sf::Sprite sprite2(texture2);
+    sprite2.setPosition(451.f, 40.f);
+    window.draw(sprite2);
+
+    renderTexture.clear(sf::Color(230, 190, 80));
+    max_y = 0.85F;
+    for (int i{0}, size = static_cast<int>(meandist.size()); i != size; ++i) {
+      sf::Vector2f pixelPos =
+          pf::set_graph_point(i, meandist[static_cast<long unsigned int>(i)],
+                              size, scaleFactorX, scaleFactorY, max_y);
+      sf::CircleShape shape(2);
+      shape.setPosition(pixelPos);
+      shape.setFillColor(sf::Color::Black);
+      renderTexture.draw(shape);
+    }
+    renderTexture.display();
+    const sf::Texture& texture3 = renderTexture.getTexture();
+    sf::Sprite sprite3(texture3);
+    sprite3.setPosition(851.f, 40.f);
+    window.draw(sprite3);
+
+    renderTexture.clear(sf::Color(230, 190, 80));
+    max_y = 0.4F;
+    for (int i{0}, size = static_cast<int>(devpos.size()); i != size; ++i) {
+      sf::Vector2f pixelPos =
+          pf::set_graph_point(i, devpos[static_cast<long unsigned int>(i)],
+                              size, scaleFactorX, scaleFactorY, max_y);
+      sf::CircleShape shape(2);
+      shape.setPosition(pixelPos);
+      shape.setFillColor(sf::Color::Black);
+      renderTexture.draw(shape);
+    }
+    renderTexture.display();
+    const sf::Texture& texture4 = renderTexture.getTexture();
+    sf::Sprite sprite4(texture4);
+    sprite4.setPosition(51.f, 365.f);
+    window.draw(sprite4);
+
+    renderTexture.clear(sf::Color(230, 190, 80));
+    max_y = 0.4F;
+    for (int i{0}, size = static_cast<int>(devvel.size()); i != size; ++i) {
+      sf::Vector2f pixelPos =
+          pf::set_graph_point(i, devvel[static_cast<long unsigned int>(i)],
+                              size, scaleFactorX, scaleFactorY, max_y);
+      sf::CircleShape shape(2);
+      shape.setPosition(pixelPos);
+      shape.setFillColor(sf::Color::Black);
+      renderTexture.draw(shape);
+    }
+    renderTexture.display();
+    const sf::Texture& texture5 = renderTexture.getTexture();
+    sf::Sprite sprite5(texture5);
+    sprite5.setPosition(451.f, 365.f);
+    window.draw(sprite5);
+
+    renderTexture.clear(sf::Color(230, 190, 80));
+    max_y = 0.4F;
+    for (int i{0}, size = static_cast<int>(devdist.size()); i != size; ++i) {
+      sf::Vector2f pixelPos =
+          pf::set_graph_point(i, devdist[static_cast<long unsigned int>(i)],
+                              size, scaleFactorX, scaleFactorY, max_y);
+      sf::CircleShape shape(2);
+      shape.setPosition(pixelPos);
+      shape.setFillColor(sf::Color::Black);
+      renderTexture.draw(shape);
+    }
+    renderTexture.display();
+    const sf::Texture& texture6 = renderTexture.getTexture();
+    sf::Sprite sprite6(texture6);
+    sprite6.setPosition(851.f, 365.f);
+    window.draw(sprite6);
+
+    pf::movimento(stormo, 0.001f);
+    pf::comportamento_bordi(stormo);
+    pf::applicazione_regole(stormo, d, ds, s, a, c, angolo);
+    pf::controllo_velocità(stormo, 2.0f);
+
+    meanpos.push_back(pf::mean_position(stormo));
+    meanvel.push_back(pf::mean_velocity(stormo));
+    meandist.push_back(pf::mean_distance(stormo));
+    devpos.push_back(pf::standdev_position(stormo));
+    devvel.push_back(pf::standdev_velocity(stormo));
+    devdist.push_back(pf::standdev_distance(stormo));
+
+    window.display();
+  }
+}
 
 int main()
 {
@@ -248,11 +425,15 @@ int main()
             << "a. Visualizzare sul piano il comportamento di uno stormo\n";
   std::cout << "b. Visualizzare sul piano il comportamento di uno stormo "
                "usando i parametri consigliati\n";
-  std::cout << "c. Visualizzare l'andamento di velocità, posizione e distanza "
-               "medie in funzione del tempo con dei grafici\n";
-  std::cout << "d. Visualizzare sul piano il comportamento di due stormi (di "
+  std::cout << "c. Visualizzare l'andamento nel tempo di distanza "
+               "dall'origine, velocità dello stormo e distanza tra gli uccelli "
+               "medie con dei grafici\n";
+  std::cout << "d. Visualizzare l'andamento nel tempo di distanza "
+               "dall'origine, velocità dello stormo e distanza tra gli uccelli "
+               "medie con dei grafici, usando i parametri consigliati\n";
+  std::cout << "e. Visualizzare sul piano il comportamento di due stormi (di "
                "specie diverse)\n";
-  std::cout << "e. Visualizzare sul piano il comportamento di due stormi "
+  std::cout << "f. Visualizzare sul piano il comportamento di due stormi "
                "usando i parametri consigliati\n";
   char op;
   std::cin >> op;
@@ -294,9 +475,14 @@ int main()
     assert(s > 0);
     assert(a > 0);
     assert(c > 0);
-    grafici(n, d, ds, s, a, c);
+    std::cout << "Inserire l'angolo di visuale (in gradi): ";
+    std::cin >> angolo;
+    grafici(n, d, ds, s, a, c, angolo);
     break;
   case 'd':
+    grafici(20, 0.02f, 0.005f, 1.0f, 0.15f, 0.005f, 360.0f);
+    break;
+  case 'e':
     std::cout
         << "Inserire il numero di uccelli che compongono il primo stormo: ";
     std::cin >> n;
@@ -325,9 +511,9 @@ int main()
     assert(angolo >= 0 && d <= 360);
     simulazione_piano_due_stormi(n, n2, d, ds, s, a, c, ds2, s2, angolo);
     break;
-  case 'e':
-    simulazione_piano_due_stormi(100, 100, 0.03f, 0.0025f, 0.75f, 0.5f, 0.5f, 0.02f,
-                                 0.95f, 360.0f);
+  case 'f':
+    simulazione_piano_due_stormi(100, 100, 0.03f, 0.0025f, 0.75f, 0.5f, 0.5f,
+                                 0.02f, 0.95f, 360.0f);
     break;
   default:
     std::cout << "Carattere non valido";
