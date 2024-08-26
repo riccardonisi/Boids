@@ -78,7 +78,7 @@ constexpr float pi_f = 3.14159265358979323846f;
 
 float calculateRotationAngle(float dx, float dy)
 {
-  return std::atan2f(dy, dx) * 180.0f / pi_f; // In gradi
+  return std::atan2(dy, dx) * 180.0f / pi_f; // In gradi
 }
 
 void simulazione_piano(int n, float d, float ds, float s, float a, float c,

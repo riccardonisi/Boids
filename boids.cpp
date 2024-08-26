@@ -37,7 +37,7 @@ bool campo_visivo(Boid const& a, Boid const& b, float angolo)
   Point2D direzione       = normalizzazione(a.get_vel());
   Point2D dir_verso_altro = normalizzazione(b.get_pos() - a.get_pos());
   float dotProduct       = dot(direzione, dir_verso_altro);
-  float angle            = std::acosf(dotProduct) * 180.0f / pi_f;
+  float angle            = std::acos(dotProduct) * 180.0f / pi_f;
   return angle <= (angolo / 2.0f);
 }
 
@@ -108,7 +108,7 @@ Point2D coesione(std::vector<Boid> const& stormo, unsigned long int i, float c,
   }
 }
 
-std::vector<Boid> genera_stormo(float n)
+std::vector<Boid> genera_stormo(int n)
 {
   if (n < 1) {
     throw std::runtime_error{

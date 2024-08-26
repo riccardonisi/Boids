@@ -52,7 +52,7 @@ inline Point2D operator/(Point2D const& a, float u)
 
 inline float distanza(Point2D const& a, Point2D const& b)
 {
-  return std::sqrtf(powf((a.x - b.x), 2) + powf((a.y - b.y), 2));
+  return std::sqrt(powf((a.x - b.x), 2) + powf((a.y - b.y), 2));
 }
 
 } // namespace pf

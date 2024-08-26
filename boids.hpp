@@ -40,7 +40,7 @@ Point2D allineamento(std::vector<Boid> const& stormo, unsigned long int i,
 Point2D coesione(std::vector<Boid> const& stormo, unsigned long int i, float c,
                  float d, float angolo);
 
-std::vector<Boid> genera_stormo(float n);
+std::vector<Boid> genera_stormo(int n);
 
 /*std::vector<Boid> boid_vicini(std::vector<Boid> const& stormo,
                               unsigned long int i, float d)
