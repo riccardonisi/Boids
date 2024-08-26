@@ -36,8 +36,8 @@ bool campo_visivo(Boid const& a, Boid const& b, float angolo)
 {
   Point2D direzione       = normalizzazione(a.get_vel());
   Point2D dir_verso_altro = normalizzazione(b.get_pos() - a.get_pos());
-  float dotProduct       = dot(direzione, dir_verso_altro);
-  float angle            = std::acos(dotProduct) * 180.0f / pi_f;
+  float dotProduct        = dot(direzione, dir_verso_altro);
+  float angle             = std::acos(dotProduct) * 180.0f / pi_f;
   return angle <= (angolo / 2.0f);
 }
 
@@ -139,8 +139,39 @@ void movimento(std::vector<Boid>& stormo, float t)
   }
 }
 
-void applicazione_regole(std::vector<Boid>& stormo, float d, float ds,
-                         float s, float a, float c, float angolo)
+void random_boost(std::vector<Boid>& stormo, float boost,
+                  float angle_probability)
+{
+  std::random_device rd;
+  std::mt19937 gen(rd());
+
+  for (pf::Boid& boid : stormo) {
+    Point2D current_vel = boid.get_vel();
+    float current_speed = lunghezza(current_vel);
+
+    float new_speed = current_speed + boost;
+
+    float current_angle = std::atan2(current_vel.y, current_vel.x);
+
+    std::uniform_real_distribution<float> prob_dis(0.0f, 1.0f);
+    float angle = 0.0f;
+    if (prob_dis(gen) < angle_probability) {
+      std::uniform_real_distribution<float> angle_dis(-M_PI / 8, M_PI / 8);
+      angle = angle_dis(gen);
+    }
+
+    float new_angle = current_angle + angle;
+
+    Point2D new_vel;
+    new_vel.x = std::cos(new_angle) * new_speed;
+    new_vel.y = std::sin(new_angle) * new_speed;
+
+    boid.set_vel(new_vel);
+  }
+}
+
+void applicazione_regole(std::vector<Boid>& stormo, float d, float ds, float s,
+                         float a, float c, float angolo)
 {
   std::vector<Point2D> correzione_velocità;
   for (unsigned long int i{0}; i != stormo.size(); ++i) {
@@ -186,7 +217,7 @@ void controllo_velocità(std::vector<Boid>& stormo, float v)
     if (stormo[i].get_vel().y < -v) {
       stormo[i].set_vel({stormo[i].get_vel().x, -v});
     }
-    
+
     /* if (0. < stormo[i].get_vel().x < 0.3) {
       stormo[i].set_vel({0.1, stormo[i].get_vel().y});
     }
@@ -200,7 +231,6 @@ void controllo_velocità(std::vector<Boid>& stormo, float v)
     if (-0.3 < stormo[i].get_vel().y < 0.) {
       stormo[i].set_vel({stormo[i].get_vel().x, - 0.3});
     } */
-    
   }
 }
 
@@ -227,8 +257,7 @@ Point2D separazione_altro_stormo(std::vector<Boid> const& stormo,
 void applicazione_regole_due_stormi(std::vector<Boid>& stormo,
                                     std::vector<Boid> const& stormo_altro,
                                     float d, float ds, float s, float a,
-                                    float c, float ds2, float s2,
-                                    float angolo)
+                                    float c, float ds2, float s2, float angolo)
 {
   std::vector<Point2D> correzione_velocità;
   for (unsigned long int i{0}; i != stormo.size(); ++i) {

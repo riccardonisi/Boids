@@ -78,6 +78,8 @@ void applicazione_regole(std::vector<Boid>& stormo, float d, float ds,
 
 void comportamento_bordi(std::vector<Boid>& stormo);
 
+void random_boost(std::vector<Boid>& stormo, float boost, float angle_probability); 
+
 void controllo_velocità(std::vector<Boid>& stormo, float v);
 
 Point2D separazione_altro_stormo(std::vector<Boid> const& stormo,

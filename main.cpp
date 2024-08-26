@@ -126,13 +126,14 @@ void simulazione_piano(int n, float d, float ds, float s, float a, float c,
                                            scaleFactorX, scaleFactorY);
       sf::ConvexShape triangle;
       triangle.setPointCount(3);
-      triangle.setPoint(0, sf::Vector2f(0, -5.0)); // Vertice superiore (punta)
-      triangle.setPoint(1,
-                        sf::Vector2f(-3.0, 5.0)); // Punto a sinistra della base
-      triangle.setPoint(2, sf::Vector2f(3.0, 5.0)); // Punto a destra della base
+      triangle.setPoint(0, sf::Vector2f(0, -3.3f)); // Vertice superiore (punta)
+      triangle.setPoint(
+          1, sf::Vector2f(-2.0f, 3.3f)); // Punto a sinistra della base
+      triangle.setPoint(2,
+                        sf::Vector2f(2.0f, 3.3f)); // Punto a destra della base
       triangle.setPosition(pixelPos);
       triangle.setFillColor(sf::Color::Black);
-      triangle.setOrigin(0, -5.0);
+      triangle.setOrigin(0, -3.3f);
 
       float targetAngle = calculateRotationAngle(
           normalizzazione(boid.get_vel()).x, normalizzazione(boid.get_vel()).y);
@@ -144,6 +145,7 @@ void simulazione_piano(int n, float d, float ds, float s, float a, float c,
     pf::movimento(stormo, 0.001f);
     pf::comportamento_bordi(stormo);
     pf::applicazione_regole(stormo, d, ds, s, a, c, angolo);
+    pf::random_boost(stormo, 0.01f, 0.01f);
     pf::controllo_velocità(stormo, 2);
 
     window.display();
@@ -192,12 +194,12 @@ void simulazione_piano_due_stormi(int n1, int n2, float d, float ds, float s,
                                            scaleFactorX, scaleFactorY);
       sf::ConvexShape triangle;
       triangle.setPointCount(3);
-      triangle.setPoint(0, sf::Vector2f(0, -5.0));
-      triangle.setPoint(1, sf::Vector2f(-3.0, 5.0));
-      triangle.setPoint(2, sf::Vector2f(3.0, 5.0));
+      triangle.setPoint(0, sf::Vector2f(0, -3.3));
+      triangle.setPoint(1, sf::Vector2f(-2.0, 3.3));
+      triangle.setPoint(2, sf::Vector2f(3.0, 3.3));
       triangle.setPosition(pixelPos);
       triangle.setFillColor(sf::Color::Black);
-      triangle.setOrigin(0, -5.0);
+      triangle.setOrigin(0, -3.3);
       float targetAngle = calculateRotationAngle(
           normalizzazione(boid.get_vel()).x, normalizzazione(boid.get_vel()).y);
       triangle.setRotation(targetAngle + 90);
@@ -207,6 +209,7 @@ void simulazione_piano_due_stormi(int n1, int n2, float d, float ds, float s,
     pf::comportamento_bordi(stormo1);
     pf::applicazione_regole_due_stormi(stormo1, stormo2, d, ds, s, a, c, ds2,
                                        s2, angolo);
+    pf::random_boost(stormo1, 0.01f, 0.01f);
     pf::controllo_velocità(stormo1, 2.0);
 
     for (pf::Boid const& boid : stormo2) {
@@ -214,12 +217,12 @@ void simulazione_piano_due_stormi(int n1, int n2, float d, float ds, float s,
                                            scaleFactorX, scaleFactorY);
       sf::ConvexShape triangle;
       triangle.setPointCount(3);
-      triangle.setPoint(0, sf::Vector2f(0, -5.0));
-      triangle.setPoint(1, sf::Vector2f(-3.0, 5.0));
-      triangle.setPoint(2, sf::Vector2f(3.0, 5.0));
+      triangle.setPoint(0, sf::Vector2f(0, -3.3));
+      triangle.setPoint(1, sf::Vector2f(-2.0, 3.3));
+      triangle.setPoint(2, sf::Vector2f(2.0, 3.3));
       triangle.setPosition(pixelPos);
       triangle.setFillColor(sf::Color::Red);
-      triangle.setOrigin(0, -5.0);
+      triangle.setOrigin(0, -3.3);
       float targetAngle = calculateRotationAngle(
           normalizzazione(boid.get_vel()).x, normalizzazione(boid.get_vel()).y);
       triangle.setRotation(targetAngle + 90);
@@ -229,6 +232,7 @@ void simulazione_piano_due_stormi(int n1, int n2, float d, float ds, float s,
     pf::comportamento_bordi(stormo2);
     pf::applicazione_regole_due_stormi(stormo2, stormo1, d, ds, s, a, c, ds2,
                                        s2, angolo);
+    pf::random_boost(stormo2, 0.01f, 0.01f);
     pf::controllo_velocità(stormo2, 2.0);
 
     window.display();
