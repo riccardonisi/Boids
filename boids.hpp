@@ -78,6 +78,8 @@ void applicazione_regole(std::vector<Boid>& stormo, float d, float ds,
 
 void comportamento_bordi(std::vector<Boid>& stormo);
 
+constexpr float pi_f = 3.14159265358979323846f;
+
 void random_boost(std::vector<Boid>& stormo, float boost, float angle_probability); 
 
 void controllo_velocità(std::vector<Boid>& stormo, float v);

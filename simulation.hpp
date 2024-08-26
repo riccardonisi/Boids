@@ -3,8 +3,6 @@
 
 namespace pf {
 
-constexpr float pi_f = 3.14159265358979323846f;
-
 sf::Vector2f realeToPixel(float x, float y, float scaleFactorX,
                           float scaleFactorY);
 

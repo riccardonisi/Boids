@@ -30,8 +30,6 @@ bool operator==(Boid const& a, Boid const& b)
   }
 }
 
-constexpr float pi_f = 3.14159265358979323846f;
-
 bool campo_visivo(Boid const& a, Boid const& b, float angolo)
 {
   Point2D direzione       = normalizzazione(a.get_vel());
@@ -156,7 +154,7 @@ void random_boost(std::vector<Boid>& stormo, float boost,
     std::uniform_real_distribution<float> prob_dis(0.0f, 1.0f);
     float angle = 0.0f;
     if (prob_dis(gen) < angle_probability) {
-      std::uniform_real_distribution<float> angle_dis(-M_PI / 8, M_PI / 8);
+      std::uniform_real_distribution<float> angle_dis(-pi_f / 8, pi_f / 8);
       angle = angle_dis(gen);
     }
 
