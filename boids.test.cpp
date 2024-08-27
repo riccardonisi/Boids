@@ -638,15 +638,15 @@ TEST_CASE("Testing boids mean parameters")
   SUBCASE(
       "Calling mean_position() and standdev_position() with 0, 1 and 2 boids")
   {
-    pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
-    std::vector<pf::Boid> prova{b1};
+    std::vector<pf::Boid> prova;
+    REQUIRE(prova.size() == 0);
     CHECK_THROWS(pf::mean_position(prova));
     CHECK_THROWS(pf::standdev_position(prova));
-    b1 = pf::Boid{{4.0, 2.3}, {0.4f, 0.3f}};
+    pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
     prova.push_back(b1);
     CHECK_THROWS(pf::mean_position(prova));
     CHECK_THROWS(pf::standdev_position(prova));
-    b1 = pf::Boid{{2.1, 3.3}, {0.3f, 2.f}};
+    b1 = pf::Boid{{4.0f, 2.3f}, {0.4f, 0.3f}};
     prova.push_back(b1);
     CHECK_THROWS(pf::mean_position(prova));
     CHECK_THROWS(pf::standdev_position(prova));
@@ -679,15 +679,15 @@ TEST_CASE("Testing boids mean parameters")
   SUBCASE(
       "Calling mean_velocity() and standdev_velocity() with 0, 1 and 2 boids")
   {
-    pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
-    std::vector<pf::Boid> prova{b1};
+    std::vector<pf::Boid> prova;
+    REQUIRE(prova.size() == 0);
     CHECK_THROWS(pf::mean_velocity(prova));
     CHECK_THROWS(pf::standdev_velocity(prova));
-    b1 = pf::Boid{{4.0, 2.3}, {0.4f, 0.3f}};
+    pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
     prova.push_back(b1);
     CHECK_THROWS(pf::mean_velocity(prova));
     CHECK_THROWS(pf::standdev_velocity(prova));
-    b1 = pf::Boid{{4.3, 2}, {1.2, 5}};
+    b1 = pf::Boid{{4.0f, 2.3f}, {0.4f, 0.3f}};
     prova.push_back(b1);
     CHECK_THROWS(pf::mean_velocity(prova));
     CHECK_THROWS(pf::standdev_velocity(prova));
@@ -715,27 +715,18 @@ TEST_CASE("Testing boids mean parameters")
     CHECK(sd == doctest::Approx(0.58396f));
   }
 
-  SUBCASE("Calling standdev_distance() with 2 boids")
-  {
-    pf::Boid b1{{0.5f, 0.1f}, {1, 2}};
-    pf::Boid b2{{0.9f, 1.4f}, {1, 2}};
-    std::vector<pf::Boid> prova{b1, b2};
-    float sd = pf::standdev_distance(prova);
-    CHECK(sd == doctest::Approx(0.58396f));
-  }
-
   SUBCASE(
       "Calling mean_distance() and standdev_distance() with 0, 1 and 2 boids")
   {
-    pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
-    std::vector<pf::Boid> prova{b1};
+    std::vector<pf::Boid> prova;
+    REQUIRE(prova.size() == 0);
     CHECK_THROWS(pf::mean_distance(prova));
     CHECK_THROWS(pf::standdev_distance(prova));
-    b1 = pf::Boid{{4.0, 2.3}, {0.4f, 0.3f}};
+    pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
     prova.push_back(b1);
     CHECK_THROWS(pf::mean_distance(prova));
     CHECK_THROWS(pf::standdev_distance(prova));
-    b1 = pf::Boid{{1.0, 6.3}, {0.45f, 0.6f}};
+    b1 = pf::Boid{{4.0f, 2.3f}, {0.4f, 0.3f}};
     prova.push_back(b1);
     CHECK_THROWS(pf::mean_distance(prova));
     CHECK_THROWS(pf::standdev_distance(prova));
