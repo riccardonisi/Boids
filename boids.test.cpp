@@ -426,29 +426,6 @@ TEST_CASE("Testing generation of boids")
     std::vector<pf::Boid> prova = pf::genera_stormo(50);
     CHECK(prova.size() == 50);
   }
-
-  /*SUBCASE("Calling boid_vicini() with 10 boids")
-  {
-    float dist{2};
-    pf::Boid a{{1, 2}, {3, 4}};
-    pf::Boid b{{0.4, 2}, {7, 10}};
-    pf::Boid c{{5.7, 3}, {3, 4}};
-    pf::Boid d{{0.15, 23}, {3, 4}};
-    pf::Boid e{{3, 2}, {3, 4}};
-    pf::Boid f{{5.3, 1.1}, {3, 4}};
-    pf::Boid g{{1.3, 2.7}, {3, 4}};
-    pf::Boid h{{1.8, 3.1}, {3, 4}};
-    pf::Boid i{{1.4, 2.56}, {3, 4}};
-    pf::Boid l{{1, 2}, {3, 4}};
-    std::vector<pf::Boid> stormo{a, b, c, d, e, f, g, h, i, l};
-    std::vector<pf::Boid> stormo_vicino = boid_vicini(stormo, 0, dist);
-    CHECK(stormo_vicino.size() == 5);
-    CHECK(stormo_vicino[0] == b);
-    CHECK(stormo_vicino[1] == g);
-    CHECK(stormo_vicino[2] == h);
-    CHECK(stormo_vicino[3] == i);
-    CHECK(stormo_vicino[4] == l);
-  }*/
 }
 
 TEST_CASE("Testing application of the rules of flight")
@@ -581,33 +558,30 @@ TEST_CASE("Testing application of the rules of flight")
   {
     pf::Boid a1{{0, 0}, {1, 1}};
     pf::Boid b1{{1, 1}, {0, 0}};
-    float angolo1 = 120.0f;
-    float angolo2 = 60.0f;
-    CHECK(campo_visivo(a1, b1, angolo1));
-    CHECK(campo_visivo(a1, b1, angolo2));
+    CHECK(campo_visivo(a1, b1, 120.f));
+    CHECK(campo_visivo(a1, b1, 60.f));
     pf::Boid a2{{0, 0}, {1, 1}};
     pf::Boid b2{{0, 0}, {2, -1}};
-    CHECK(campo_visivo(a2, b2, angolo1) == false);
-    CHECK(campo_visivo(a2, b2, angolo2) == false);
+    CHECK(campo_visivo(a2, b2, 120.f) == false);
+    CHECK(campo_visivo(a2, b2, 60.f) == false);
     pf::Boid a3{{1, 1}, {1, 1}};
     pf::Boid b3{{-1, 2}, {1, 3}};
-    CHECK(campo_visivo(a3, b3, angolo1) == false);
-    CHECK(campo_visivo(a3, b3, angolo2) == false);
-    float angolo3{360.0f};
-    CHECK(campo_visivo(a3, b3, angolo3));
-    CHECK(campo_visivo(a1, b3, angolo3));
-    float angolo4{0.f};
-    CHECK(!campo_visivo(a1, b1, angolo4));
-    a3      = pf::Boid{{1, 0}, {1, 0}};
-    b3      = pf::Boid{{1, 1}, {1, 3}};
-    angolo3 = 180.0;
-    CHECK(!campo_visivo(a3, b3, angolo3));
+    CHECK(campo_visivo(a3, b3, 120.f) == false);
+    CHECK(campo_visivo(a3, b3, 60.f) == false);
+    CHECK(campo_visivo(a3, b3, 360.f));
+    CHECK(campo_visivo(a1, b3, 360.f));
+    CHECK(!campo_visivo(a1, b1, 0.f));
+    a3 = pf::Boid{{1, 0}, {1, 0}};
+    b3 = pf::Boid{{1, 1}, {1, 3}};
+    CHECK(campo_visivo(a3, b3, 180.f));
     a3 = pf::Boid{{-1, 0}, {-2, 0}};
     b3 = pf::Boid{{-6, -7}, {2, 3}};
-    CHECK(campo_visivo(a3, b3, angolo3));
+    CHECK(campo_visivo(a3, b3, 180.f));
     a3 = pf::Boid{{0, 0}, {0, 0}};
     b3 = pf::Boid{{1, 1}, {1, 3}};
-    // CHECK(campo_visivo(a3, b3, angolo4));
+    CHECK(campo_visivo(a3, b3, 0.f));
+    a3 = pf::Boid{{0, 0}, {-1, -1}};
+    CHECK(campo_visivo(a3, b3, 360.f));
   }
 }
 

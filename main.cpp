@@ -40,15 +40,15 @@ int main()
     float a;
     float c;
     std::cin >> d >> ds >> s >> a >> c;
-    assert(d >= 0 && d <= std::sqrt(2));
-    assert(ds >= 0 && ds <= std::sqrt(2));
-    assert(s > 0);
-    assert(a > 0);
-    assert(c > 0);
+    assert(d >= 0.f && d <= std::sqrt(2.f));
+    assert(ds >= 0.f && ds <= std::sqrt(2.f));
+    assert(s > 0.f);
+    assert(a > 0.f);
+    assert(c > 0.f);
     std::cout << "Inserire l'angolo di visuale (in gradi): ";
     float angolo;
     std::cin >> angolo;
-    assert(angolo >= 0 && angolo <= 360);
+    assert(angolo >= 0.0f && angolo <= 360.f);
 
     std::vector<pf::Boid> stormo = pf::genera_stormo(n);
     std::cout << "Inserire il numero di secondi che si vuole far durare la "
@@ -102,15 +102,15 @@ int main()
     float a;
     float c;
     std::cin >> d >> ds >> s >> a >> c;
-    assert(d >= 0 && d <= std::sqrt(2));
-    assert(ds >= 0 && ds <= std::sqrt(2));
-    assert(s > 0);
-    assert(a > 0);
-    assert(c > 0);
+    assert(d >= 0.f && d <= std::sqrt(2.f));
+    assert(ds >= 0.f && ds <= std::sqrt(2.f));
+    assert(s > 0.f);
+    assert(a > 0.f);
+    assert(c > 0.f);
     std::cout << "Inserire l'angolo di visuale (in gradi): ";
     float angolo;
     std::cin >> angolo;
-    assert(angolo >= 0 && angolo <= 360);
+    assert(angolo >= 0.f && angolo <= 360.f);
     pf::simulazione_piano(n, d, ds, s, a, c, angolo);
   } else if (op == 'c') {
     pf::simulazione_piano(200, 0.02f, 0.005f, 0.05f, 0.15f, 0.05f, 150.0f);
@@ -126,15 +126,15 @@ int main()
     float a;
     float c;
     std::cin >> d >> ds >> s >> a >> c;
-    assert(d >= 0 && d <= std::sqrt(2));
-    assert(ds >= 0 && ds <= std::sqrt(2));
-    assert(s > 0);
-    assert(a > 0);
-    assert(c > 0);
+    assert(d >= 0.f && d <= std::sqrt(2.f));
+    assert(ds >= 0.f && ds <= std::sqrt(2.f));
+    assert(s > 0.f);
+    assert(a > 0.f);
+    assert(c > 0.f);
     std::cout << "Inserire l'angolo di visuale (in gradi): ";
     float angolo;
     std::cin >> angolo;
-    assert(angolo >= 0 && angolo <= 360);
+    assert(angolo >= 0.f && angolo <= 360.f);
     pf::grafici(n, d, ds, s, a, c, angolo);
   } else if (op == 'e') {
     pf::grafici(20, 0.02f, 0.005f, 1.0f, 0.15f, 0.005f, 360.0f);
@@ -157,21 +157,21 @@ int main()
     float a;
     float c;
     std::cin >> d >> ds >> s >> a >> c;
-    assert(d >= 0 && d <= std::sqrt(2));
-    assert(ds >= 0 && ds <= std::sqrt(2));
-    assert(s > 0);
-    assert(a > 0);
-    assert(c > 0);
+    assert(d >= 0.f && d <= std::sqrt(2.f));
+    assert(ds >= 0.f && ds <= std::sqrt(2.f));
+    assert(s > 0.f);
+    assert(a > 0.f);
+    assert(c > 0.f);
     std::cout << "Inserire ds2 , s2, che si applicano tra specie diverse: ";
     float ds2;
     float s2;
     std::cin >> ds2 >> s2;
-    assert(s2 > 0);
-    assert(ds2 >= 0 && ds2 <= std::sqrt(2));
+    assert(s2 > 0.f);
+    assert(ds2 >= 0.f && ds2 <= std::sqrt(2.f));
     std::cout << "Inserire l'angolo di visuale (in gradi): ";
     float angolo;
     std::cin >> angolo;
-    assert(angolo >= 0 && angolo <= 360);
+    assert(angolo >= 0.f && angolo <= 360.f);
     pf::simulazione_piano_due_stormi(n, n2, d, ds, s, a, c, ds2, s2, angolo);
   } else if (op == 'g') {
     pf::simulazione_piano_due_stormi(100, 100, 0.03f, 0.0025f, 0.75f, 0.5f,

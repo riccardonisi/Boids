@@ -31,11 +31,15 @@ bool operator==(Boid const& a, Boid const& b)
 
 bool campo_visivo(Boid const& a, Boid const& b, float angolo)
 {
-  Point2D direzione       = normalizzazione(a.get_vel());
-  Point2D dir_verso_altro = normalizzazione(b.get_pos() - a.get_pos());
-  float dotProduct        = dot(direzione, dir_verso_altro);
-  float angle             = std::acos(dotProduct) * 180.0f / pi_f;
-  return angle < (angolo / 2.0f);
+  if (a.get_vel().x == 0.f && a.get_vel().x == 0.f) {
+    return true;
+  } else {
+    Point2D direzione       = normalizzazione(a.get_vel());
+    Point2D dir_verso_altro = normalizzazione(b.get_pos() - a.get_pos());
+    float dotProduct        = dot(direzione, dir_verso_altro);
+    float angle             = std::acos(dotProduct) * 180.0f / pi_f;
+    return angle <= (angolo / 2.0f);
+  }
 }
 
 Point2D separazione(std::vector<Boid> const& stormo, unsigned long int i,
@@ -214,20 +218,6 @@ void controllo_velocità(std::vector<Boid>& stormo, float v)
     if (stormo[i].get_vel().y < -v) {
       stormo[i].set_vel({stormo[i].get_vel().x, -v});
     }
-
-    /* if (0. < stormo[i].get_vel().x < 0.3) {
-      stormo[i].set_vel({0.1, stormo[i].get_vel().y});
-    }
-    if (0. < stormo[i].get_vel().y < 0.3) {
-      stormo[i].set_vel({stormo[i].get_vel().x, 0.3});
-    }
-
-    if (-0.3 < stormo[i].get_vel().x < 0.) {
-      stormo[i].set_vel({- 0.3, stormo[i].get_vel().y});
-    }
-    if (-0.3 < stormo[i].get_vel().y < 0.) {
-      stormo[i].set_vel({stormo[i].get_vel().x, - 0.3});
-    } */
   }
 }
 
