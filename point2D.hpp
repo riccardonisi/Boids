@@ -2,6 +2,7 @@
 #define POINT2D_HPP
 
 #include <cmath>
+#include <stdexcept>
 
 namespace pf {
 struct Point2D
@@ -47,6 +48,9 @@ inline Point2D operator*(float u, Point2D const& a)
 
 inline Point2D operator/(Point2D const& a, float u)
 {
+  if (u == 0) {
+    throw std::runtime_error{"Impossibile dividere per 0"};
+  }
   return {a.x / u, a.y / u};
 }
 

@@ -1,7 +1,7 @@
 #ifndef BOIDS_HPP
 #define BOIDS_HPP
 
-#include "Point2D.hpp"
+#include "point2D.hpp"
 #include <vector>
 
 namespace pf {
@@ -24,8 +24,6 @@ class Boid
 
   void set_vel(Point2D v);
 };
-
-float dot(Point2D const& a, Point2D const& b);
 
 bool operator==(Boid const& a, Boid const& b);
 
