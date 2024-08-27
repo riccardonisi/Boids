@@ -1,6 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
-#include "statistics.hpp"
+#include "simulation.hpp"
 
 #include "doctest.h"
 
@@ -596,12 +596,12 @@ TEST_CASE("Testing application of the rules of flight")
     float angolo3{360.0f};
     CHECK(campo_visivo(a3, b3, angolo3));
     CHECK(campo_visivo(a1, b3, angolo3));
-    // float angolo4{0};
-    //  CHECK(campo_visivo(a1, b1, angolo4));
+    float angolo4{0.f};
+    CHECK(!campo_visivo(a1, b1, angolo4));
     a3      = pf::Boid{{1, 0}, {1, 0}};
     b3      = pf::Boid{{1, 1}, {1, 3}};
     angolo3 = 180.0;
-    CHECK(campo_visivo(a3, b3, angolo3));
+    CHECK(!campo_visivo(a3, b3, angolo3));
     a3 = pf::Boid{{-1, 0}, {-2, 0}};
     b3 = pf::Boid{{-6, -7}, {2, 3}};
     CHECK(campo_visivo(a3, b3, angolo3));
@@ -856,11 +856,22 @@ TEST_CASE("Testing functions useful to make the graphic part")
   REQUIRE(prova.size() == 0);
 
   SUBCASE("Calling realeToPixel()")
-  {}
+  {
+    sf::Vector2f vect = pf::realeToPixel(0.345f, 0.827f, 451.f, 765.43f);
+    CHECK(vect.x == doctest::Approx(155.595f));
+    CHECK(vect.y == doctest::Approx(633.01061f));
+  }
 
   SUBCASE("Calling calculateRotationAngle()")
-  {}
+  {
+    float ang = pf::calculateRotationAngle(0.2f, 0.56f);
+    CHECK(ang == doctest::Approx(70.34618));
+  }
 
   SUBCASE("Calling set_graph_point()")
-  {}
+  {
+    sf::Vector2f point = pf::set_graph_point(2, 0.4f, 5, 300.f, 200.f, 1.2f);
+    CHECK(point.x == doctest::Approx(120.f));
+    CHECK(point.y == doctest::Approx(133.3333333f));
+  }
 }

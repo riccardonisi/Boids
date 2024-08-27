@@ -35,7 +35,7 @@ bool campo_visivo(Boid const& a, Boid const& b, float angolo)
   Point2D dir_verso_altro = normalizzazione(b.get_pos() - a.get_pos());
   float dotProduct        = dot(direzione, dir_verso_altro);
   float angle             = std::acos(dotProduct) * 180.0f / pi_f;
-  return angle <= (angolo / 2.0f);
+  return angle < (angolo / 2.0f);
 }
 
 Point2D separazione(std::vector<Boid> const& stormo, unsigned long int i,

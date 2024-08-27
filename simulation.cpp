@@ -4,18 +4,6 @@
 
 namespace pf {
 
-// Funzione per convertire un valore reale in pixel
-sf::Vector2f realeToPixel(float x, float y, float scaleFactorX,
-                          float scaleFactorY)
-{
-  return sf::Vector2f(x * scaleFactorX, y * scaleFactorY);
-}
-
-float calculateRotationAngle(float dx, float dy)
-{
-  return std::atan2(dy, dx) * 180.0f / pi_f; // In gradi
-}
-
 void simulazione_piano(int n, float d, float ds, float s, float a, float c,
                        float angolo)
 {
@@ -62,9 +50,10 @@ void simulazione_piano(int n, float d, float ds, float s, float a, float c,
       sf::ConvexShape triangle;
       triangle.setPointCount(3);
       triangle.setPoint(0, sf::Vector2f(0, -3.3f)); // Vertice superiore (punta)
-      triangle.setPoint(1,
-                        sf::Vector2f(-2.0f, 3.3f)); // Punto a sinistra della base
-      triangle.setPoint(2, sf::Vector2f(2.0f, 3.3f)); // Punto a destra della base
+      triangle.setPoint(
+          1, sf::Vector2f(-2.0f, 3.3f)); // Punto a sinistra della base
+      triangle.setPoint(2,
+                        sf::Vector2f(2.0f, 3.3f)); // Punto a destra della base
       triangle.setPosition(pixelPos);
       triangle.setFillColor(sf::Color::Black);
       triangle.setOrigin(0, -3.3f);
@@ -171,14 +160,6 @@ void simulazione_piano_due_stormi(int n1, int n2, float d, float ds, float s,
 
     window.display();
   }
-}
-
-sf::Vector2f set_graph_point(int i, float valore, int size, float scaleFactorX,
-                             float scaleFactorY, float max_y)
-{
-  float y = valore / max_y;
-  float x = static_cast<float>(i) / static_cast<float>(size);
-  return sf::Vector2f(realeToPixel(x, 1.f - y, scaleFactorX, scaleFactorY));
 }
 
 void grafici(int n, float d, float ds, float s, float a, float c, float angolo)
