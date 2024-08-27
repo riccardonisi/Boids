@@ -1,3 +1,6 @@
+#ifndef SIMULATION_HPP
+#define SIMULATION_HPP
+
 #include "statistics.hpp"
 #include <SFML/Graphics.hpp>
 
@@ -21,3 +24,5 @@ sf::Vector2f set_graph_point(int i, float valore, int size, float scaleFactorX,
 void grafici(int n, float d, float ds, float s, float a, float c, float angolo);
 
 } // namespace pf
+
+#endif
