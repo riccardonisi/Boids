@@ -68,6 +68,13 @@ TEST_CASE("Testing operators and functions of the struct Point2D")
     CHECK(p1.y == doctest::Approx(5.9047619f));
   }
 
+  SUBCASE("Testing operator / with 0")
+  {
+    pf::Point2D point1{1.3f, 12.4f};
+    auto u = 0.f;
+    CHECK_THROWS(point1 / u);
+  }
+
   SUBCASE("Testing distanza() function")
   {
     pf::Point2D a{2, 5};
@@ -132,8 +139,32 @@ TEST_CASE("Testing operators and functions of the struct Point2D")
   }
 }
 
-TEST_CASE("Testing the operators of the class Boid")
+TEST_CASE("Testing methods and operators of the class Boid")
 {
+  SUBCASE("Testing get_() methods")
+  {
+    pf::Boid a{{3.2f, 9.4f}, {2, 4.8f}};
+    CHECK(a.get_pos().x == 3.2f);
+    CHECK(a.get_pos().y == 9.4f);
+    CHECK(a.get_vel().x == 2.0f);
+    CHECK(a.get_vel().y == 4.8f);
+  }
+
+  SUBCASE("Testing set_() methods")
+  {
+    pf::Boid a{{3.2f, 9.4f}, {2, 4.8f}};
+    a.set_pos(pf::Point2D{2.3f, 4.5f});
+    CHECK(a.get_pos().x == 2.3f);
+    CHECK(a.get_pos().y == 4.5f);
+    CHECK(a.get_vel().x == 2.0f);
+    CHECK(a.get_vel().y == 4.8f);
+    a.set_vel(pf::Point2D{3.1f, 7.5f});
+    CHECK(a.get_pos().x == 2.3f);
+    CHECK(a.get_pos().y == 4.5f);
+    CHECK(a.get_vel().x == 3.1f);
+    CHECK(a.get_vel().y == 7.5f);
+  }
+
   SUBCASE("Testing operator ==")
   {
     pf::Boid a{{3.2f, 9.4f}, {2, 4.8f}};
@@ -565,8 +596,8 @@ TEST_CASE("Testing application of the rules of flight")
     float angolo3{360.0f};
     CHECK(campo_visivo(a3, b3, angolo3));
     CHECK(campo_visivo(a1, b3, angolo3));
-    //float angolo4{0};
-    // CHECK(campo_visivo(a1, b1, angolo4));
+    // float angolo4{0};
+    //  CHECK(campo_visivo(a1, b1, angolo4));
     a3      = pf::Boid{{1, 0}, {1, 0}};
     b3      = pf::Boid{{1, 1}, {1, 3}};
     angolo3 = 180.0;
@@ -582,6 +613,45 @@ TEST_CASE("Testing application of the rules of flight")
 
 TEST_CASE("Testing boids mean parameters")
 {
+  SUBCASE("Calling mean_position() with 4 boids")
+  {
+    pf::Boid b1{{0.5f, 0.1f}, {1, 2}};
+    pf::Boid b2{{0.9f, 1.4f}, {1, 2}};
+    pf::Boid b3{{3, 0.2f}, {1, 2}};
+    pf::Boid b4{{2.3f, 1.1f}, {1, 2}};
+    std::vector<pf::Boid> prova{b1, b2, b3, b4};
+    float mp = pf::mean_position(prova);
+    CHECK(mp == doctest::Approx(1.9326f));
+  }
+
+  SUBCASE("Calling standdev_position() with 4 boids")
+  {
+    pf::Boid b1{{0.5f, 0.1f}, {1, 2}};
+    pf::Boid b2{{0.9f, 1.4f}, {1, 2}};
+    pf::Boid b3{{3, 0.2f}, {1, 2}};
+    pf::Boid b4{{2.3f, 1.1f}, {1, 2}};
+    std::vector<pf::Boid> prova{b1, b2, b3, b4};
+    float sp = pf::standdev_position(prova);
+    CHECK(sp == doctest::Approx(1.10003f));
+  }
+
+  SUBCASE(
+      "Calling mean_position() and standdev_position() with 0, 1 and 2 boids")
+  {
+    pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
+    std::vector<pf::Boid> prova{b1};
+    CHECK_THROWS(pf::mean_position(prova));
+    CHECK_THROWS(pf::standdev_position(prova));
+    b1 = pf::Boid{{4.0, 2.3}, {0.4f, 0.3f}};
+    prova.push_back(b1);
+    CHECK_THROWS(pf::mean_position(prova));
+    CHECK_THROWS(pf::standdev_position(prova));
+    b1 = pf::Boid{{2.1, 3.3}, {0.3f, 2.f}};
+    prova.push_back(b1);
+    CHECK_THROWS(pf::mean_position(prova));
+    CHECK_THROWS(pf::standdev_position(prova));
+  }
+
   SUBCASE("Calling mean_velocity() with 5 boids")
   {
     pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
@@ -606,26 +676,21 @@ TEST_CASE("Testing boids mean parameters")
     CHECK(sv == doctest::Approx(1.91529f));
   }
 
-  SUBCASE("Calling mean_position() with 4 boids")
+  SUBCASE(
+      "Calling mean_velocity() and standdev_velocity() with 0, 1 and 2 boids")
   {
-    pf::Boid b1{{0.5f, 0.1f}, {1, 2}};
-    pf::Boid b2{{0.9f, 1.4f}, {1, 2}};
-    pf::Boid b3{{3, 0.2f}, {1, 2}};
-    pf::Boid b4{{2.3f, 1.1f}, {1, 2}};
-    std::vector<pf::Boid> prova{b1, b2, b3, b4};
-    float mp = pf::mean_position(prova);
-    CHECK(mp == doctest::Approx(1.9326f));
-  }
-
-  SUBCASE("Calling standdev_position() with 4 boids")
-  {
-    pf::Boid b1{{0.5f, 0.1f}, {1, 2}};
-    pf::Boid b2{{0.9f, 1.4f}, {1, 2}};
-    pf::Boid b3{{3, 0.2f}, {1, 2}};
-    pf::Boid b4{{2.3f, 1.1f}, {1, 2}};
-    std::vector<pf::Boid> prova{b1, b2, b3, b4};
-    float sp = pf::standdev_position(prova);
-    CHECK(sp == doctest::Approx(1.10003f));
+    pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
+    std::vector<pf::Boid> prova{b1};
+    CHECK_THROWS(pf::mean_velocity(prova));
+    CHECK_THROWS(pf::standdev_velocity(prova));
+    b1 = pf::Boid{{4.0, 2.3}, {0.4f, 0.3f}};
+    prova.push_back(b1);
+    CHECK_THROWS(pf::mean_velocity(prova));
+    CHECK_THROWS(pf::standdev_velocity(prova));
+    b1 = pf::Boid{{4.3, 2}, {1.2, 5}};
+    prova.push_back(b1);
+    CHECK_THROWS(pf::mean_velocity(prova));
+    CHECK_THROWS(pf::standdev_velocity(prova));
   }
 
   SUBCASE("Calling mean_distance() with 4 boids")
@@ -648,6 +713,32 @@ TEST_CASE("Testing boids mean parameters")
     std::vector<pf::Boid> prova{b1, b2, b3, b4};
     float sd = pf::standdev_distance(prova);
     CHECK(sd == doctest::Approx(0.58396f));
+  }
+
+  SUBCASE("Calling standdev_distance() with 2 boids")
+  {
+    pf::Boid b1{{0.5f, 0.1f}, {1, 2}};
+    pf::Boid b2{{0.9f, 1.4f}, {1, 2}};
+    std::vector<pf::Boid> prova{b1, b2};
+    float sd = pf::standdev_distance(prova);
+    CHECK(sd == doctest::Approx(0.58396f));
+  }
+
+  SUBCASE(
+      "Calling mean_distance() and standdev_distance() with 0, 1 and 2 boids")
+  {
+    pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
+    std::vector<pf::Boid> prova{b1};
+    CHECK_THROWS(pf::mean_distance(prova));
+    CHECK_THROWS(pf::standdev_distance(prova));
+    b1 = pf::Boid{{4.0, 2.3}, {0.4f, 0.3f}};
+    prova.push_back(b1);
+    CHECK_THROWS(pf::mean_distance(prova));
+    CHECK_THROWS(pf::standdev_distance(prova));
+    b1 = pf::Boid{{1.0, 6.3}, {0.45f, 0.6f}};
+    prova.push_back(b1);
+    CHECK_THROWS(pf::mean_distance(prova));
+    CHECK_THROWS(pf::standdev_distance(prova));
   }
 }
 
@@ -766,4 +857,19 @@ TEST_CASE("Testing rules of flight with 2 storms")
     CHECK(stormo[3].get_vel().x == doctest::Approx(-3.14f));
     CHECK(stormo[3].get_vel().y == doctest::Approx(1.945f));
   }
+}
+
+TEST_CASE("Testing functions useful to make the graphic part")
+{
+  std::vector<pf::Boid> prova;
+  REQUIRE(prova.size() == 0);
+
+  SUBCASE("Calling realeToPixel()")
+  {}
+
+  SUBCASE("Calling calculateRotationAngle()")
+  {}
+
+  SUBCASE("Calling set_graph_point()")
+  {}
 }
