@@ -4,29 +4,29 @@
 
 namespace pf {
 
-void simulazione_piano(double n, float d, float ds, float s, float a, float c,
-                       float angolo)
+void simulation_one_flock(double n, float d, float ds, float s, float a, float c,
+                       float field_of_view)
 {
   constexpr int pixelx = 1000;
   constexpr int pixely = 600;
   sf::RenderWindow window(
       sf::VideoMode(pixelx, pixely),
-      "Simulazione del comportamento di uno stormo, di Nisi, Rosini, Seren");
+      "simulation_one_flock of one flock's behavior, by Nisi, Rosini, Seren");
   window.setPosition(sf::Vector2i(50, 70));
   constexpr int frame_rate{60};
   window.setFramerateLimit(frame_rate);
 
-  // Vettore di boids, ossia lo stormo
-  std::vector<Boid> stormo = genera_stormo(n);
+  // Vettore di boids, ossia lo flock
+  std::vector<Boid> flock = generate_flock(n);
 
   // Fattori di scala per la conversione
-  float scaleFactorX = static_cast<float>(pixelx) / 1.0f;
-  float scaleFactorY = static_cast<float>(pixely) / 1.0f;
+  float scale_factor_x = static_cast<float>(pixelx) / 1.0f;
+  float scale_factor_y = static_cast<float>(pixely) / 1.0f;
 
   // Crea una texture (e poi una sprite) con lo sfondo
   sf::Texture texture;
   if (!texture.loadFromFile("sfondo.png")) {
-    throw std::runtime_error{"Impossibile caricare l'immagine di sfondo"};
+    throw std::runtime_error{"Cannot load background image"};
   }
   sf::Sprite sprite;
   sprite.setTexture(texture);
@@ -44,9 +44,9 @@ void simulazione_piano(double n, float d, float ds, float s, float a, float c,
     window.draw(sprite);
 
     // Disegnare i punti convertiti in pixel
-    for (Boid const& boid : stormo) {
-      sf::Vector2f pixelPos = realeToPixel(boid.get_pos().x, boid.get_pos().y,
-                                           scaleFactorX, scaleFactorY);
+    for (Boid const& boid : flock) {
+      sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
+                                           scale_factor_x, scale_factor_y);
       sf::ConvexShape triangle;
       triangle.setPointCount(3);
       triangle.setPoint(0, sf::Vector2f(0, -3.3f)); // Vertice superiore (punta)
@@ -58,45 +58,45 @@ void simulazione_piano(double n, float d, float ds, float s, float a, float c,
       triangle.setFillColor(sf::Color::Black);
       triangle.setOrigin(0, -3.3f);
 
-      float targetAngle = calculateRotationAngle(
-          normalizzazione(boid.get_vel()).x, normalizzazione(boid.get_vel()).y);
+      float targetAngle = calculate_rotation_angle(
+          boid.get_vel().x, boid.get_vel().y);
       triangle.setRotation(targetAngle + 90);
 
       window.draw(triangle);
     }
 
-    movimento(stormo, 0.001f);
-    comportamento_bordi(stormo);
-    applicazione_regole(stormo, d, ds, s, a, c, angolo);
-    random_boost(stormo, 0.01f, 0.01f);
-    controllo_velocità(stormo, 2);
+    movement(flock, 0.001f);
+    boundary_behavior(flock);
+    flocking_behavior(flock, d, ds, s, a, c, field_of_view);
+    random_boost(flock, 0.01f, 0.01f);
+    speed_control(flock, 2);
 
     window.display();
   }
 }
 
-void simulazione_piano_due_stormi(double n1, double n2, float d, float ds, float s,
+void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
                                   float a, float c, float ds2, float s2,
-                                  float angolo)
+                                  float field_of_view)
 {
   constexpr int pixelx = 1000;
   constexpr int pixely = 600;
   sf::RenderWindow window(
       sf::VideoMode(pixelx, pixely),
-      "Simulazione del comportamento di uno stormo, di Nisi, Rosini, Seren");
+      "simulation_two_flocks of two flocks' behavior, by Nisi, Rosini, Seren");
   window.setPosition(sf::Vector2i(50, 70));
   constexpr int frame_rate{60};
   window.setFramerateLimit(frame_rate);
 
-  std::vector<Boid> stormo1 = genera_stormo(n1);
-  std::vector<Boid> stormo2 = genera_stormo(n2);
+  std::vector<Boid> flock1 = generate_flock(n1);
+  std::vector<Boid> flock2 = generate_flock(n2);
 
-  float scaleFactorX = static_cast<float>(pixelx) / 1.0f;
-  float scaleFactorY = static_cast<float>(pixely) / 1.0f;
+  float scale_factor_x = static_cast<float>(pixelx) / 1.0f;
+  float scale_factor_y = static_cast<float>(pixely) / 1.0f;
 
   sf::Texture texture;
   if (!texture.loadFromFile("sfondo.png")) {
-    throw std::runtime_error{"Impossibile caricare l'immagine di sfondo"};
+    throw std::runtime_error{"Cannot load backgroung image"};
   }
   sf::Sprite sprite;
   sprite.setTexture(texture);
@@ -112,9 +112,9 @@ void simulazione_piano_due_stormi(double n1, double n2, float d, float ds, float
     window.clear(sf::Color(0, 160, 200, 200));
     window.draw(sprite);
 
-    for (Boid const& boid : stormo1) {
-      sf::Vector2f pixelPos = realeToPixel(boid.get_pos().x, boid.get_pos().y,
-                                           scaleFactorX, scaleFactorY);
+    for (Boid const& boid : flock1) {
+      sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
+                                           scale_factor_x, scale_factor_y);
       sf::ConvexShape triangle;
       triangle.setPointCount(3);
       triangle.setPoint(0, sf::Vector2f(0, -3.3f));
@@ -123,21 +123,21 @@ void simulazione_piano_due_stormi(double n1, double n2, float d, float ds, float
       triangle.setPosition(pixelPos);
       triangle.setFillColor(sf::Color::Black);
       triangle.setOrigin(0, -3.3f);
-      float targetAngle = calculateRotationAngle(
-          normalizzazione(boid.get_vel()).x, normalizzazione(boid.get_vel()).y);
+      float targetAngle = calculate_rotation_angle(
+          normalization(boid.get_vel()).x, normalization(boid.get_vel()).y);
       triangle.setRotation(targetAngle + 90);
       window.draw(triangle);
     }
-    movimento(stormo1, 0.001f);
-    comportamento_bordi(stormo1);
-    applicazione_regole_due_stormi(stormo1, stormo2, d, ds, s, a, c, ds2, s2,
-                                   angolo);
-    random_boost(stormo1, 0.01f, 0.01f);
-    controllo_velocità(stormo1, 2.0);
+    movement(flock1, 0.001f);
+    boundary_behavior(flock1);
+    flocking_behavior_two_flocks(flock1, flock2, d, ds, s, a, c, ds2, s2,
+                                   field_of_view);
+    random_boost(flock1, 0.01f, 0.01f);
+    speed_control(flock1, 2.0);
 
-    for (Boid const& boid : stormo2) {
-      sf::Vector2f pixelPos = realeToPixel(boid.get_pos().x, boid.get_pos().y,
-                                           scaleFactorX, scaleFactorY);
+    for (Boid const& boid : flock2) {
+      sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
+                                           scale_factor_x, scale_factor_y);
       sf::ConvexShape triangle;
       triangle.setPointCount(3);
       triangle.setPoint(0, sf::Vector2f(0, -3.3f));
@@ -146,54 +146,54 @@ void simulazione_piano_due_stormi(double n1, double n2, float d, float ds, float
       triangle.setPosition(pixelPos);
       triangle.setFillColor(sf::Color::Red);
       triangle.setOrigin(0, -3.3f);
-      float targetAngle = calculateRotationAngle(
-          normalizzazione(boid.get_vel()).x, normalizzazione(boid.get_vel()).y);
+      float targetAngle = calculate_rotation_angle(
+          normalization(boid.get_vel()).x, normalization(boid.get_vel()).y);
       triangle.setRotation(targetAngle + 90);
       window.draw(triangle);
     }
-    movimento(stormo2, 0.001f);
-    comportamento_bordi(stormo2);
-    applicazione_regole_due_stormi(stormo2, stormo1, d, ds, s, a, c, ds2, s2,
-                                   angolo);
-    random_boost(stormo2, 0.01f, 0.01f);
-    controllo_velocità(stormo2, 2.0f);
+    movement(flock2, 0.001f);
+    boundary_behavior(flock2);
+    flocking_behavior_two_flocks(flock2, flock1, d, ds, s, a, c, ds2, s2,
+                                   field_of_view);
+    random_boost(flock2, 0.01f, 0.01f);
+    speed_control(flock2, 2.0f);
 
     window.display();
   }
 }
 
-void grafici(double n, float d, float ds, float s, float a, float c, float angolo)
+void graphs(double n, float d, float ds, float s, float a, float c, float field_of_view)
 {
   constexpr int pixelx = 1200;
   constexpr int pixely = 650;
   sf::RenderWindow window(
       sf::VideoMode(pixelx, pixely),
-      "Simulazione del comportamento di uno stormo, di Nisi, Rosini, Seren");
+      "simulation_one_flock of one flock's behavior, by Nisi, Rosini, Seren");
   window.setPosition(sf::Vector2i(10, 40));
   constexpr int frame_rate{120};
   window.setFramerateLimit(frame_rate);
 
-  std::vector<Boid> stormo = genera_stormo(n);
+  std::vector<Boid> flock = generate_flock(n);
 
-  float scaleFactorX = 300.0f / 1.0f;
-  float scaleFactorY = 250.0f / 1.0f;
+  float scale_factor_x = 300.0f / 1.0f;
+  float scale_factor_y = 250.0f / 1.0f;
 
   std::vector<float> meanpos;
-  meanpos.push_back(mean_position(stormo));
+  meanpos.push_back(mean_position(flock));
   std::vector<float> meanvel;
-  meanvel.push_back(mean_velocity(stormo));
+  meanvel.push_back(mean_velocity(flock));
   std::vector<float> meandist;
-  meandist.push_back(mean_distance(stormo));
+  meandist.push_back(mean_distance(flock));
   std::vector<float> devpos;
-  devpos.push_back(standdev_position(stormo));
+  devpos.push_back(standdev_position(flock));
   std::vector<float> devvel;
-  devvel.push_back(standdev_velocity(stormo));
+  devvel.push_back(standdev_velocity(flock));
   std::vector<float> devdist;
-  devdist.push_back(standdev_distance(stormo));
+  devdist.push_back(standdev_distance(flock));
 
   sf::Texture sfondo_texture;
-  if (!sfondo_texture.loadFromFile("sfondo_grafici.png")) {
-    throw std::runtime_error{"Impossibile caricare l'immagine di sfondo"};
+  if (!sfondo_texture.loadFromFile("sfondo_graphs.png")) {
+    throw std::runtime_error{"Cannot load background image"};
   }
   sf::Sprite sfondo_sprite;
   sfondo_sprite.setTexture(sfondo_texture);
@@ -201,18 +201,18 @@ void grafici(double n, float d, float ds, float s, float a, float c, float angol
   sf::RenderTexture renderTexture;
   if (!renderTexture.create(300, 250)) {
     throw std::runtime_error{
-        "Impossibile creare la texture su cui disegnare i grafici"};
+        "Cannot render graphs' textures"};
   }
   sf::RenderTexture renderTextureTime;
   if (!renderTextureTime.create(355, 15)) {
     throw std::runtime_error{
-        "Impossibile creare la texture su cui scrivere il tempo"};
+        "Cannot render time's texture"};
   }
 
   sf::Clock clock;
   sf::Font font;
   if (!font.loadFromFile("cambria.ttc")) {
-    throw std::runtime_error{"Impossibile caricare il font"};
+    throw std::runtime_error{"Cannot load font"};
   }
 
   while (window.isOpen()) {
@@ -230,7 +230,7 @@ void grafici(double n, float d, float ds, float s, float a, float c, float angol
     for (int i{0}, size = static_cast<int>(meanpos.size()); i != size; ++i) {
       sf::Vector2f pixelPos =
           set_graph_point(i, meanpos[static_cast<long unsigned int>(i)], size,
-                          scaleFactorX, scaleFactorY, max_y);
+                          scale_factor_x, scale_factor_y, max_y);
       sf::CircleShape shape(2);
       shape.setPosition(pixelPos);
       shape.setFillColor(sf::Color::Black);
@@ -247,7 +247,7 @@ void grafici(double n, float d, float ds, float s, float a, float c, float angol
     for (int i{0}, size = static_cast<int>(meanvel.size()); i != size; ++i) {
       sf::Vector2f pixelPos =
           set_graph_point(i, meanvel[static_cast<long unsigned int>(i)], size,
-                          scaleFactorX, scaleFactorY, max_y);
+                          scale_factor_x, scale_factor_y, max_y);
       sf::CircleShape shape(2);
       shape.setPosition(pixelPos);
       shape.setFillColor(sf::Color::Black);
@@ -264,7 +264,7 @@ void grafici(double n, float d, float ds, float s, float a, float c, float angol
     for (int i{0}, size = static_cast<int>(meandist.size()); i != size; ++i) {
       sf::Vector2f pixelPos =
           set_graph_point(i, meandist[static_cast<long unsigned int>(i)], size,
-                          scaleFactorX, scaleFactorY, max_y);
+                          scale_factor_x, scale_factor_y, max_y);
       sf::CircleShape shape(2);
       shape.setPosition(pixelPos);
       shape.setFillColor(sf::Color::Black);
@@ -281,7 +281,7 @@ void grafici(double n, float d, float ds, float s, float a, float c, float angol
     for (int i{0}, size = static_cast<int>(devpos.size()); i != size; ++i) {
       sf::Vector2f pixelPos =
           set_graph_point(i, devpos[static_cast<long unsigned int>(i)], size,
-                          scaleFactorX, scaleFactorY, max_y);
+                          scale_factor_x, scale_factor_y, max_y);
       sf::CircleShape shape(2);
       shape.setPosition(pixelPos);
       shape.setFillColor(sf::Color::Black);
@@ -298,7 +298,7 @@ void grafici(double n, float d, float ds, float s, float a, float c, float angol
     for (int i{0}, size = static_cast<int>(devvel.size()); i != size; ++i) {
       sf::Vector2f pixelPos =
           set_graph_point(i, devvel[static_cast<long unsigned int>(i)], size,
-                          scaleFactorX, scaleFactorY, max_y);
+                          scale_factor_x, scale_factor_y, max_y);
       sf::CircleShape shape(2);
       shape.setPosition(pixelPos);
       shape.setFillColor(sf::Color::Black);
@@ -315,7 +315,7 @@ void grafici(double n, float d, float ds, float s, float a, float c, float angol
     for (int i{0}, size = static_cast<int>(devdist.size()); i != size; ++i) {
       sf::Vector2f pixelPos =
           set_graph_point(i, devdist[static_cast<long unsigned int>(i)], size,
-                          scaleFactorX, scaleFactorY, max_y);
+                          scale_factor_x, scale_factor_y, max_y);
       sf::CircleShape shape(2);
       shape.setPosition(pixelPos);
       shape.setFillColor(sf::Color::Black);
@@ -328,30 +328,30 @@ void grafici(double n, float d, float ds, float s, float a, float c, float angol
     window.draw(sprite6);
 
     renderTextureTime.clear(sf::Color::White);
-    sf::Time time = clock.getElapsedTime();
-    float sec     = time.asSeconds();
-    std::string tempo{std::to_string(sec)};
-    std::string tempo_approssimato{tempo.substr(0, 3)};
+    sf::Time actual_time = clock.getElapsedTime();
+    float sec     = actual_time.asSeconds();
+    std::string time{std::to_string(sec)};
+    std::string approx_time{time.substr(0, 3)};
     sf::Text text;
     text.setFont(font);
-    text.setString(tempo_approssimato);
+    text.setString(approx_time);
     text.setCharacterSize(10);
     text.setFillColor(sf::Color::Black);
     text.setPosition(288.F, 2.F);
     renderTextureTime.draw(text);
-    tempo              = std::to_string(sec / 2.f);
-    tempo_approssimato = tempo.substr(0, 3);
-    text.setString(tempo_approssimato);
+    time              = std::to_string(sec / 2.f);
+    approx_time = time.substr(0, 3);
+    text.setString(approx_time);
     text.setPosition(138.F, 2.F);
     renderTextureTime.draw(text);
-    tempo              = std::to_string(sec / 4.f);
-    tempo_approssimato = tempo.substr(0, 3);
-    text.setString(tempo_approssimato);
+    time              = std::to_string(sec / 4.f);
+    approx_time = time.substr(0, 3);
+    text.setString(approx_time);
     text.setPosition(63.F, 2.F);
     renderTextureTime.draw(text);
-    tempo              = std::to_string(sec * 3.F / 4.f);
-    tempo_approssimato = tempo.substr(0, 3);
-    text.setString(tempo_approssimato);
+    time              = std::to_string(sec * 3.F / 4.f);
+    approx_time = time.substr(0, 3);
+    text.setString(approx_time);
     text.setPosition(213.F, 2.F);
     renderTextureTime.draw(text);
     renderTextureTime.display();
@@ -374,17 +374,17 @@ void grafici(double n, float d, float ds, float s, float a, float c, float angol
     sprite_time.setPosition(850.f, 621.f);
     window.draw(sprite_time);
 
-    movimento(stormo, 0.001f);
-    comportamento_bordi(stormo);
-    applicazione_regole(stormo, d, ds, s, a, c, angolo);
-    controllo_velocità(stormo, 2.0f);
+    movement(flock, 0.001f);
+    boundary_behavior(flock);
+    flocking_behavior(flock, d, ds, s, a, c, field_of_view);
+    speed_control(flock, 2.0f);
 
-    meanpos.push_back(mean_position(stormo));
-    meanvel.push_back(mean_velocity(stormo));
-    meandist.push_back(mean_distance(stormo));
-    devpos.push_back(standdev_position(stormo));
-    devvel.push_back(standdev_velocity(stormo));
-    devdist.push_back(standdev_distance(stormo));
+    meanpos.push_back(mean_position(flock));
+    meanvel.push_back(mean_velocity(flock));
+    meandist.push_back(mean_distance(flock));
+    devpos.push_back(standdev_position(flock));
+    devvel.push_back(standdev_velocity(flock));
+    devdist.push_back(standdev_distance(flock));
 
     window.display();
   }

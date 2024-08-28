@@ -6,34 +6,34 @@
 
 namespace pf {
 
-inline sf::Vector2f realeToPixel(float x, float y, float scaleFactorX,
-                                 float scaleFactorY)
+inline sf::Vector2f real_to_pixel(float x, float y, float scale_factor_x,
+                                 float scale_factor_y)
 {
-  return sf::Vector2f(x * scaleFactorX, y * scaleFactorY);
+  return sf::Vector2f(x * scale_factor_x, y * scale_factor_y);
 }
 
-inline float calculateRotationAngle(float dx, float dy)
+inline float calculate_rotation_angle(float direction_x, float direction_y)
 {
-  return std::atan2(dy, dx) * 180.0f / pi_f; // In gradi
+  return std::atan2(direction_y, direction_x) * 180.0f / pi_f; // In gradi
 }
 
-inline sf::Vector2f set_graph_point(int i, float valore, int size,
-                                    float scaleFactorX, float scaleFactorY,
+inline sf::Vector2f set_graph_point(int i, float value_y, int size,
+                                    float scale_factor_x, float scale_factor_y,
                                     float max_y)
 {
-  float y = valore / max_y;
+  float y = value_y / max_y;
   float x = static_cast<float>(i) / static_cast<float>(size);
-  return sf::Vector2f(realeToPixel(x, 1.f - y, scaleFactorX, scaleFactorY));
+  return sf::Vector2f(real_to_pixel(x, 1.f - y, scale_factor_x, scale_factor_y));
 }
 
-void simulazione_piano(double n, float d, float ds, float s, float a, float c,
-                       float angolo);
+void simulation_one_flock(double n, float d, float ds, float s, float a, float c,
+                       float field_of_view);
 
-void simulazione_piano_due_stormi(double n1, double n2, float d, float ds, float s,
+void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
                                   float a, float c, float ds2, float s2,
-                                  float angolo);
+                                  float field_of_view);
 
-void grafici(double n, float d, float ds, float s, float a, float c, float angolo);
+void graphs(double n, float d, float ds, float s, float a, float c, float field_of_view);
 
 } // namespace pf
 

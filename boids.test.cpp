@@ -75,45 +75,45 @@ TEST_CASE("Testing operators and functions of the struct Point2D")
     CHECK_THROWS(point1 / u);
   }
 
-  SUBCASE("Testing distanza() function")
+  SUBCASE("Testing distance() function")
   {
     pf::Point2D a{2, 5};
     pf::Point2D b{0.3f, 6.8f};
     pf::Point2D c{-15, 100};
-    CHECK(pf::distanza(a, b) == doctest::Approx(2.47589f));
-    CHECK(pf::distanza(b, c) == doctest::Approx(94.4475f));
-    CHECK(pf::distanza(a, c) == doctest::Approx(96.5091f));
+    CHECK(pf::distance(a, b) == doctest::Approx(2.47589f));
+    CHECK(pf::distance(b, c) == doctest::Approx(94.4475f));
+    CHECK(pf::distance(a, c) == doctest::Approx(96.5091f));
   }
 
-  SUBCASE("Testing lunghezza() function")
+  SUBCASE("Testing magnitude() function")
   {
     pf::Point2D a{1, 2};
-    pf::lunghezza(a);
-    CHECK(pf::lunghezza(a) == doctest::Approx(2.23607f));
+    pf::magnitude(a);
+    CHECK(pf::magnitude(a) == doctest::Approx(2.23607f));
     pf::Point2D b{0, 0};
-    pf::lunghezza(b);
-    CHECK(pf::lunghezza(b) == doctest::Approx(0.f));
+    pf::magnitude(b);
+    CHECK(pf::magnitude(b) == doctest::Approx(0.f));
     pf::Point2D c{-2, -5};
-    pf::lunghezza(c);
-    CHECK(pf::lunghezza(c) == doctest::Approx(5.38516f));
+    pf::magnitude(c);
+    CHECK(pf::magnitude(c) == doctest::Approx(5.38516f));
   }
 
-  SUBCASE("Testing normalizzazione() function")
+  SUBCASE("Testing normalization() function")
   {
     pf::Point2D a{2, 3};
-    pf::normalizzazione(a);
-    CHECK(pf::normalizzazione(a).x == doctest::Approx(0.55470f));
-    CHECK(pf::normalizzazione(a).y == doctest::Approx(0.83205f));
-    CHECK(pf::lunghezza(normalizzazione(a)) == doctest::Approx(0.99999f));
+    pf::normalization(a);
+    CHECK(pf::normalization(a).x == doctest::Approx(0.55470f));
+    CHECK(pf::normalization(a).y == doctest::Approx(0.83205f));
+    CHECK(pf::magnitude(normalization(a)) == doctest::Approx(0.99999f));
     pf::Point2D b{-3, -1};
-    pf::normalizzazione(b);
-    CHECK(pf::normalizzazione(b).x == doctest::Approx(-0.94868f));
-    CHECK(pf::normalizzazione(b).y == doctest::Approx(-0.31623f));
-    CHECK(pf::lunghezza(normalizzazione(b)) == doctest::Approx(0.99999f));
+    pf::normalization(b);
+    CHECK(pf::normalization(b).x == doctest::Approx(-0.94868f));
+    CHECK(pf::normalization(b).y == doctest::Approx(-0.31623f));
+    CHECK(pf::magnitude(normalization(b)) == doctest::Approx(0.99999f));
     pf::Point2D c{0, 0};
-    CHECK(pf::normalizzazione(c).x == doctest::Approx(0.f));
-    CHECK(pf::normalizzazione(c).y == doctest::Approx(0.f));
-    CHECK(pf::lunghezza(normalizzazione(c)) == doctest::Approx(0.f));
+    CHECK(pf::normalization(c).x == doctest::Approx(0.f));
+    CHECK(pf::normalization(c).y == doctest::Approx(0.f));
+    CHECK(pf::magnitude(normalization(c)) == doctest::Approx(0.f));
   }
 
   SUBCASE("Testing dot() function")
@@ -182,7 +182,7 @@ TEST_CASE("Testing rules of flight")
   std::vector<pf::Boid> prova;
   REQUIRE(prova.size() == 0);
 
-  SUBCASE("Calling separazione() with 2 near boids")
+  SUBCASE("Calling separation() with 2 near boids")
   {
     pf::Point2D p1{2, 3};
     pf::Point2D v1{0, 0};
@@ -192,26 +192,26 @@ TEST_CASE("Testing rules of flight")
     pf::Boid b2{p2, v2};
     prova.push_back(b1);
     prova.push_back(b2);
-    pf::Point2D v3 = separazione(prova, 0, 0.5f, 10, 360);
+    pf::Point2D v3 = separation(prova, 0, 0.5f, 10, 360);
     CHECK(v3.x == doctest::Approx(-1.25f));
     CHECK(v3.y == doctest::Approx(-2.4f));
   }
 
-  SUBCASE("Calling separazione() with 0 boids")
+  SUBCASE("Calling separation() with 0 boids")
   {
-    CHECK_THROWS(separazione(prova, 0, 0.5f, 1, 360));
+    CHECK_THROWS(separation(prova, 0, 0.5f, 1, 360));
   }
 
-  SUBCASE("Calling separazione() with 1 boid")
+  SUBCASE("Calling separation() with 1 boid")
   {
     pf::Point2D p1{4.5f, 7.8f};
     pf::Point2D v1{0, 0};
     pf::Boid b1{p1, v1};
     prova.push_back(b1);
-    CHECK_THROWS(separazione(prova, 0, 0.5f, 12, 360));
+    CHECK_THROWS(separation(prova, 0, 0.5f, 12, 360));
   }
 
-  SUBCASE("Calling separazione() with 2 near boids, and 2 far boids")
+  SUBCASE("Calling separation() with 2 near boids, and 2 far boids")
   {
     pf::Point2D p{2, 3};
     pf::Point2D v{0, 0};
@@ -226,12 +226,12 @@ TEST_CASE("Testing rules of flight")
     p = {12, 11.5f};
     b = pf::Boid{p, v};
     prova.push_back(b);
-    pf::Point2D v3 = separazione(prova, 0, 0.5, 10, 360);
+    pf::Point2D v3 = separation(prova, 0, 0.5, 10, 360);
     CHECK(v3.x == doctest::Approx(-1.25f));
     CHECK(v3.y == doctest::Approx(-2.4f));
   }
 
-  SUBCASE("Calling separazione() with 0 near boids")
+  SUBCASE("Calling separation() with 0 near boids")
   {
     pf::Point2D p{25, 31.2f};
     pf::Point2D v{0, 0};
@@ -246,12 +246,12 @@ TEST_CASE("Testing rules of flight")
     p = {12, 11.5f};
     b = pf::Boid{p, v};
     prova.push_back(b);
-    pf::Point2D v3 = separazione(prova, 0, 0.5f, 10, 360);
+    pf::Point2D v3 = separation(prova, 0, 0.5f, 10, 360);
     CHECK(v3.x == doctest::Approx(0.f));
     CHECK(v3.y == doctest::Approx(0.f));
   }
 
-  SUBCASE("Calling allineamento() with 3 near boids")
+  SUBCASE("Calling alignment() with 3 near boids")
   {
     pf::Point2D v1{2, 3};
     pf::Point2D p1{0, 0};
@@ -265,26 +265,26 @@ TEST_CASE("Testing rules of flight")
     prova.push_back(b1);
     prova.push_back(b2);
     prova.push_back(b3);
-    pf::Point2D v4 = allineamento(prova, 1, 3, 10, 360);
+    pf::Point2D v4 = alignment(prova, 1, 3, 10, 360);
     CHECK(v4.x == doctest::Approx(8.25f));
     CHECK(v4.y == doctest::Approx(-2.4f));
   }
 
-  SUBCASE("Calling allineamento() with 0 boids")
+  SUBCASE("Calling alignment() with 0 boids")
   {
-    CHECK_THROWS(allineamento(prova, 0, 2, 10, 360));
+    CHECK_THROWS(alignment(prova, 0, 2, 10, 360));
   }
 
-  SUBCASE("Calling allineamento() with 1 boid")
+  SUBCASE("Calling alignment() with 1 boid")
   {
     pf::Point2D v1{4.5f, 7.8f};
     pf::Point2D p1{0, 0};
     pf::Boid b1{p1, v1};
     prova.push_back(b1);
-    CHECK_THROWS(allineamento(prova, 0, 2, 20, 360));
+    CHECK_THROWS(alignment(prova, 0, 2, 20, 360));
   }
 
-  SUBCASE("Calling allineamento() with 3 near boids and 2 far boids")
+  SUBCASE("Calling alignment() with 3 near boids and 2 far boids")
   {
     pf::Point2D v{2, 3};
     pf::Point2D p{0, 0};
@@ -300,12 +300,12 @@ TEST_CASE("Testing rules of flight")
     p = {15, 8};
     v = {1.2f, 0.8f};
     prova.push_back(pf::Boid{p, v});
-    pf::Point2D v4 = allineamento(prova, 1, 3, 17, 360);
+    pf::Point2D v4 = alignment(prova, 1, 3, 17, 360);
     CHECK(v4.x == doctest::Approx(8.25f));
     CHECK(v4.y == doctest::Approx(-2.4f));
   }
 
-  SUBCASE("Calling allineamento() with 0 near boids")
+  SUBCASE("Calling alignment() with 0 near boids")
   {
     pf::Point2D v{2, 3};
     pf::Point2D p{0, 0};
@@ -320,12 +320,12 @@ TEST_CASE("Testing rules of flight")
     prova.push_back(pf::Boid{p, v});
     v = {1.2f, 0.8f};
     prova.push_back(pf::Boid{p, v});
-    pf::Point2D v4 = allineamento(prova, 1, 3, 17, 360);
+    pf::Point2D v4 = alignment(prova, 1, 3, 17, 360);
     CHECK(v4.x == doctest::Approx(0.f));
     CHECK(v4.y == doctest::Approx(0.f));
   }
 
-  SUBCASE("Calling coesione() with 3 near boids")
+  SUBCASE("Calling cohesion() with 3 near boids")
   {
     pf::Point2D p1{2, 3};
     pf::Point2D v1{0, 0};
@@ -339,26 +339,26 @@ TEST_CASE("Testing rules of flight")
     prova.push_back(b1);
     prova.push_back(b2);
     prova.push_back(b3);
-    pf::Point2D v4 = coesione(prova, 0, 0.6f, 11, 360);
+    pf::Point2D v4 = cohesion(prova, 0, 0.6f, 11, 360);
     CHECK(v4.x == doctest::Approx(0.3f));
     CHECK(v4.y == doctest::Approx(2.4f));
   }
 
-  SUBCASE("Calling coesione() with 0 boids")
+  SUBCASE("Calling cohesion() with 0 boids")
   {
-    CHECK_THROWS(coesione(prova, 0, 0.2f, 2, 360));
+    CHECK_THROWS(cohesion(prova, 0, 0.2f, 2, 360));
   }
 
-  SUBCASE("Calling coesione() with 1 boid")
+  SUBCASE("Calling cohesion() with 1 boid")
   {
     pf::Point2D p1{4.5f, 7};
     pf::Point2D v1{0, 0};
     pf::Boid b1{p1, v1};
     prova.push_back(b1);
-    CHECK_THROWS(coesione(prova, 0, 2, 10, 360));
+    CHECK_THROWS(cohesion(prova, 0, 2, 10, 360));
   }
 
-  SUBCASE("Calling coesione() with 3 near boids, and 1 far boid")
+  SUBCASE("Calling cohesion() with 3 near boids, and 1 far boid")
   {
     pf::Point2D p{2, 3};
     pf::Point2D v{0, 0};
@@ -369,12 +369,12 @@ TEST_CASE("Testing rules of flight")
     prova.push_back(pf::Boid{p, v});
     p = {4.5f, 7.8f};
     prova.push_back(pf::Boid{p, v});
-    pf::Point2D v4 = coesione(prova, 0, 0.6f, 9, 360);
+    pf::Point2D v4 = cohesion(prova, 0, 0.6f, 9, 360);
     CHECK(v4.x == doctest::Approx(0.3f));
     CHECK(v4.y == doctest::Approx(2.4f));
   }
 
-  SUBCASE("Calling coesione() with 0 near boids")
+  SUBCASE("Calling cohesion() with 0 near boids")
   {
     pf::Point2D p{2, 3};
     pf::Point2D v{0, 0};
@@ -385,7 +385,7 @@ TEST_CASE("Testing rules of flight")
     prova.push_back(pf::Boid{p, v});
     p = {25, 7.8f};
     prova.push_back(pf::Boid{p, v});
-    pf::Point2D v4 = coesione(prova, 3, 0.6f, 8.5f, 360);
+    pf::Point2D v4 = cohesion(prova, 3, 0.6f, 8.5f, 360);
     CHECK(v4.x == doctest::Approx(0.f));
     CHECK(v4.y == doctest::Approx(0.f));
   }
@@ -393,26 +393,26 @@ TEST_CASE("Testing rules of flight")
 
 TEST_CASE("Testing generation of boids")
 {
-  SUBCASE("Calling genera_stormo() with 0 or less boids")
+  SUBCASE("Calling generate_flock() with 0 or less boids")
   {
-    CHECK_THROWS(pf::genera_stormo(0));
-    CHECK_THROWS(pf::genera_stormo(-2));
-    CHECK_THROWS(pf::genera_stormo(-46));
-    CHECK_THROWS(pf::genera_stormo(-57));
-    CHECK_THROWS(pf::genera_stormo(-1234));
+    CHECK_THROWS(pf::generate_flock(0));
+    CHECK_THROWS(pf::generate_flock(-2));
+    CHECK_THROWS(pf::generate_flock(-46));
+    CHECK_THROWS(pf::generate_flock(-57));
+    CHECK_THROWS(pf::generate_flock(-1234));
   }
 
-  SUBCASE("Calling genera_stormo() with a non integer number of boids")
+  SUBCASE("Calling generate_flock() with a non integer number of boids")
   {
-    CHECK_THROWS(pf::genera_stormo(0.5f));
-    CHECK_THROWS(pf::genera_stormo(23.45f));
-    CHECK_THROWS(pf::genera_stormo(-1.4f));
-    CHECK_THROWS(pf::genera_stormo(1234.56f));
+    CHECK_THROWS(pf::generate_flock(0.5f));
+    CHECK_THROWS(pf::generate_flock(23.45f));
+    CHECK_THROWS(pf::generate_flock(-1.4f));
+    CHECK_THROWS(pf::generate_flock(1234.56f));
   }
 
-  SUBCASE("Calling genera_stormo() with 5 boids")
+  SUBCASE("Calling generate_flock() with 5 boids")
   {
-    std::vector<pf::Boid> prova = pf::genera_stormo(5);
+    std::vector<pf::Boid> prova = pf::generate_flock(5);
     CHECK(prova.size() == 5);
     CHECK(!(prova[0] == prova[1] && prova[0] == prova[2] && prova[0] == prova[3]
             && prova[0] == prova[4]));
@@ -421,16 +421,16 @@ TEST_CASE("Testing generation of boids")
             && prova[0].get_pos().x == prova[0].get_vel().y));
   }
 
-  SUBCASE("Calling genera_stormo() with 50 boids")
+  SUBCASE("Calling generate_flock() with 50 boids")
   {
-    std::vector<pf::Boid> prova = pf::genera_stormo(50);
+    std::vector<pf::Boid> prova = pf::generate_flock(50);
     CHECK(prova.size() == 50);
   }
 }
 
 TEST_CASE("Testing application of the rules of flight")
 {
-  SUBCASE("Calling applicazione_regole()")
+  SUBCASE("Calling flocking_behavior()")
   {
     float d{2};
     float ds{1};
@@ -438,150 +438,150 @@ TEST_CASE("Testing application of the rules of flight")
     pf::Boid b2{{0.4f, 2}, {-7, -0.8f}};
     pf::Boid b3{{5.7f, 3}, {1, 4}};
     pf::Boid b4{{1.3f, 2.7f}, {2.2f, -1}};
-    std::vector<pf::Boid> stormo{b1, b2, b3, b4};
+    std::vector<pf::Boid> flock{b1, b2, b3, b4};
     float s{0.5f};
     float a{1.2f};
     float c{0.75f};
-    pf::applicazione_regole(stormo, d, ds, s, a, c, 360);
-    CHECK(stormo[0].get_pos().x == doctest::Approx(1.f));
-    CHECK(stormo[0].get_pos().y == doctest::Approx(2.f));
-    CHECK(stormo[0].get_vel().x == doctest::Approx(-3.4425f));
-    CHECK(stormo[0].get_vel().y == doctest::Approx(-1.9675f));
-    CHECK(stormo[1].get_pos().x == doctest::Approx(0.4f));
-    CHECK(stormo[1].get_pos().y == doctest::Approx(2.f));
-    CHECK(stormo[1].get_vel().x == doctest::Approx(4.7825f));
-    CHECK(stormo[1].get_vel().y == doctest::Approx(2.2225f));
-    CHECK(stormo[2].get_pos().x == doctest::Approx(5.7f));
-    CHECK(stormo[2].get_pos().y == doctest::Approx(3.f));
-    CHECK(stormo[2].get_vel().x == doctest::Approx(1.f));
-    CHECK(stormo[2].get_vel().y == doctest::Approx(4.f));
-    CHECK(stormo[3].get_pos().x == doctest::Approx(1.3f));
-    CHECK(stormo[3].get_pos().y == doctest::Approx(2.7f));
-    CHECK(stormo[3].get_vel().x == doctest::Approx(-3.14f));
-    CHECK(stormo[3].get_vel().y == doctest::Approx(1.945f));
+    pf::flocking_behavior(flock, d, ds, s, a, c, 360);
+    CHECK(flock[0].get_pos().x == doctest::Approx(1.f));
+    CHECK(flock[0].get_pos().y == doctest::Approx(2.f));
+    CHECK(flock[0].get_vel().x == doctest::Approx(-3.4425f));
+    CHECK(flock[0].get_vel().y == doctest::Approx(-1.9675f));
+    CHECK(flock[1].get_pos().x == doctest::Approx(0.4f));
+    CHECK(flock[1].get_pos().y == doctest::Approx(2.f));
+    CHECK(flock[1].get_vel().x == doctest::Approx(4.7825f));
+    CHECK(flock[1].get_vel().y == doctest::Approx(2.2225f));
+    CHECK(flock[2].get_pos().x == doctest::Approx(5.7f));
+    CHECK(flock[2].get_pos().y == doctest::Approx(3.f));
+    CHECK(flock[2].get_vel().x == doctest::Approx(1.f));
+    CHECK(flock[2].get_vel().y == doctest::Approx(4.f));
+    CHECK(flock[3].get_pos().x == doctest::Approx(1.3f));
+    CHECK(flock[3].get_pos().y == doctest::Approx(2.7f));
+    CHECK(flock[3].get_vel().x == doctest::Approx(-3.14f));
+    CHECK(flock[3].get_vel().y == doctest::Approx(1.945f));
   }
 
-  SUBCASE("Calling movimento() with 3 boids")
+  SUBCASE("Calling movement() with 3 boids")
   {
     pf::Boid b1{{1, 2}, {3, 4}};
     pf::Boid b2{{0.4f, 2}, {0, -0.8f}};
     pf::Boid b3{{5.7f, 3}, {-1, 4}};
-    std::vector<pf::Boid> stormo{b1, b2, b3};
-    pf::movimento(stormo, 0.5f);
-    CHECK(stormo[0].get_pos().x == doctest::Approx(2.5f));
-    CHECK(stormo[0].get_pos().y == doctest::Approx(4.f));
-    CHECK(stormo[0].get_vel().x == doctest::Approx(3.f));
-    CHECK(stormo[0].get_vel().y == doctest::Approx(4.f));
-    CHECK(stormo[1].get_pos().x == doctest::Approx(0.4f));
-    CHECK(stormo[1].get_pos().y == doctest::Approx(1.6f));
-    CHECK(stormo[1].get_vel().x == doctest::Approx(0.f));
-    CHECK(stormo[1].get_vel().y == doctest::Approx(-0.8f));
-    CHECK(stormo[2].get_pos().x == doctest::Approx(5.2f));
-    CHECK(stormo[2].get_pos().y == doctest::Approx(5.f));
-    CHECK(stormo[2].get_vel().x == doctest::Approx(-1.f));
-    CHECK(stormo[2].get_vel().y == doctest::Approx(4.f));
+    std::vector<pf::Boid> flock{b1, b2, b3};
+    pf::movement(flock, 0.5f);
+    CHECK(flock[0].get_pos().x == doctest::Approx(2.5f));
+    CHECK(flock[0].get_pos().y == doctest::Approx(4.f));
+    CHECK(flock[0].get_vel().x == doctest::Approx(3.f));
+    CHECK(flock[0].get_vel().y == doctest::Approx(4.f));
+    CHECK(flock[1].get_pos().x == doctest::Approx(0.4f));
+    CHECK(flock[1].get_pos().y == doctest::Approx(1.6f));
+    CHECK(flock[1].get_vel().x == doctest::Approx(0.f));
+    CHECK(flock[1].get_vel().y == doctest::Approx(-0.8f));
+    CHECK(flock[2].get_pos().x == doctest::Approx(5.2f));
+    CHECK(flock[2].get_pos().y == doctest::Approx(5.f));
+    CHECK(flock[2].get_vel().x == doctest::Approx(-1.f));
+    CHECK(flock[2].get_vel().y == doctest::Approx(4.f));
   }
 
-  SUBCASE("Calling comportamento_bordi() with 5 boids")
+  SUBCASE("Calling boundary_behavior() with 5 boids")
   {
     pf::Boid b1{{0.2f, 0.5f}, {1, 2}};
     pf::Boid b2{{0.3f, 12}, {1, 2}};
     pf::Boid b3{{2, 0.5f}, {1, 2}};
     pf::Boid b4{{100, 23}, {1, 2}};
     pf::Boid b5{{-2, -3}, {1, 2}};
-    std::vector<pf::Boid> stormo{b1, b2, b3, b4, b5};
-    pf::comportamento_bordi(stormo);
-    CHECK(stormo.size() == 5);
-    CHECK(stormo[0].get_pos().x == 0.2f);
-    CHECK(stormo[0].get_pos().y == 0.5f);
-    CHECK(stormo[0].get_vel().x == 1.f);
-    CHECK(stormo[0].get_vel().y == 2.f);
-    CHECK(stormo[1].get_pos().x == 0.3f);
-    CHECK(stormo[1].get_pos().y == 0.f);
-    CHECK(stormo[1].get_vel().x == 1.f);
-    CHECK(stormo[1].get_vel().y == 2.f);
-    CHECK(stormo[2].get_pos().x == 0.f);
-    CHECK(stormo[2].get_pos().y == 0.5f);
-    CHECK(stormo[2].get_vel().x == 1.f);
-    CHECK(stormo[2].get_vel().y == 2.f);
-    CHECK(stormo[3].get_pos().x == 0.f);
-    CHECK(stormo[3].get_pos().y == 0.f);
-    CHECK(stormo[3].get_vel().x == 1.f);
-    CHECK(stormo[3].get_vel().y == 2.f);
-    CHECK(stormo[4].get_pos().x == 1.f);
-    CHECK(stormo[4].get_pos().y == 1.f);
-    CHECK(stormo[4].get_vel().x == 1.f);
-    CHECK(stormo[4].get_vel().y == 2.f);
+    std::vector<pf::Boid> flock{b1, b2, b3, b4, b5};
+    pf::boundary_behavior(flock);
+    CHECK(flock.size() == 5);
+    CHECK(flock[0].get_pos().x == 0.2f);
+    CHECK(flock[0].get_pos().y == 0.5f);
+    CHECK(flock[0].get_vel().x == 1.f);
+    CHECK(flock[0].get_vel().y == 2.f);
+    CHECK(flock[1].get_pos().x == 0.3f);
+    CHECK(flock[1].get_pos().y == 0.f);
+    CHECK(flock[1].get_vel().x == 1.f);
+    CHECK(flock[1].get_vel().y == 2.f);
+    CHECK(flock[2].get_pos().x == 0.f);
+    CHECK(flock[2].get_pos().y == 0.5f);
+    CHECK(flock[2].get_vel().x == 1.f);
+    CHECK(flock[2].get_vel().y == 2.f);
+    CHECK(flock[3].get_pos().x == 0.f);
+    CHECK(flock[3].get_pos().y == 0.f);
+    CHECK(flock[3].get_vel().x == 1.f);
+    CHECK(flock[3].get_vel().y == 2.f);
+    CHECK(flock[4].get_pos().x == 1.f);
+    CHECK(flock[4].get_pos().y == 1.f);
+    CHECK(flock[4].get_vel().x == 1.f);
+    CHECK(flock[4].get_vel().y == 2.f);
   }
 
-  SUBCASE("Calling controllo_velocità() with 5 boids")
+  SUBCASE("Calling speed_control() with 5 boids")
   {
-    std::vector<pf::Boid> stormo;
+    std::vector<pf::Boid> flock;
     pf::Point2D p{0, 0};
     pf::Point2D v{2, 3};
-    stormo.push_back(pf::Boid{p, v});
+    flock.push_back(pf::Boid{p, v});
     p = {1, 1};
     v = {0.5f, 1.2f};
-    stormo.push_back(pf::Boid{p, v});
+    flock.push_back(pf::Boid{p, v});
     v = {2.3f, 1};
-    stormo.push_back(pf::Boid{p, v});
+    flock.push_back(pf::Boid{p, v});
     p = {2, 1};
     v = {1.5f, 2.8f};
-    stormo.push_back(pf::Boid{p, v});
+    flock.push_back(pf::Boid{p, v});
     v = {1.2f, 0.8f};
-    stormo.push_back(pf::Boid{p, v});
-    pf::controllo_velocità(stormo, 2);
-    CHECK(stormo.size() == 5);
-    CHECK(stormo[0].get_pos().x == 0.f);
-    CHECK(stormo[0].get_pos().y == 0.f);
-    CHECK(stormo[0].get_vel().x == 2.f);
-    CHECK(stormo[0].get_vel().y == 2.f);
-    CHECK(stormo[1].get_pos().x == 1.f);
-    CHECK(stormo[1].get_pos().y == 1.f);
-    CHECK(stormo[1].get_vel().x == 0.5f);
-    CHECK(stormo[1].get_vel().y == 1.2f);
-    CHECK(stormo[2].get_pos().x == 1.f);
-    CHECK(stormo[2].get_pos().y == 1.f);
-    CHECK(stormo[2].get_vel().x == 2.f);
-    CHECK(stormo[2].get_vel().y == 1.f);
-    CHECK(stormo[3].get_pos().x == 2.f);
-    CHECK(stormo[3].get_pos().y == 1.f);
-    CHECK(stormo[3].get_vel().x == 1.5f);
-    CHECK(stormo[3].get_vel().y == 2.f);
-    CHECK(stormo[4].get_pos().x == 2.f);
-    CHECK(stormo[4].get_pos().y == 1.f);
-    CHECK(stormo[4].get_vel().x == 1.2f);
-    CHECK(stormo[4].get_vel().y == 0.8f);
+    flock.push_back(pf::Boid{p, v});
+    pf::speed_control(flock, 2);
+    CHECK(flock.size() == 5);
+    CHECK(flock[0].get_pos().x == 0.f);
+    CHECK(flock[0].get_pos().y == 0.f);
+    CHECK(flock[0].get_vel().x == 2.f);
+    CHECK(flock[0].get_vel().y == 2.f);
+    CHECK(flock[1].get_pos().x == 1.f);
+    CHECK(flock[1].get_pos().y == 1.f);
+    CHECK(flock[1].get_vel().x == 0.5f);
+    CHECK(flock[1].get_vel().y == 1.2f);
+    CHECK(flock[2].get_pos().x == 1.f);
+    CHECK(flock[2].get_pos().y == 1.f);
+    CHECK(flock[2].get_vel().x == 2.f);
+    CHECK(flock[2].get_vel().y == 1.f);
+    CHECK(flock[3].get_pos().x == 2.f);
+    CHECK(flock[3].get_pos().y == 1.f);
+    CHECK(flock[3].get_vel().x == 1.5f);
+    CHECK(flock[3].get_vel().y == 2.f);
+    CHECK(flock[4].get_pos().x == 2.f);
+    CHECK(flock[4].get_pos().y == 1.f);
+    CHECK(flock[4].get_vel().x == 1.2f);
+    CHECK(flock[4].get_vel().y == 0.8f);
   }
 
-  SUBCASE("Calling campo_visivo()")
+  SUBCASE("Calling is_in_field_of_view()")
   {
     pf::Boid a1{{0, 0}, {1, 1}};
     pf::Boid b1{{1, 1}, {0, 0}};
-    CHECK(campo_visivo(a1, b1, 120.f));
-    CHECK(campo_visivo(a1, b1, 60.f));
+    CHECK(is_in_field_of_view(a1, b1, 120.f));
+    CHECK(is_in_field_of_view(a1, b1, 60.f));
     pf::Boid a2{{0, 0}, {1, 1}};
     pf::Boid b2{{0, 0}, {2, -1}};
-    CHECK(campo_visivo(a2, b2, 120.f) == false);
-    CHECK(campo_visivo(a2, b2, 60.f) == false);
+    CHECK(is_in_field_of_view(a2, b2, 120.f) == false);
+    CHECK(is_in_field_of_view(a2, b2, 60.f) == false);
     pf::Boid a3{{1, 1}, {1, 1}};
     pf::Boid b3{{-1, 2}, {1, 3}};
-    CHECK(campo_visivo(a3, b3, 120.f) == false);
-    CHECK(campo_visivo(a3, b3, 60.f) == false);
-    CHECK(campo_visivo(a3, b3, 360.f));
-    CHECK(campo_visivo(a1, b3, 360.f));
-    CHECK(!campo_visivo(a1, b1, 0.f));
+    CHECK(is_in_field_of_view(a3, b3, 120.f) == false);
+    CHECK(is_in_field_of_view(a3, b3, 60.f) == false);
+    CHECK(is_in_field_of_view(a3, b3, 360.f));
+    CHECK(is_in_field_of_view(a1, b3, 360.f));
+    CHECK(!is_in_field_of_view(a1, b1, 0.f));
     a3 = pf::Boid{{1, 0}, {1, 0}};
     b3 = pf::Boid{{1, 1}, {1, 3}};
-    CHECK(campo_visivo(a3, b3, 180.f));
+    CHECK(is_in_field_of_view(a3, b3, 180.f));
     a3 = pf::Boid{{-1, 0}, {-2, 0}};
     b3 = pf::Boid{{-6, -7}, {2, 3}};
-    CHECK(campo_visivo(a3, b3, 180.f));
+    CHECK(is_in_field_of_view(a3, b3, 180.f));
     a3 = pf::Boid{{0, 0}, {0, 0}};
     b3 = pf::Boid{{1, 1}, {1, 3}};
-    CHECK(campo_visivo(a3, b3, 0.f));
+    CHECK(is_in_field_of_view(a3, b3, 0.f));
     a3 = pf::Boid{{0, 0}, {-1, -1}};
-    CHECK(campo_visivo(a3, b3, 360.f));
+    CHECK(is_in_field_of_view(a3, b3, 360.f));
   }
 }
 
@@ -712,7 +712,7 @@ TEST_CASE("Testing rules of flight with 2 storms")
   std::vector<pf::Boid> prova;
   REQUIRE(prova.size() == 0);
 
-  SUBCASE("Calling separazione_altro_stormo() with 1 near boid and 1 far boid")
+  SUBCASE("Calling separation_between_flocks() with 1 near boid and 1 far boid")
   {
     pf::Point2D p1{2, 3};
     pf::Point2D v1{0, 0};
@@ -725,20 +725,20 @@ TEST_CASE("Testing rules of flight with 2 storms")
     v2 = {0, 0};
     b2 = pf::Boid{p2, v2};
     prova.push_back(b2);
-    pf::Point2D v3 = pf::separazione_altro_stormo(prova, b1, 0.5f, 10, 360);
+    pf::Point2D v3 = pf::separation_between_flocks(prova, b1, 0.5f, 10, 360);
     CHECK(v3.x == doctest::Approx(-1.25f));
     CHECK(v3.y == doctest::Approx(-2.4f));
   }
 
-  SUBCASE("Calling separazione_altro_stormo() with 0 boids")
+  SUBCASE("Calling separation_between_flocks() with 0 boids")
   {
     pf::Point2D p1{2, 3};
     pf::Point2D v1{0, 0};
     pf::Boid b1{p1, v1};
-    CHECK_THROWS(separazione_altro_stormo(prova, b1, 0.5f, 1, 360));
+    CHECK_THROWS(separation_between_flocks(prova, b1, 0.5f, 1, 360));
   }
 
-  SUBCASE("Calling separazione_altro_stormo() with 1 boid")
+  SUBCASE("Calling separation_between_flocks() with 1 boid")
   {
     pf::Point2D p1{4.5f, 7.8f};
     pf::Point2D v1{0, 0};
@@ -747,10 +747,10 @@ TEST_CASE("Testing rules of flight with 2 storms")
     pf::Point2D p2{2, 3};
     pf::Point2D v2{0, 0};
     pf::Boid b2{p2, v2};
-    CHECK_THROWS(separazione_altro_stormo(prova, b2, 0.5f, 12, 360));
+    CHECK_THROWS(separation_between_flocks(prova, b2, 0.5f, 12, 360));
   }
 
-  SUBCASE("Calling separazione_altro_stormo() with 1 near boid and 2 far boids")
+  SUBCASE("Calling separation_between_flocks() with 1 near boid and 2 far boids")
   {
     pf::Point2D p{4.5f, 7.8f};
     pf::Point2D v{0, 0};
@@ -764,12 +764,12 @@ TEST_CASE("Testing rules of flight with 2 storms")
     prova.push_back(b);
     p              = {2, 3};
     b              = pf::Boid{p, v};
-    pf::Point2D v3 = separazione_altro_stormo(prova, b, 0.5f, 10, 360);
+    pf::Point2D v3 = separation_between_flocks(prova, b, 0.5f, 10, 360);
     CHECK(v3.x == doctest::Approx(-1.25f));
     CHECK(v3.y == doctest::Approx(-2.4f));
   }
 
-  SUBCASE("Calling separazione_altro_stormo() with 0 near boids")
+  SUBCASE("Calling separation_between_flocks() with 0 near boids")
   {
     pf::Point2D p{4.5f, 7.8f};
     pf::Point2D v{0, 0};
@@ -783,12 +783,12 @@ TEST_CASE("Testing rules of flight with 2 storms")
     prova.push_back(b);
     p              = {20, 18.3f};
     b              = pf::Boid{p, v};
-    pf::Point2D v3 = separazione_altro_stormo(prova, b, 0.5f, 10, 360);
+    pf::Point2D v3 = separation_between_flocks(prova, b, 0.5f, 10, 360);
     CHECK(v3.x == doctest::Approx(0.f));
     CHECK(v3.y == doctest::Approx(0.f));
   }
 
-  SUBCASE("Calling applicazione_regole_due_stormi()")
+  SUBCASE("Calling flocking_behavior_two_flocks()")
   {
     float d{2};
     float ds{1};
@@ -796,31 +796,31 @@ TEST_CASE("Testing rules of flight with 2 storms")
     pf::Boid b2{{0.4f, 2}, {-7, -0.8f}};
     pf::Boid b3{{5.7f, 3}, {1, 4}};
     pf::Boid b4{{1.3f, 2.7f}, {2.2f, -1}};
-    std::vector<pf::Boid> stormo{b1, b2, b3, b4};
+    std::vector<pf::Boid> flock{b1, b2, b3, b4};
     b1 = pf::Boid{{12, 23}, {1, 2}};
     b2 = pf::Boid{{5.4f, 3.1f}, {0.2f, 1.3f}};
-    std::vector<pf::Boid> stormo2{b1, b2};
+    std::vector<pf::Boid> flock2{b1, b2};
     float s{0.5f};
     float a{1.2f};
     float c{0.75f};
-    pf::applicazione_regole_due_stormi(stormo, stormo2, d, ds, s, a, c, ds, s,
+    pf::flocking_behavior_two_flocks(flock, flock2, d, ds, s, a, c, ds, s,
                                        360);
-    CHECK(stormo[0].get_pos().x == doctest::Approx(1.f));
-    CHECK(stormo[0].get_pos().y == doctest::Approx(2.f));
-    CHECK(stormo[0].get_vel().x == doctest::Approx(-3.4425f));
-    CHECK(stormo[0].get_vel().y == doctest::Approx(-1.9675f));
-    CHECK(stormo[1].get_pos().x == doctest::Approx(0.4f));
-    CHECK(stormo[1].get_pos().y == doctest::Approx(2.f));
-    CHECK(stormo[1].get_vel().x == doctest::Approx(4.7825f));
-    CHECK(stormo[1].get_vel().y == doctest::Approx(2.2225f));
-    CHECK(stormo[2].get_pos().x == doctest::Approx(5.7f));
-    CHECK(stormo[2].get_pos().y == doctest::Approx(3.f));
-    CHECK(stormo[2].get_vel().x == doctest::Approx(1.15f));
-    CHECK(stormo[2].get_vel().y == doctest::Approx(3.95f));
-    CHECK(stormo[3].get_pos().x == doctest::Approx(1.3f));
-    CHECK(stormo[3].get_pos().y == doctest::Approx(2.7f));
-    CHECK(stormo[3].get_vel().x == doctest::Approx(-3.14f));
-    CHECK(stormo[3].get_vel().y == doctest::Approx(1.945f));
+    CHECK(flock[0].get_pos().x == doctest::Approx(1.f));
+    CHECK(flock[0].get_pos().y == doctest::Approx(2.f));
+    CHECK(flock[0].get_vel().x == doctest::Approx(-3.4425f));
+    CHECK(flock[0].get_vel().y == doctest::Approx(-1.9675f));
+    CHECK(flock[1].get_pos().x == doctest::Approx(0.4f));
+    CHECK(flock[1].get_pos().y == doctest::Approx(2.f));
+    CHECK(flock[1].get_vel().x == doctest::Approx(4.7825f));
+    CHECK(flock[1].get_vel().y == doctest::Approx(2.2225f));
+    CHECK(flock[2].get_pos().x == doctest::Approx(5.7f));
+    CHECK(flock[2].get_pos().y == doctest::Approx(3.f));
+    CHECK(flock[2].get_vel().x == doctest::Approx(1.15f));
+    CHECK(flock[2].get_vel().y == doctest::Approx(3.95f));
+    CHECK(flock[3].get_pos().x == doctest::Approx(1.3f));
+    CHECK(flock[3].get_pos().y == doctest::Approx(2.7f));
+    CHECK(flock[3].get_vel().x == doctest::Approx(-3.14f));
+    CHECK(flock[3].get_vel().y == doctest::Approx(1.945f));
   }
 }
 
@@ -829,16 +829,16 @@ TEST_CASE("Testing functions useful to make the graphic part")
   std::vector<pf::Boid> prova;
   REQUIRE(prova.size() == 0);
 
-  SUBCASE("Calling realeToPixel()")
+  SUBCASE("Calling real_to_pixel()")
   {
-    sf::Vector2f vect = pf::realeToPixel(0.345f, 0.827f, 451.f, 765.43f);
+    sf::Vector2f vect = pf::real_to_pixel(0.345f, 0.827f, 451.f, 765.43f);
     CHECK(vect.x == doctest::Approx(155.595f));
     CHECK(vect.y == doctest::Approx(633.01061f));
   }
 
-  SUBCASE("Calling calculateRotationAngle()")
+  SUBCASE("Calling calculate_rotation_angle()")
   {
-    float ang = pf::calculateRotationAngle(0.2f, 0.56f);
+    float ang = pf::calculate_rotation_angle(0.2f, 0.56f);
     CHECK(ang == doctest::Approx(70.34618));
   }
 

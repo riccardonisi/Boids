@@ -29,97 +29,97 @@ bool operator==(Boid const& a, Boid const& b)
   }
 }
 
-bool campo_visivo(Boid const& a, Boid const& b, float angolo)
+bool is_in_field_of_view(Boid const& a, Boid const& b, float field_of_view)
 {
   if (a.get_vel().x == 0.f && a.get_vel().x == 0.f) {
     return true;
   } else {
-    Point2D direzione       = normalizzazione(a.get_vel());
-    Point2D dir_verso_altro = normalizzazione(b.get_pos() - a.get_pos());
-    float dotProduct        = dot(direzione, dir_verso_altro);
-    float angle             = std::acos(dotProduct) * 180.0f / pi_f;
-    return angle <= (angolo / 2.0f);
+    Point2D direction       = normalization(a.get_vel());
+    Point2D dir_to_other = normalization(b.get_pos() - a.get_pos());
+    float dotProduct        = dot(direction, dir_to_other);
+    float angle_between            = std::acos(dotProduct) * 180.0f / pi_f;
+    return angle_between <= (field_of_view / 2.0f);
   }
 }
 
-Point2D separazione(std::vector<Boid> const& stormo, unsigned long int i,
-                    float s, float ds, float angolo)
+Point2D separation(std::vector<Boid> const& flock, unsigned long int i,
+                    float s, float ds, float field_of_view)
 {
-  unsigned long int n = stormo.size();
+  unsigned long int n = flock.size();
   if (n < 2) {
     throw std::runtime_error{
-        "Non ci sono abbastanza uccelli per applicare le regole di volo"};
+        "Not enough boids to apply the rules of flight"};
   }
   Point2D sum{0, 0};
   for (unsigned long int j{0}; j != n; ++j) {
-    if (distanza(stormo[j].get_pos(), stormo[i].get_pos()) < ds
-        && campo_visivo(stormo[j], stormo[i], angolo)) {
-      Point2D const& p = stormo[j].get_pos();
-      sum              = sum + p - stormo[i].get_pos();
+    if (distance(flock[j].get_pos(), flock[i].get_pos()) < ds
+        && is_in_field_of_view(flock[j], flock[i], field_of_view)) {
+      Point2D const& p = flock[j].get_pos();
+      sum              = sum + p - flock[i].get_pos();
     }
   }
   return -s * sum;
 }
 
-Point2D allineamento(std::vector<Boid> const& stormo, unsigned long int i,
-                     float a, float d, float angolo)
+Point2D alignment(std::vector<Boid> const& flock, unsigned long int i,
+                     float a, float d, float field_of_view)
 {
   int n{0};
-  if (stormo.size() < 2) {
+  if (flock.size() < 2) {
     throw std::runtime_error{
-        "Non ci sono abbastanza uccelli per applicare le regole di volo"};
+        "Not enough boids to apply the rules of flight"};
   }
   Point2D sum{0, 0};
-  for (unsigned long int j{0}; j != stormo.size(); ++j) {
-    if (j != i && distanza(stormo[j].get_pos(), stormo[i].get_pos()) < d
-        && campo_visivo(stormo[j], stormo[i], angolo)) {
+  for (unsigned long int j{0}; j != flock.size(); ++j) {
+    if (j != i && distance(flock[j].get_pos(), flock[i].get_pos()) < d
+        && is_in_field_of_view(flock[j], flock[i], field_of_view)) {
       ++n;
-      Point2D const& v = stormo[j].get_vel();
+      Point2D const& v = flock[j].get_vel();
       sum              = sum + v;
     }
   }
   if (n != 0) {
-    return a * (sum / static_cast<float>(n) - stormo[i].get_vel());
+    return a * (sum / static_cast<float>(n) - flock[i].get_vel());
   } else {
     return {0, 0};
   }
 }
 
-Point2D coesione(std::vector<Boid> const& stormo, unsigned long int i, float c,
-                 float d, float angolo)
+Point2D cohesion(std::vector<Boid> const& flock, unsigned long int i, float c,
+                 float d, float field_of_view)
 {
   int n{0};
-  if (stormo.size() < 2) {
+  if (flock.size() < 2) {
     throw std::runtime_error{
-        "Non ci sono abbastanza uccelli per applicare le regole di volo"};
+        "Not enough boids to apply the rules of flight"};
   }
   Point2D sum{0, 0};
-  for (unsigned long int j{0}; j != stormo.size(); ++j) {
-    if (j != i && distanza(stormo[j].get_pos(), stormo[i].get_pos()) < d
-        && campo_visivo(stormo[j], stormo[i], angolo)) {
+  for (unsigned long int j{0}; j != flock.size(); ++j) {
+    if (j != i && distance(flock[j].get_pos(), flock[i].get_pos()) < d
+        && is_in_field_of_view(flock[j], flock[i], field_of_view)) {
       ++n;
-      Point2D const& p = stormo[j].get_pos();
+      Point2D const& p = flock[j].get_pos();
       sum              = sum + p;
     }
   }
   if (n != 0) {
-    return c * (sum / static_cast<float>(n) - stormo[i].get_pos());
+    return c * (sum / static_cast<float>(n) - flock[i].get_pos());
   } else {
     return {0, 0};
   }
 }
 
-std::vector<Boid> genera_stormo(double n)
+std::vector<Boid> generate_flock(double n)
 {
   if (n < 1) {
     throw std::runtime_error{
-        "Non ci sono abbastanza uccelli per generare lo stormo"};
+        "Not enought boids to generate a flock"};
   }
   if (std::floor(n) != n) {
     throw std::runtime_error{
-        "Il numero di uccelli deve essere un numero naturale"};
+        "The number of boids must be a natural number"};
   }
-  std::vector<Boid> stormo;
+  std::vector<Boid> flock;
   std::random_device rd;
   std::mt19937 gen(rd());
   for (int i{0}; i != static_cast<int>(n); ++i) {
@@ -128,40 +128,40 @@ std::vector<Boid> genera_stormo(double n)
     Point2D p{dis(gen), dis(gen)};
     Point2D v{dis2(gen), dis2(gen)};
     Boid x{p, v};
-    stormo.push_back(x);
+    flock.push_back(x);
   }
-  return stormo;
+  return flock;
 }
 
-void movimento(std::vector<Boid>& stormo, float t)
+void movement(std::vector<Boid>& flock, float t)
 {
-  for (unsigned long int i{0}; i != stormo.size(); ++i) {
-    stormo[i].set_pos(stormo[i].get_pos() + t * stormo[i].get_vel());
+  for (unsigned long int i{0}; i != flock.size(); ++i) {
+    flock[i].set_pos(flock[i].get_pos() + t * flock[i].get_vel());
   }
 }
 
-void random_boost(std::vector<Boid>& stormo, float boost,
-                  float angle_probability)
+void random_boost(std::vector<Boid>& flock, float boost,
+                  float turn_probability)
 {
   std::random_device rd;
   std::mt19937 gen(rd());
 
-  for (pf::Boid& boid : stormo) {
+  for (pf::Boid& boid : flock) {
     Point2D current_vel = boid.get_vel();
-    float current_speed = lunghezza(current_vel);
+    float current_speed = magnitude(current_vel);
 
     float new_speed = current_speed + boost;
 
     float current_angle = std::atan2(current_vel.y, current_vel.x);
 
     std::uniform_real_distribution<float> prob_dis(0.0f, 1.0f);
-    float angle = 0.0f;
-    if (prob_dis(gen) < angle_probability) {
+    float turn_angle = 0.0f;
+    if (prob_dis(gen) < turn_probability) {
       std::uniform_real_distribution<float> angle_dis(-pi_f / 8, pi_f / 8);
-      angle = angle_dis(gen);
+      turn_angle = angle_dis(gen);
     }
 
-    float new_angle = current_angle + angle;
+    float new_angle = current_angle + turn_angle;
 
     Point2D new_vel;
     new_vel.x = std::cos(new_angle) * new_speed;
@@ -171,91 +171,91 @@ void random_boost(std::vector<Boid>& stormo, float boost,
   }
 }
 
-void applicazione_regole(std::vector<Boid>& stormo, float d, float ds, float s,
-                         float a, float c, float angolo)
+void flocking_behavior(std::vector<Boid>& flock, float d, float ds, float s,
+                         float a, float c, float field_of_view)
 {
-  std::vector<Point2D> correzione_velocità;
-  for (unsigned long int i{0}; i != stormo.size(); ++i) {
-    correzione_velocità.push_back(separazione(stormo, i, s, ds, angolo)
-                                  + allineamento(stormo, i, a, d, angolo)
-                                  + coesione(stormo, i, c, d, angolo));
+  std::vector<Point2D> vel_corrections;
+  for (unsigned long int i{0}; i != flock.size(); ++i) {
+    vel_corrections.push_back(separation(flock, i, s, ds, field_of_view)
+                                  + alignment(flock, i, a, d, field_of_view)
+                                  + cohesion(flock, i, c, d, field_of_view));
   }
-  for (unsigned long int i{0}; i != stormo.size(); ++i) {
-    stormo[i].set_vel(stormo[i].get_vel() + correzione_velocità[i]);
-  }
-}
-
-void comportamento_bordi(std::vector<Boid>& stormo)
-{
-  for (unsigned long int i{0}; i != stormo.size(); ++i) {
-    if (stormo[i].get_pos().x > 1) {
-      stormo[i].set_pos({0, stormo[i].get_pos().y});
-    }
-    if (stormo[i].get_pos().y > 1) {
-      stormo[i].set_pos({stormo[i].get_pos().x, 0});
-    }
-    if (stormo[i].get_pos().x < 0) {
-      stormo[i].set_pos({1, stormo[i].get_pos().y});
-    }
-    if (stormo[i].get_pos().y < 0) {
-      stormo[i].set_pos({stormo[i].get_pos().x, 1});
-    }
+  for (unsigned long int i{0}; i != flock.size(); ++i) {
+    flock[i].set_vel(flock[i].get_vel() + vel_corrections[i]);
   }
 }
 
-void controllo_velocità(std::vector<Boid>& stormo, float v)
+void boundary_behavior(std::vector<Boid>& flock)
 {
-  for (unsigned long int i{0}; i != stormo.size(); ++i) {
-    if (stormo[i].get_vel().x > v) {
-      stormo[i].set_vel({v, stormo[i].get_vel().y});
+  for (unsigned long int i{0}; i != flock.size(); ++i) {
+    if (flock[i].get_pos().x > 1) {
+      flock[i].set_pos({0, flock[i].get_pos().y});
     }
-    if (stormo[i].get_vel().y > v) {
-      stormo[i].set_vel({stormo[i].get_vel().x, v});
+    if (flock[i].get_pos().y > 1) {
+      flock[i].set_pos({flock[i].get_pos().x, 0});
     }
-    if (stormo[i].get_vel().x < -v) {
-      stormo[i].set_vel({-v, stormo[i].get_vel().y});
+    if (flock[i].get_pos().x < 0) {
+      flock[i].set_pos({1, flock[i].get_pos().y});
     }
-    if (stormo[i].get_vel().y < -v) {
-      stormo[i].set_vel({stormo[i].get_vel().x, -v});
+    if (flock[i].get_pos().y < 0) {
+      flock[i].set_pos({flock[i].get_pos().x, 1});
     }
   }
 }
 
-Point2D separazione_altro_stormo(std::vector<Boid> const& stormo,
-                                 Boid const& uccello, float s, float ds,
-                                 float angolo)
+void speed_control(std::vector<Boid>& flock, float v)
 {
-  unsigned long int n = stormo.size();
+  for (unsigned long int i{0}; i != flock.size(); ++i) {
+    if (flock[i].get_vel().x > v) {
+      flock[i].set_vel({v, flock[i].get_vel().y});
+    }
+    if (flock[i].get_vel().y > v) {
+      flock[i].set_vel({flock[i].get_vel().x, v});
+    }
+    if (flock[i].get_vel().x < -v) {
+      flock[i].set_vel({-v, flock[i].get_vel().y});
+    }
+    if (flock[i].get_vel().y < -v) {
+      flock[i].set_vel({flock[i].get_vel().x, -v});
+    }
+  }
+}
+
+Point2D separation_between_flocks(std::vector<Boid> const& flock,
+                                 Boid const& boid, float s, float ds,
+                                 float field_of_view)
+{
+  unsigned long int n = flock.size();
   if (n < 2) {
     throw std::runtime_error{
-        "Non ci sono abbastanza uccelli per applicare le regole di volo"};
+        "Not enough boids to apply the rules of flight"};
   }
   Point2D sum{0, 0};
   for (unsigned long int j{0}; j != n; ++j) {
-    if (distanza(stormo[j].get_pos(), uccello.get_pos()) < ds
-        && campo_visivo(stormo[j], uccello, angolo)) {
-      Point2D const& p = stormo[j].get_pos();
-      sum              = sum + p - uccello.get_pos();
+    if (distance(flock[j].get_pos(), boid.get_pos()) < ds
+        && is_in_field_of_view(flock[j], boid, field_of_view)) {
+      Point2D const& p = flock[j].get_pos();
+      sum              = sum + p - boid.get_pos();
     }
   }
   return -s * sum;
 }
 
-void applicazione_regole_due_stormi(std::vector<Boid>& stormo,
-                                    std::vector<Boid> const& stormo_altro,
+void flocking_behavior_two_flocks(std::vector<Boid>& flock,
+                                    std::vector<Boid> const& flock_other,
                                     float d, float ds, float s, float a,
-                                    float c, float ds2, float s2, float angolo)
+                                    float c, float ds2, float s2, float field_of_view)
 {
-  std::vector<Point2D> correzione_velocità;
-  for (unsigned long int i{0}; i != stormo.size(); ++i) {
-    correzione_velocità.push_back(
-        separazione(stormo, i, s, ds, angolo)
-        + separazione_altro_stormo(stormo_altro, stormo[i], s2, ds2, angolo)
-        + allineamento(stormo, i, a, d, angolo)
-        + coesione(stormo, i, c, d, angolo));
+  std::vector<Point2D> vel_corrections;
+  for (unsigned long int i{0}; i != flock.size(); ++i) {
+    vel_corrections.push_back(
+        separation(flock, i, s, ds, field_of_view)
+        + separation_between_flocks(flock_other, flock[i], s2, ds2, field_of_view)
+        + alignment(flock, i, a, d, field_of_view)
+        + cohesion(flock, i, c, d, field_of_view));
   }
-  for (unsigned long int i{0}; i != stormo.size(); ++i) {
-    stormo[i].set_vel(stormo[i].get_vel() + correzione_velocità[i]);
+  for (unsigned long int i{0}; i != flock.size(); ++i) {
+    flock[i].set_vel(flock[i].get_vel() + vel_corrections[i]);
   }
 }
 
