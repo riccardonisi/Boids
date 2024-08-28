@@ -11,26 +11,6 @@ struct Point2D
   float y;
 };
 
-inline float magnitude(Point2D const& a)
-{
-  return std::sqrt(a.x * a.x + a.y * a.y);
-}
-
-inline Point2D normalization(Point2D const& a)
-{
-  float length = magnitude(a);
-  if (length == 0) {
-    return a;
-  } else {
-    return {a.x / length, a.y / length};
-  }
-}
-
-inline float dot(Point2D const& a, Point2D const& b)
-{
-  return a.x * b.x + a.y * b.y;
-}
-
 inline Point2D operator+(Point2D const& a, Point2D const& b)
 {
   return {a.x + b.x, a.y + b.y};
@@ -52,6 +32,26 @@ inline Point2D operator/(Point2D const& a, float u)
     throw std::runtime_error{"Cannot divide by 0"};
   }
   return {a.x / u, a.y / u};
+}
+
+inline float dot(Point2D const& a, Point2D const& b)
+{
+  return a.x * b.x + a.y * b.y;
+}
+
+inline float magnitude(Point2D const& a)
+{
+  return std::sqrt(a.x * a.x + a.y * a.y);
+}
+
+inline Point2D normalization(Point2D const& a)
+{
+  float length = magnitude(a);
+  if (length == 0) {
+    return a;
+  } else {
+    return {a.x / length, a.y / length};
+  }
 }
 
 inline float distance(Point2D const& a, Point2D const& b)

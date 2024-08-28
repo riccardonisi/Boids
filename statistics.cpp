@@ -63,8 +63,8 @@ float mean_distance(std::vector<Boid> const& flock)
         "Not enough boids to estimate parameters"};
   }
   float sum{0};
-  for (unsigned long int i{0}; i != flock.size(); ++i) {
-    for (unsigned long int j{0}; j != i; ++j) {
+  for (size_t i{0}; i != flock.size(); ++i) {
+    for (size_t j{0}; j != i; ++j) {
       sum += distance(flock[i].get_pos(), flock[j].get_pos());
     }
   }
@@ -81,8 +81,8 @@ float standdev_distance(std::vector<Boid> const& flock)
   }
   float sum{0};
   const float mean_dist{mean_distance(flock)};
-  for (unsigned long int i{0}; i != flock.size(); ++i) {
-    for (unsigned long int j{0}; j != i; ++j) {
+  for (size_t i{0}; i != flock.size(); ++i) {
+    for (size_t j{0}; j != i; ++j) {
       sum += powf(
           (distance(flock[i].get_pos(), flock[j].get_pos()) - mean_dist), 2);
     }

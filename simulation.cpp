@@ -16,14 +16,11 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
   constexpr int frame_rate{60};
   window.setFramerateLimit(frame_rate);
 
-  // Vettore di boids, ossia lo flock
   std::vector<Boid> flock = generate_flock(n);
 
-  // Fattori di scala per la conversione
   float scale_factor_x = static_cast<float>(pixelx) / 1.0f;
   float scale_factor_y = static_cast<float>(pixely) / 1.0f;
 
-  // Crea una texture (e poi una sprite) con lo sfondo
   sf::Texture texture;
   if (!texture.loadFromFile("background.png")) {
     throw std::runtime_error{"Cannot load background image"};
@@ -31,7 +28,6 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
   sf::Sprite sprite;
   sprite.setTexture(texture);
 
-  // Eseguire il loop della finestra finché è aperta
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -43,17 +39,14 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
     window.clear(sf::Color(0, 160, 200, 200));
     window.draw(sprite);
 
-    // Disegnare i punti convertiti in pixel
     for (Boid const& boid : flock) {
       sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
                                             scale_factor_x, scale_factor_y);
       sf::ConvexShape triangle;
       triangle.setPointCount(3);
-      triangle.setPoint(0, sf::Vector2f(0, -3.3f)); // Vertice superiore (punta)
-      triangle.setPoint(
-          1, sf::Vector2f(-2.0f, 3.3f)); // Punto a sinistra della base
-      triangle.setPoint(2,
-                        sf::Vector2f(2.0f, 3.3f)); // Punto a destra della base
+      triangle.setPoint(0, sf::Vector2f(0, -3.3f));
+      triangle.setPoint(1, sf::Vector2f(-2.0f, 3.3f));
+      triangle.setPoint(2, sf::Vector2f(2.0f, 3.3f));
       triangle.setPosition(pixelPos);
       triangle.setFillColor(sf::Color::Black);
       triangle.setOrigin(0, -3.3f);
@@ -70,93 +63,6 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
     flocking_behavior(flock, d, ds, s, a, c, field_of_view);
     random_boost(flock, 0.01f, 0.01f);
     speed_control(flock, 2);
-
-    window.display();
-  }
-}
-
-void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
-                           float a, float c, float ds2, float s2,
-                           float field_of_view)
-{
-  constexpr int pixelx = 1000;
-  constexpr int pixely = 600;
-  sf::RenderWindow window(
-      sf::VideoMode(pixelx, pixely),
-      "simulation_two_flocks of two flocks' behavior, by Nisi, Rosini, Seren");
-  window.setPosition(sf::Vector2i(50, 70));
-  constexpr int frame_rate{60};
-  window.setFramerateLimit(frame_rate);
-
-  std::vector<Boid> flock1 = generate_flock(n1);
-  std::vector<Boid> flock2 = generate_flock(n2);
-
-  float scale_factor_x = static_cast<float>(pixelx) / 1.0f;
-  float scale_factor_y = static_cast<float>(pixely) / 1.0f;
-
-  sf::Texture texture;
-  if (!texture.loadFromFile("background.png")) {
-    throw std::runtime_error{"Cannot load backgroung image"};
-  }
-  sf::Sprite sprite;
-  sprite.setTexture(texture);
-
-  while (window.isOpen()) {
-    sf::Event event;
-    while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed) {
-        window.close();
-      }
-    }
-
-    window.clear(sf::Color(0, 160, 200, 200));
-    window.draw(sprite);
-
-    for (Boid const& boid : flock1) {
-      sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
-                                            scale_factor_x, scale_factor_y);
-      sf::ConvexShape triangle;
-      triangle.setPointCount(3);
-      triangle.setPoint(0, sf::Vector2f(0, -3.3f));
-      triangle.setPoint(1, sf::Vector2f(-2.0f, 3.3f));
-      triangle.setPoint(2, sf::Vector2f(2.0f, 3.3f));
-      triangle.setPosition(pixelPos);
-      triangle.setFillColor(sf::Color::Black);
-      triangle.setOrigin(0, -3.3f);
-      float targetAngle = calculate_rotation_angle(
-          normalization(boid.get_vel()).x, normalization(boid.get_vel()).y);
-      triangle.setRotation(targetAngle + 90);
-      window.draw(triangle);
-    }
-    movement(flock1, 0.001f);
-    boundary_behavior(flock1);
-    flocking_behavior_two_flocks(flock1, flock2, d, ds, s, a, c, ds2, s2,
-                                 field_of_view);
-    random_boost(flock1, 0.01f, 0.01f);
-    speed_control(flock1, 2.0);
-
-    for (Boid const& boid : flock2) {
-      sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
-                                            scale_factor_x, scale_factor_y);
-      sf::ConvexShape triangle;
-      triangle.setPointCount(3);
-      triangle.setPoint(0, sf::Vector2f(0, -3.3f));
-      triangle.setPoint(1, sf::Vector2f(-2.0f, 3.3f));
-      triangle.setPoint(2, sf::Vector2f(2.0f, 3.3f));
-      triangle.setPosition(pixelPos);
-      triangle.setFillColor(sf::Color::Red);
-      triangle.setOrigin(0, -3.3f);
-      float targetAngle = calculate_rotation_angle(
-          normalization(boid.get_vel()).x, normalization(boid.get_vel()).y);
-      triangle.setRotation(targetAngle + 90);
-      window.draw(triangle);
-    }
-    movement(flock2, 0.001f);
-    boundary_behavior(flock2);
-    flocking_behavior_two_flocks(flock2, flock1, d, ds, s, a, c, ds2, s2,
-                                 field_of_view);
-    random_boost(flock2, 0.01f, 0.01f);
-    speed_control(flock2, 2.0f);
 
     window.display();
   }
@@ -386,6 +292,93 @@ void graphs(double n, float d, float ds, float s, float a, float c,
     devpos.push_back(standdev_position(flock));
     devvel.push_back(standdev_velocity(flock));
     devdist.push_back(standdev_distance(flock));
+
+    window.display();
+  }
+}
+
+void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
+                           float a, float c, float ds2, float s2,
+                           float field_of_view)
+{
+  constexpr int pixelx = 1000;
+  constexpr int pixely = 600;
+  sf::RenderWindow window(
+      sf::VideoMode(pixelx, pixely),
+      "simulation_two_flocks of two flocks' behavior, by Nisi, Rosini, Seren");
+  window.setPosition(sf::Vector2i(50, 70));
+  constexpr int frame_rate{60};
+  window.setFramerateLimit(frame_rate);
+
+  std::vector<Boid> flock1 = generate_flock(n1);
+  std::vector<Boid> flock2 = generate_flock(n2);
+
+  float scale_factor_x = static_cast<float>(pixelx) / 1.0f;
+  float scale_factor_y = static_cast<float>(pixely) / 1.0f;
+
+  sf::Texture texture;
+  if (!texture.loadFromFile("background.png")) {
+    throw std::runtime_error{"Cannot load backgroung image"};
+  }
+  sf::Sprite sprite;
+  sprite.setTexture(texture);
+
+  while (window.isOpen()) {
+    sf::Event event;
+    while (window.pollEvent(event)) {
+      if (event.type == sf::Event::Closed) {
+        window.close();
+      }
+    }
+
+    window.clear(sf::Color(0, 160, 200, 200));
+    window.draw(sprite);
+
+    for (Boid const& boid : flock1) {
+      sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
+                                            scale_factor_x, scale_factor_y);
+      sf::ConvexShape triangle;
+      triangle.setPointCount(3);
+      triangle.setPoint(0, sf::Vector2f(0, -3.3f));
+      triangle.setPoint(1, sf::Vector2f(-2.0f, 3.3f));
+      triangle.setPoint(2, sf::Vector2f(2.0f, 3.3f));
+      triangle.setPosition(pixelPos);
+      triangle.setFillColor(sf::Color::Black);
+      triangle.setOrigin(0, -3.3f);
+      float targetAngle = calculate_rotation_angle(
+          normalization(boid.get_vel()).x, normalization(boid.get_vel()).y);
+      triangle.setRotation(targetAngle + 90);
+      window.draw(triangle);
+    }
+    movement(flock1, 0.001f);
+    boundary_behavior(flock1);
+    flocking_behavior_two_flocks(flock1, flock2, d, ds, s, a, c, ds2, s2,
+                                 field_of_view);
+    random_boost(flock1, 0.01f, 0.01f);
+    speed_control(flock1, 2.0);
+
+    for (Boid const& boid : flock2) {
+      sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
+                                            scale_factor_x, scale_factor_y);
+      sf::ConvexShape triangle;
+      triangle.setPointCount(3);
+      triangle.setPoint(0, sf::Vector2f(0, -3.3f));
+      triangle.setPoint(1, sf::Vector2f(-2.0f, 3.3f));
+      triangle.setPoint(2, sf::Vector2f(2.0f, 3.3f));
+      triangle.setPosition(pixelPos);
+      triangle.setFillColor(sf::Color::Red);
+      triangle.setOrigin(0, -3.3f);
+      float targetAngle = calculate_rotation_angle(
+          normalization(boid.get_vel()).x, normalization(boid.get_vel()).y);
+      triangle.setRotation(targetAngle + 90);
+      window.draw(triangle);
+    }
+    movement(flock2, 0.001f);
+    boundary_behavior(flock2);
+    flocking_behavior_two_flocks(flock2, flock1, d, ds, s, a, c, ds2, s2,
+                                 field_of_view);
+    random_boost(flock2, 0.01f, 0.01f);
+    speed_control(flock2, 2.0f);
 
     window.display();
   }
