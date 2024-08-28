@@ -30,7 +30,7 @@ int main()
   std::cin >> op;
   if (op == 'a') {
     std::cout << "Select the number of boids: ";
-    int n;
+    double n;
     std::cin >> n;
     assert(n > 1);
     std::cout << "Set d, ds, s, a, c: ";
@@ -53,12 +53,11 @@ int main()
     std::vector<pf::Boid> flock = pf::generate_flock(n);
     std::cout << "Set the duration of the simulation"
                  "in seconds: ";
-    int time_tot;
+    double time_tot;
     std::cin >> time_tot;
-    ++time_tot;
     std::cout << "Set update time of "
                  "mean parameters ";
-    int time_lapse;
+    double time_lapse;
     std::cin >> time_lapse;
     const auto start{std::chrono::steady_clock::now()};
     auto start2{std::chrono::steady_clock::now()};
@@ -66,7 +65,7 @@ int main()
     std::chrono::duration<double> elapsed_seconds2{0};
     bool condition{true};
     while (elapsed_seconds.count() < time_tot) {
-      if (condition == true) {
+      if (condition) {
         start2 = std::chrono::steady_clock::now();
         std::cout << "\ntime = " << elapsed_seconds.count() << "s\n";
         std::cout << "Mean distance from the origin = "
@@ -92,7 +91,7 @@ int main()
     }
   } else if (op == 'b') {
     std::cout << "Select the number of boids: ";
-    int n;
+    double n;
     std::cin >> n;
     assert(n > 1);
     std::cout << "Set d, ds, s, a, c: ";
@@ -116,7 +115,7 @@ int main()
     pf::simulation_one_flock(200, 0.02f, 0.005f, 0.05f, 0.15f, 0.05f, 150.0f);
   } else if (op == 'd') {
     std::cout << "Select the number of boids: ";
-    int n;
+    double n;
     std::cin >> n;
     assert(n > 1);
     std::cout << "Set d, ds, s, a, c: ";
@@ -139,14 +138,12 @@ int main()
   } else if (op == 'e') {
     pf::graphs(20, 0.02f, 0.005f, 1.0f, 0.15f, 0.005f, 360.0f);
   } else if (op == 'f') {
-    std::cout
-        << "Select the number of boids for the first flock: ";
-    int n;
+    std::cout << "Select the number of boids for the first flock: ";
+    double n;
     std::cin >> n;
     assert(n > 1);
-    std::cout
-        << "Select the number of boids for the second flock: ";
-    int n2;
+    std::cout << "Select the number of boids for the second flock: ";
+    double n2;
     std::cin >> n2;
     assert(n2 > 1);
     std::cout << "Set d, ds, s, a, c, for boids of their "
@@ -174,8 +171,8 @@ int main()
     assert(field_of_view >= 0.f && field_of_view <= 360.f);
     pf::simulation_two_flocks(n, n2, d, ds, s, a, c, ds2, s2, field_of_view);
   } else if (op == 'g') {
-    pf::simulation_two_flocks(100, 100, 0.03f, 0.0025f, 0.75f, 0.5f,
-                                     0.5f, 0.02f, 0.95f, 360.0f);
+    pf::simulation_two_flocks(100, 100, 0.03f, 0.0025f, 0.75f, 0.5f, 0.5f,
+                              0.02f, 0.95f, 360.0f);
   } else {
     std::cout << "Unvalid character";
   }

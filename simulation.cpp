@@ -4,8 +4,8 @@
 
 namespace pf {
 
-void simulation_one_flock(double n, float d, float ds, float s, float a, float c,
-                       float field_of_view)
+void simulation_one_flock(double n, float d, float ds, float s, float a,
+                          float c, float field_of_view)
 {
   constexpr int pixelx = 1000;
   constexpr int pixely = 600;
@@ -25,7 +25,7 @@ void simulation_one_flock(double n, float d, float ds, float s, float a, float c
 
   // Crea una texture (e poi una sprite) con lo sfondo
   sf::Texture texture;
-  if (!texture.loadFromFile("sfondo.png")) {
+  if (!texture.loadFromFile("background.png")) {
     throw std::runtime_error{"Cannot load background image"};
   }
   sf::Sprite sprite;
@@ -46,7 +46,7 @@ void simulation_one_flock(double n, float d, float ds, float s, float a, float c
     // Disegnare i punti convertiti in pixel
     for (Boid const& boid : flock) {
       sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
-                                           scale_factor_x, scale_factor_y);
+                                            scale_factor_x, scale_factor_y);
       sf::ConvexShape triangle;
       triangle.setPointCount(3);
       triangle.setPoint(0, sf::Vector2f(0, -3.3f)); // Vertice superiore (punta)
@@ -58,8 +58,8 @@ void simulation_one_flock(double n, float d, float ds, float s, float a, float c
       triangle.setFillColor(sf::Color::Black);
       triangle.setOrigin(0, -3.3f);
 
-      float targetAngle = calculate_rotation_angle(
-          boid.get_vel().x, boid.get_vel().y);
+      float targetAngle =
+          calculate_rotation_angle(boid.get_vel().x, boid.get_vel().y);
       triangle.setRotation(targetAngle + 90);
 
       window.draw(triangle);
@@ -76,8 +76,8 @@ void simulation_one_flock(double n, float d, float ds, float s, float a, float c
 }
 
 void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
-                                  float a, float c, float ds2, float s2,
-                                  float field_of_view)
+                           float a, float c, float ds2, float s2,
+                           float field_of_view)
 {
   constexpr int pixelx = 1000;
   constexpr int pixely = 600;
@@ -95,7 +95,7 @@ void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
   float scale_factor_y = static_cast<float>(pixely) / 1.0f;
 
   sf::Texture texture;
-  if (!texture.loadFromFile("sfondo.png")) {
+  if (!texture.loadFromFile("background.png")) {
     throw std::runtime_error{"Cannot load backgroung image"};
   }
   sf::Sprite sprite;
@@ -114,7 +114,7 @@ void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
 
     for (Boid const& boid : flock1) {
       sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
-                                           scale_factor_x, scale_factor_y);
+                                            scale_factor_x, scale_factor_y);
       sf::ConvexShape triangle;
       triangle.setPointCount(3);
       triangle.setPoint(0, sf::Vector2f(0, -3.3f));
@@ -131,13 +131,13 @@ void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
     movement(flock1, 0.001f);
     boundary_behavior(flock1);
     flocking_behavior_two_flocks(flock1, flock2, d, ds, s, a, c, ds2, s2,
-                                   field_of_view);
+                                 field_of_view);
     random_boost(flock1, 0.01f, 0.01f);
     speed_control(flock1, 2.0);
 
     for (Boid const& boid : flock2) {
       sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
-                                           scale_factor_x, scale_factor_y);
+                                            scale_factor_x, scale_factor_y);
       sf::ConvexShape triangle;
       triangle.setPointCount(3);
       triangle.setPoint(0, sf::Vector2f(0, -3.3f));
@@ -154,7 +154,7 @@ void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
     movement(flock2, 0.001f);
     boundary_behavior(flock2);
     flocking_behavior_two_flocks(flock2, flock1, d, ds, s, a, c, ds2, s2,
-                                   field_of_view);
+                                 field_of_view);
     random_boost(flock2, 0.01f, 0.01f);
     speed_control(flock2, 2.0f);
 
@@ -162,7 +162,8 @@ void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
   }
 }
 
-void graphs(double n, float d, float ds, float s, float a, float c, float field_of_view)
+void graphs(double n, float d, float ds, float s, float a, float c,
+            float field_of_view)
 {
   constexpr int pixelx = 1200;
   constexpr int pixely = 650;
@@ -170,7 +171,7 @@ void graphs(double n, float d, float ds, float s, float a, float c, float field_
       sf::VideoMode(pixelx, pixely),
       "simulation_one_flock of one flock's behavior, by Nisi, Rosini, Seren");
   window.setPosition(sf::Vector2i(10, 40));
-  constexpr int frame_rate{120};
+  constexpr int frame_rate{60};
   window.setFramerateLimit(frame_rate);
 
   std::vector<Boid> flock = generate_flock(n);
@@ -192,7 +193,7 @@ void graphs(double n, float d, float ds, float s, float a, float c, float field_
   devdist.push_back(standdev_distance(flock));
 
   sf::Texture sfondo_texture;
-  if (!sfondo_texture.loadFromFile("sfondo_graphs.png")) {
+  if (!sfondo_texture.loadFromFile("background_graphs.png")) {
     throw std::runtime_error{"Cannot load background image"};
   }
   sf::Sprite sfondo_sprite;
@@ -200,13 +201,11 @@ void graphs(double n, float d, float ds, float s, float a, float c, float field_
 
   sf::RenderTexture renderTexture;
   if (!renderTexture.create(300, 250)) {
-    throw std::runtime_error{
-        "Cannot render graphs' textures"};
+    throw std::runtime_error{"Cannot render graphs' textures"};
   }
   sf::RenderTexture renderTextureTime;
-  if (!renderTextureTime.create(355, 15)) {
-    throw std::runtime_error{
-        "Cannot render time's texture"};
+  if (!renderTextureTime.create(355, 17)) {
+    throw std::runtime_error{"Cannot render time's texture"};
   }
 
   sf::Clock clock;
@@ -243,7 +242,7 @@ void graphs(double n, float d, float ds, float s, float a, float c, float field_
     window.draw(sprite1);
 
     renderTexture.clear(sf::Color(230, 190, 80));
-    max_y = 1.0F;
+    max_y = 2.8F;
     for (int i{0}, size = static_cast<int>(meanvel.size()); i != size; ++i) {
       sf::Vector2f pixelPos =
           set_graph_point(i, meanvel[static_cast<long unsigned int>(i)], size,
@@ -329,33 +328,34 @@ void graphs(double n, float d, float ds, float s, float a, float c, float field_
 
     renderTextureTime.clear(sf::Color::White);
     sf::Time actual_time = clock.getElapsedTime();
-    float sec     = actual_time.asSeconds();
+    float sec            = actual_time.asSeconds();
     std::string time{std::to_string(sec)};
     std::string approx_time{time.substr(0, 3)};
     sf::Text text;
     text.setFont(font);
     text.setString(approx_time);
-    text.setCharacterSize(10);
+    text.setCharacterSize(13);
     text.setFillColor(sf::Color::Black);
-    text.setPosition(288.F, 2.F);
+    text.setPosition(287.F, 2.F);
     renderTextureTime.draw(text);
-    time              = std::to_string(sec / 2.f);
+    time        = std::to_string(sec / 2.f);
     approx_time = time.substr(0, 3);
     text.setString(approx_time);
     text.setPosition(138.F, 2.F);
     renderTextureTime.draw(text);
-    time              = std::to_string(sec / 4.f);
+    time        = std::to_string(sec / 4.f);
     approx_time = time.substr(0, 3);
     text.setString(approx_time);
     text.setPosition(63.F, 2.F);
     renderTextureTime.draw(text);
-    time              = std::to_string(sec * 3.F / 4.f);
+    time        = std::to_string(sec * 3.F / 4.f);
     approx_time = time.substr(0, 3);
     text.setString(approx_time);
     text.setPosition(213.F, 2.F);
     renderTextureTime.draw(text);
     renderTextureTime.display();
     text.setString("time (s)");
+    text.setCharacterSize(12);
     text.setPosition(307.F, 2.F);
     renderTextureTime.draw(text);
     renderTextureTime.display();
@@ -377,6 +377,7 @@ void graphs(double n, float d, float ds, float s, float a, float c, float field_
     movement(flock, 0.001f);
     boundary_behavior(flock);
     flocking_behavior(flock, d, ds, s, a, c, field_of_view);
+    random_boost(flock, 0.01f, 0.01f);
     speed_control(flock, 2.0f);
 
     meanpos.push_back(mean_position(flock));

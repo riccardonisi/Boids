@@ -404,10 +404,10 @@ TEST_CASE("Testing generation of boids")
 
   SUBCASE("Calling generate_flock() with a non integer number of boids")
   {
-    CHECK_THROWS(pf::generate_flock(0.5f));
-    CHECK_THROWS(pf::generate_flock(23.45f));
-    CHECK_THROWS(pf::generate_flock(-1.4f));
-    CHECK_THROWS(pf::generate_flock(1234.56f));
+    CHECK_THROWS(pf::generate_flock(0.5));
+    CHECK_THROWS(pf::generate_flock(23.45));
+    CHECK_THROWS(pf::generate_flock(-1.4));
+    CHECK_THROWS(pf::generate_flock(1234.56));
   }
 
   SUBCASE("Calling generate_flock() with 5 boids")
