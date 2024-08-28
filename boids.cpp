@@ -109,20 +109,20 @@ Point2D coesione(std::vector<Boid> const& stormo, unsigned long int i, float c,
   }
 }
 
-std::vector<Boid> genera_stormo(int n)
+std::vector<Boid> genera_stormo(double n)
 {
   if (n < 1) {
     throw std::runtime_error{
         "Non ci sono abbastanza uccelli per generare lo stormo"};
   }
-  /*if (std::floor(n) != n) {
+  if (std::floor(n) != n) {
     throw std::runtime_error{
         "Il numero di uccelli deve essere un numero naturale"};
-  }*/
+  }
   std::vector<Boid> stormo;
-  for (int i{0}; i != n; ++i) {
-    std::random_device rd;
-    std::mt19937 gen(rd());
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  for (int i{0}; i != static_cast<int>(n); ++i) {
     std::uniform_real_distribution<float> dis(0.0f, 1.0f);
     std::uniform_real_distribution<float> dis2(-1.0f, 1.0f);
     Point2D p{dis(gen), dis(gen)};

@@ -26,14 +26,14 @@ inline sf::Vector2f set_graph_point(int i, float valore, int size,
   return sf::Vector2f(realeToPixel(x, 1.f - y, scaleFactorX, scaleFactorY));
 }
 
-void simulazione_piano(int n, float d, float ds, float s, float a, float c,
+void simulazione_piano(double n, float d, float ds, float s, float a, float c,
                        float angolo);
 
-void simulazione_piano_due_stormi(int n1, int n2, float d, float ds, float s,
+void simulazione_piano_due_stormi(double n1, double n2, float d, float ds, float s,
                                   float a, float c, float ds2, float s2,
                                   float angolo);
 
-void grafici(int n, float d, float ds, float s, float a, float c, float angolo);
+void grafici(double n, float d, float ds, float s, float a, float c, float angolo);
 
 } // namespace pf
 

@@ -4,7 +4,7 @@
 
 namespace pf {
 
-void simulazione_piano(int n, float d, float ds, float s, float a, float c,
+void simulazione_piano(double n, float d, float ds, float s, float a, float c,
                        float angolo)
 {
   constexpr int pixelx = 1000;
@@ -75,7 +75,7 @@ void simulazione_piano(int n, float d, float ds, float s, float a, float c,
   }
 }
 
-void simulazione_piano_due_stormi(int n1, int n2, float d, float ds, float s,
+void simulazione_piano_due_stormi(double n1, double n2, float d, float ds, float s,
                                   float a, float c, float ds2, float s2,
                                   float angolo)
 {
@@ -162,7 +162,7 @@ void simulazione_piano_due_stormi(int n1, int n2, float d, float ds, float s,
   }
 }
 
-void grafici(int n, float d, float ds, float s, float a, float c, float angolo)
+void grafici(double n, float d, float ds, float s, float a, float c, float angolo)
 {
   constexpr int pixelx = 1200;
   constexpr int pixely = 650;
@@ -355,7 +355,7 @@ void grafici(int n, float d, float ds, float s, float a, float c, float angolo)
     text.setPosition(213.F, 2.F);
     renderTextureTime.draw(text);
     renderTextureTime.display();
-    text.setString("tempo (s)");
+    text.setString("time (s)");
     text.setPosition(307.F, 2.F);
     renderTextureTime.draw(text);
     renderTextureTime.display();

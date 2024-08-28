@@ -402,13 +402,13 @@ TEST_CASE("Testing generation of boids")
     CHECK_THROWS(pf::genera_stormo(-1234));
   }
 
-  /*SUBCASE("Calling genera_stormo() with a non integer number of boids")
+  SUBCASE("Calling genera_stormo() with a non integer number of boids")
   {
     CHECK_THROWS(pf::genera_stormo(0.5f));
     CHECK_THROWS(pf::genera_stormo(23.45f));
     CHECK_THROWS(pf::genera_stormo(-1.4f));
     CHECK_THROWS(pf::genera_stormo(1234.56f));
-  }*/
+  }
 
   SUBCASE("Calling genera_stormo() with 5 boids")
   {
