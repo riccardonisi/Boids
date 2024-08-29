@@ -75,14 +75,26 @@ TEST_CASE("Testing operators and functions of the struct Point2D")
     CHECK_THROWS(point1 / u);
   }
 
-  SUBCASE("Testing distance() function")
+  SUBCASE("Testing dot() function")
   {
-    pf::Point2D a{2, 5};
-    pf::Point2D b{0.3f, 6.8f};
-    pf::Point2D c{-15, 100};
-    CHECK(pf::distance(a, b) == doctest::Approx(2.47589f));
-    CHECK(pf::distance(b, c) == doctest::Approx(94.4475f));
-    CHECK(pf::distance(a, c) == doctest::Approx(96.5091f));
+    pf::Point2D a1{2, 3};
+    pf::Point2D b1{-1, 0};
+    pf::dot(a1, b1);
+    CHECK(pf::dot(a1, b1) == doctest::Approx(-2.f));
+    pf::Point2D a2{0, 3};
+    pf::Point2D b2{-1, 0};
+    pf::dot(a2, b2);
+    CHECK(pf::dot(a2, b2) == doctest::Approx(0.f));
+    pf::Point2D a3{-1, -3};
+    pf::Point2D b3{-1, -2};
+    pf::dot(a3, b3);
+    CHECK(pf::dot(a3, b3) == doctest::Approx(7.f));
+    a3 = pf::Point2D{1, 1};
+    CHECK(pf::dot(a3, a3) == doctest::Approx(2.f));
+    a3 = pf::Point2D{std::sqrt(2.F) / 2, std::sqrt(2.F) / 2};
+    CHECK(pf::dot(a3, a3) == doctest::Approx(1.f));
+    a3 = pf::Point2D{0, 0};
+    CHECK(pf::dot(a3, b3) == doctest::Approx(0.f));
   }
 
   SUBCASE("Testing magnitude() function")
@@ -116,26 +128,14 @@ TEST_CASE("Testing operators and functions of the struct Point2D")
     CHECK(pf::magnitude(normalization(c)) == doctest::Approx(0.f));
   }
 
-  SUBCASE("Testing dot() function")
+  SUBCASE("Testing distance() function")
   {
-    pf::Point2D a1{2, 3};
-    pf::Point2D b1{-1, 0};
-    pf::dot(a1, b1);
-    CHECK(pf::dot(a1, b1) == doctest::Approx(-2.f));
-    pf::Point2D a2{0, 3};
-    pf::Point2D b2{-1, 0};
-    pf::dot(a2, b2);
-    CHECK(pf::dot(a2, b2) == doctest::Approx(0.f));
-    pf::Point2D a3{-1, -3};
-    pf::Point2D b3{-1, -2};
-    pf::dot(a3, b3);
-    CHECK(pf::dot(a3, b3) == doctest::Approx(7.f));
-    a3 = pf::Point2D{1, 1};
-    CHECK(pf::dot(a3, a3) == doctest::Approx(2.f));
-    a3 = pf::Point2D{std::sqrt(2.F) / 2, std::sqrt(2.F) / 2};
-    CHECK(pf::dot(a3, a3) == doctest::Approx(1.f));
-    a3 = pf::Point2D{0, 0};
-    CHECK(pf::dot(a3, b3) == doctest::Approx(0.f));
+    pf::Point2D a{2, 5};
+    pf::Point2D b{0.3f, 6.8f};
+    pf::Point2D c{-15, 100};
+    CHECK(pf::distance(a, b) == doctest::Approx(2.47589f));
+    CHECK(pf::distance(b, c) == doctest::Approx(94.4475f));
+    CHECK(pf::distance(a, c) == doctest::Approx(96.5091f));
   }
 }
 
@@ -153,12 +153,14 @@ TEST_CASE("Testing methods and operators of the class Boid")
   SUBCASE("Testing set_() methods")
   {
     pf::Boid a{{3.2f, 9.4f}, {2, 4.8f}};
-    a.set_pos(pf::Point2D{2.3f, 4.5f});
+    pf::Point2D p{2.3f, 4.5f};
+    a.set_pos(p);
     CHECK(a.get_pos().x == 2.3f);
     CHECK(a.get_pos().y == 4.5f);
     CHECK(a.get_vel().x == 2.0f);
     CHECK(a.get_vel().y == 4.8f);
-    a.set_vel(pf::Point2D{3.1f, 7.5f});
+    pf::Point2D v{3.1f, 7.5f};
+    a.set_vel(v);
     CHECK(a.get_pos().x == 2.3f);
     CHECK(a.get_pos().y == 4.5f);
     CHECK(a.get_vel().x == 3.1f);
@@ -177,8 +179,78 @@ TEST_CASE("Testing methods and operators of the class Boid")
   }
 }
 
+TEST_CASE("Testing generation of boids")
+{
+  SUBCASE("Calling generate_flock() with 0 or less boids")
+  {
+    CHECK_THROWS(pf::generate_flock(0));
+    CHECK_THROWS(pf::generate_flock(-2));
+    CHECK_THROWS(pf::generate_flock(-46));
+    CHECK_THROWS(pf::generate_flock(-57));
+    CHECK_THROWS(pf::generate_flock(-1234));
+  }
+
+  SUBCASE("Calling generate_flock() with a non integer number of boids")
+  {
+    CHECK_THROWS(pf::generate_flock(0.5));
+    CHECK_THROWS(pf::generate_flock(23.45));
+    CHECK_THROWS(pf::generate_flock(-1.4));
+    CHECK_THROWS(pf::generate_flock(1234.56));
+  }
+
+  SUBCASE("Calling generate_flock() with 5 boids")
+  {
+    std::vector<pf::Boid> prova = pf::generate_flock(5);
+    CHECK(prova.size() == 5);
+    CHECK(!(prova[0] == prova[1] && prova[0] == prova[2] && prova[0] == prova[3]
+            && prova[0] == prova[4]));
+    CHECK(!(prova[0].get_pos().x == prova[0].get_pos().y
+            && prova[0].get_pos().x == prova[0].get_vel().x
+            && prova[0].get_pos().x == prova[0].get_vel().y));
+  }
+
+  SUBCASE("Calling generate_flock() with 50 boids")
+  {
+    std::vector<pf::Boid> prova = pf::generate_flock(50);
+    CHECK(prova.size() == 50);
+  }
+}
+
 TEST_CASE("Testing rules of flight")
 {
+  SUBCASE("Calling is_in_field_of_view()")
+  {
+    pf::Boid a1{{0, 0}, {1, 1}};
+    pf::Boid b1{{1, 1}, {0, 0}};
+    CHECK(is_in_field_of_view(a1, b1, 120.f));
+    CHECK(is_in_field_of_view(a1, b1, 60.f));
+    pf::Boid a2{{0, 0}, {1, 1}};
+    pf::Boid b2{{0, 0}, {2, -1}};
+    CHECK(is_in_field_of_view(a2, b2, 120.f) == false);
+    CHECK(is_in_field_of_view(a2, b2, 60.f) == false);
+    pf::Boid a3{{1, 1}, {1, 1}};
+    pf::Boid b3{{-1, 2}, {1, 3}};
+    CHECK(is_in_field_of_view(a3, b3, 120.f) == false);
+    CHECK(is_in_field_of_view(a3, b3, 60.f) == false);
+    CHECK(is_in_field_of_view(a3, b3, 360.f));
+    CHECK(is_in_field_of_view(a1, b3, 360.f));
+    CHECK(!is_in_field_of_view(a1, b1, 0.f));
+    a3 = pf::Boid{{1, 0}, {1, 0}};
+    b3 = pf::Boid{{1, 1}, {1, 3}};
+    CHECK(is_in_field_of_view(a3, b3, 180.f));
+    a3 = pf::Boid{{-1, 0}, {-2, 0}};
+    b3 = pf::Boid{{-6, -7}, {2, 3}};
+    CHECK(is_in_field_of_view(a3, b3, 180.f));
+    a3 = pf::Boid{{0, 0}, {0, 0}};
+    b3 = pf::Boid{{1, 1}, {1, 3}};
+    CHECK(is_in_field_of_view(a3, b3, 0.f));
+    a3 = pf::Boid{{0, 0}, {-1, -1}};
+    CHECK(is_in_field_of_view(a3, b3, 360.f));
+    CHECK(!is_in_field_of_view(a3, a3, 25.f));
+    CHECK(!is_in_field_of_view(a3, a3, 0.f));
+    CHECK(!is_in_field_of_view(a3, a3, 360.f));
+  }
+
   std::vector<pf::Boid> prova;
   REQUIRE(prova.size() == 0);
 
@@ -396,76 +468,8 @@ TEST_CASE("Testing rules of flight")
   }
 }
 
-TEST_CASE("Testing generation of boids")
-{
-  SUBCASE("Calling generate_flock() with 0 or less boids")
-  {
-    CHECK_THROWS(pf::generate_flock(0));
-    CHECK_THROWS(pf::generate_flock(-2));
-    CHECK_THROWS(pf::generate_flock(-46));
-    CHECK_THROWS(pf::generate_flock(-57));
-    CHECK_THROWS(pf::generate_flock(-1234));
-  }
-
-  SUBCASE("Calling generate_flock() with a non integer number of boids")
-  {
-    CHECK_THROWS(pf::generate_flock(0.5));
-    CHECK_THROWS(pf::generate_flock(23.45));
-    CHECK_THROWS(pf::generate_flock(-1.4));
-    CHECK_THROWS(pf::generate_flock(1234.56));
-  }
-
-  SUBCASE("Calling generate_flock() with 5 boids")
-  {
-    std::vector<pf::Boid> prova = pf::generate_flock(5);
-    CHECK(prova.size() == 5);
-    CHECK(!(prova[0] == prova[1] && prova[0] == prova[2] && prova[0] == prova[3]
-            && prova[0] == prova[4]));
-    CHECK(!(prova[0].get_pos().x == prova[0].get_pos().y
-            && prova[0].get_pos().x == prova[0].get_vel().x
-            && prova[0].get_pos().x == prova[0].get_vel().y));
-  }
-
-  SUBCASE("Calling generate_flock() with 50 boids")
-  {
-    std::vector<pf::Boid> prova = pf::generate_flock(50);
-    CHECK(prova.size() == 50);
-  }
-}
-
 TEST_CASE("Testing application of the rules of flight")
 {
-  SUBCASE("Calling flocking_behavior()")
-  {
-    float d{2};
-    float ds{1};
-    pf::Boid b1{{1, 2}, {3, 4}};
-    pf::Boid b2{{0.4f, 2}, {-7, -0.8f}};
-    pf::Boid b3{{5.7f, 3}, {1, 4}};
-    pf::Boid b4{{1.3f, 2.7f}, {2.2f, -1}};
-    std::vector<pf::Boid> flock{b1, b2, b3, b4};
-    float s{0.5f};
-    float a{1.2f};
-    float c{0.75f};
-    pf::flocking_behavior(flock, d, ds, s, a, c, 360);
-    CHECK(flock[0].get_pos().x == doctest::Approx(1.f));
-    CHECK(flock[0].get_pos().y == doctest::Approx(2.f));
-    CHECK(flock[0].get_vel().x == doctest::Approx(-3.4425f));
-    CHECK(flock[0].get_vel().y == doctest::Approx(-1.9675f));
-    CHECK(flock[1].get_pos().x == doctest::Approx(0.4f));
-    CHECK(flock[1].get_pos().y == doctest::Approx(2.f));
-    CHECK(flock[1].get_vel().x == doctest::Approx(4.7825f));
-    CHECK(flock[1].get_vel().y == doctest::Approx(2.2225f));
-    CHECK(flock[2].get_pos().x == doctest::Approx(5.7f));
-    CHECK(flock[2].get_pos().y == doctest::Approx(3.f));
-    CHECK(flock[2].get_vel().x == doctest::Approx(1.f));
-    CHECK(flock[2].get_vel().y == doctest::Approx(4.f));
-    CHECK(flock[3].get_pos().x == doctest::Approx(1.3f));
-    CHECK(flock[3].get_pos().y == doctest::Approx(2.7f));
-    CHECK(flock[3].get_vel().x == doctest::Approx(-3.14f));
-    CHECK(flock[3].get_vel().y == doctest::Approx(1.945f));
-  }
-
   SUBCASE("Calling movement() with 3 boids")
   {
     pf::Boid b1{{1, 2}, {3, 4}};
@@ -519,6 +523,40 @@ TEST_CASE("Testing application of the rules of flight")
     CHECK(flock[4].get_vel().y == 2.f);
   }
 
+  SUBCASE("Calling flocking_behavior()")
+  {
+    float d{2};
+    float ds{1};
+    pf::Boid b1{{1, 2}, {3, 4}};
+    pf::Boid b2{{0.4f, 2}, {-7, -0.8f}};
+    pf::Boid b3{{5.7f, 3}, {1, 4}};
+    pf::Boid b4{{1.3f, 2.7f}, {2.2f, -1}};
+    std::vector<pf::Boid> flock{b1, b2, b3, b4};
+    float s{0.5f};
+    float a{1.2f};
+    float c{0.75f};
+    pf::flocking_behavior(flock, d, ds, s, a, c, 360);
+    CHECK(flock[0].get_pos().x == doctest::Approx(1.f));
+    CHECK(flock[0].get_pos().y == doctest::Approx(2.f));
+    CHECK(flock[0].get_vel().x == doctest::Approx(-3.4425f));
+    CHECK(flock[0].get_vel().y == doctest::Approx(-1.9675f));
+    CHECK(flock[1].get_pos().x == doctest::Approx(0.4f));
+    CHECK(flock[1].get_pos().y == doctest::Approx(2.f));
+    CHECK(flock[1].get_vel().x == doctest::Approx(4.7825f));
+    CHECK(flock[1].get_vel().y == doctest::Approx(2.2225f));
+    CHECK(flock[2].get_pos().x == doctest::Approx(5.7f));
+    CHECK(flock[2].get_pos().y == doctest::Approx(3.f));
+    CHECK(flock[2].get_vel().x == doctest::Approx(1.f));
+    CHECK(flock[2].get_vel().y == doctest::Approx(4.f));
+    CHECK(flock[3].get_pos().x == doctest::Approx(1.3f));
+    CHECK(flock[3].get_pos().y == doctest::Approx(2.7f));
+    CHECK(flock[3].get_vel().x == doctest::Approx(-3.14f));
+    CHECK(flock[3].get_vel().y == doctest::Approx(1.945f));
+  }
+
+  SUBCASE("Calling random_boost()")
+  {}
+
   SUBCASE("Calling speed_control() with 5 boids")
   {
     std::vector<pf::Boid> flock;
@@ -559,34 +597,38 @@ TEST_CASE("Testing application of the rules of flight")
     CHECK(flock[4].get_vel().y == 0.8f);
   }
 
-  SUBCASE("Calling is_in_field_of_view()")
+  SUBCASE("Calling flocking_behavior_two_flocks()")
   {
-    pf::Boid a1{{0, 0}, {1, 1}};
-    pf::Boid b1{{1, 1}, {0, 0}};
-    CHECK(is_in_field_of_view(a1, b1, 120.f));
-    CHECK(is_in_field_of_view(a1, b1, 60.f));
-    pf::Boid a2{{0, 0}, {1, 1}};
-    pf::Boid b2{{0, 0}, {2, -1}};
-    CHECK(is_in_field_of_view(a2, b2, 120.f) == false);
-    CHECK(is_in_field_of_view(a2, b2, 60.f) == false);
-    pf::Boid a3{{1, 1}, {1, 1}};
-    pf::Boid b3{{-1, 2}, {1, 3}};
-    CHECK(is_in_field_of_view(a3, b3, 120.f) == false);
-    CHECK(is_in_field_of_view(a3, b3, 60.f) == false);
-    CHECK(is_in_field_of_view(a3, b3, 360.f));
-    CHECK(is_in_field_of_view(a1, b3, 360.f));
-    CHECK(!is_in_field_of_view(a1, b1, 0.f));
-    a3 = pf::Boid{{1, 0}, {1, 0}};
-    b3 = pf::Boid{{1, 1}, {1, 3}};
-    CHECK(is_in_field_of_view(a3, b3, 180.f));
-    a3 = pf::Boid{{-1, 0}, {-2, 0}};
-    b3 = pf::Boid{{-6, -7}, {2, 3}};
-    CHECK(is_in_field_of_view(a3, b3, 180.f));
-    a3 = pf::Boid{{0, 0}, {0, 0}};
-    b3 = pf::Boid{{1, 1}, {1, 3}};
-    CHECK(is_in_field_of_view(a3, b3, 0.f));
-    a3 = pf::Boid{{0, 0}, {-1, -1}};
-    CHECK(is_in_field_of_view(a3, b3, 360.f));
+    float d{2};
+    float ds{1};
+    pf::Boid b1{{1, 2}, {3, 4}};
+    pf::Boid b2{{0.4f, 2}, {-7, -0.8f}};
+    pf::Boid b3{{5.7f, 3}, {1, 4}};
+    pf::Boid b4{{1.3f, 2.7f}, {2.2f, -1}};
+    std::vector<pf::Boid> flock{b1, b2, b3, b4};
+    b1 = pf::Boid{{12, 23}, {1, 2}};
+    b2 = pf::Boid{{5.4f, 3.1f}, {0.2f, 1.3f}};
+    std::vector<pf::Boid> flock2{b1, b2};
+    float s{0.5f};
+    float a{1.2f};
+    float c{0.75f};
+    pf::flocking_behavior_two_flocks(flock, flock2, d, ds, s, a, c, ds, s, 360);
+    CHECK(flock[0].get_pos().x == doctest::Approx(1.f));
+    CHECK(flock[0].get_pos().y == doctest::Approx(2.f));
+    CHECK(flock[0].get_vel().x == doctest::Approx(-3.4425f));
+    CHECK(flock[0].get_vel().y == doctest::Approx(-1.9675f));
+    CHECK(flock[1].get_pos().x == doctest::Approx(0.4f));
+    CHECK(flock[1].get_pos().y == doctest::Approx(2.f));
+    CHECK(flock[1].get_vel().x == doctest::Approx(4.7825f));
+    CHECK(flock[1].get_vel().y == doctest::Approx(2.2225f));
+    CHECK(flock[2].get_pos().x == doctest::Approx(5.7f));
+    CHECK(flock[2].get_pos().y == doctest::Approx(3.f));
+    CHECK(flock[2].get_vel().x == doctest::Approx(1.15f));
+    CHECK(flock[2].get_vel().y == doctest::Approx(3.95f));
+    CHECK(flock[3].get_pos().x == doctest::Approx(1.3f));
+    CHECK(flock[3].get_pos().y == doctest::Approx(2.7f));
+    CHECK(flock[3].get_vel().x == doctest::Approx(-3.14f));
+    CHECK(flock[3].get_vel().y == doctest::Approx(1.945f));
   }
 }
 
@@ -709,122 +751,6 @@ TEST_CASE("Testing boids mean parameters")
     prova.push_back(b1);
     CHECK_THROWS(pf::mean_distance(prova));
     CHECK_THROWS(pf::standdev_distance(prova));
-  }
-}
-
-TEST_CASE("Testing rules of flight with 2 storms")
-{
-  std::vector<pf::Boid> prova;
-  REQUIRE(prova.size() == 0);
-
-  SUBCASE("Calling separation() with 1 near boid and 1 far boid")
-  {
-    pf::Point2D p1{2, 3};
-    pf::Point2D v1{0, 0};
-    pf::Boid b1{p1, v1};
-    pf::Point2D p2{4.5f, 7.8f};
-    pf::Point2D v2{0, 0};
-    pf::Boid b2{p2, v2};
-    prova.push_back(b2);
-    p2 = {11, 7.8f};
-    v2 = {0, 0};
-    b2 = pf::Boid{p2, v2};
-    prova.push_back(b2);
-    pf::Point2D v3 = pf::separation(prova, b1, 0.5f, 10, 360);
-    CHECK(v3.x == doctest::Approx(-1.25f));
-    CHECK(v3.y == doctest::Approx(-2.4f));
-  }
-
-  SUBCASE("Calling separation() with 0 boids")
-  {
-    pf::Point2D p1{2, 3};
-    pf::Point2D v1{0, 0};
-    pf::Boid b1{p1, v1};
-    CHECK_THROWS(separation(prova, b1, 0.5f, 1, 360));
-  }
-
-  SUBCASE("Calling separation() with 1 boid")
-  {
-    pf::Point2D p1{4.5f, 7.8f};
-    pf::Point2D v1{0, 0};
-    pf::Boid b1{p1, v1};
-    prova.push_back(b1);
-    pf::Point2D p2{2, 3};
-    pf::Point2D v2{0, 0};
-    pf::Boid b2{p2, v2};
-    CHECK_THROWS(separation(prova, b2, 0.5f, 12, 360));
-  }
-
-  SUBCASE("Calling separation() with 1 near boid and 2 far boids")
-  {
-    pf::Point2D p{4.5f, 7.8f};
-    pf::Point2D v{0, 0};
-    pf::Boid b{p, v};
-    prova.push_back(b);
-    p = {100, 7.8f};
-    b = pf::Boid{p, v};
-    prova.push_back(b);
-    p = {12, 11.5f};
-    b = pf::Boid{p, v};
-    prova.push_back(b);
-    p              = {2, 3};
-    b              = pf::Boid{p, v};
-    pf::Point2D v3 = separation(prova, b, 0.5f, 10, 360);
-    CHECK(v3.x == doctest::Approx(-1.25f));
-    CHECK(v3.y == doctest::Approx(-2.4f));
-  }
-
-  SUBCASE("Calling separation() with 0 near boids")
-  {
-    pf::Point2D p{4.5f, 7.8f};
-    pf::Point2D v{0, 0};
-    pf::Boid b{p, v};
-    prova.push_back(b);
-    p = {1, 7.8f};
-    b = pf::Boid{p, v};
-    prova.push_back(b);
-    p = {12, 11.5f};
-    b = pf::Boid{p, v};
-    prova.push_back(b);
-    p              = {20, 18.3f};
-    b              = pf::Boid{p, v};
-    pf::Point2D v3 = separation(prova, b, 0.5f, 10, 360);
-    CHECK(v3.x == doctest::Approx(0.f));
-    CHECK(v3.y == doctest::Approx(0.f));
-  }
-
-  SUBCASE("Calling flocking_behavior_two_flocks()")
-  {
-    float d{2};
-    float ds{1};
-    pf::Boid b1{{1, 2}, {3, 4}};
-    pf::Boid b2{{0.4f, 2}, {-7, -0.8f}};
-    pf::Boid b3{{5.7f, 3}, {1, 4}};
-    pf::Boid b4{{1.3f, 2.7f}, {2.2f, -1}};
-    std::vector<pf::Boid> flock{b1, b2, b3, b4};
-    b1 = pf::Boid{{12, 23}, {1, 2}};
-    b2 = pf::Boid{{5.4f, 3.1f}, {0.2f, 1.3f}};
-    std::vector<pf::Boid> flock2{b1, b2};
-    float s{0.5f};
-    float a{1.2f};
-    float c{0.75f};
-    pf::flocking_behavior_two_flocks(flock, flock2, d, ds, s, a, c, ds, s, 360);
-    CHECK(flock[0].get_pos().x == doctest::Approx(1.f));
-    CHECK(flock[0].get_pos().y == doctest::Approx(2.f));
-    CHECK(flock[0].get_vel().x == doctest::Approx(-3.4425f));
-    CHECK(flock[0].get_vel().y == doctest::Approx(-1.9675f));
-    CHECK(flock[1].get_pos().x == doctest::Approx(0.4f));
-    CHECK(flock[1].get_pos().y == doctest::Approx(2.f));
-    CHECK(flock[1].get_vel().x == doctest::Approx(4.7825f));
-    CHECK(flock[1].get_vel().y == doctest::Approx(2.2225f));
-    CHECK(flock[2].get_pos().x == doctest::Approx(5.7f));
-    CHECK(flock[2].get_pos().y == doctest::Approx(3.f));
-    CHECK(flock[2].get_vel().x == doctest::Approx(1.15f));
-    CHECK(flock[2].get_vel().y == doctest::Approx(3.95f));
-    CHECK(flock[3].get_pos().x == doctest::Approx(1.3f));
-    CHECK(flock[3].get_pos().y == doctest::Approx(2.7f));
-    CHECK(flock[3].get_vel().x == doctest::Approx(-3.14f));
-    CHECK(flock[3].get_vel().y == doctest::Approx(1.945f));
   }
 }
 
