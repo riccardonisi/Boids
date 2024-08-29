@@ -169,7 +169,7 @@ void flocking_behavior(std::vector<Boid>& flock, float d, float ds, float s,
                               + alignment(flock, boid, a, d, field_of_view)
                               + cohesion(flock, boid, c, d, field_of_view));
   }
-  for (unsigned long int i{0}; i != flock.size(); ++i) {
+  for (size_t i{0}; i != flock.size(); ++i) {
     Point2D new_vel = flock[i].get_vel() + vel_corrections[i];
     flock[i].set_vel(new_vel);
   }
@@ -238,7 +238,7 @@ void flocking_behavior_two_flocks(std::vector<Boid>& flock,
         + alignment(flock, boid, a, d, field_of_view)
         + cohesion(flock, boid, c, d, field_of_view));
   }
-  for (unsigned long int i{0}; i != flock.size(); ++i) {
+  for (size_t i{0}; i != flock.size(); ++i) {
     Point2D new_vel = flock[i].get_vel() + vel_corrections[i];
     flock[i].set_vel(new_vel);
   }
