@@ -11,7 +11,7 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
   constexpr int pixely = 600;
   sf::RenderWindow window(
       sf::VideoMode(pixelx, pixely),
-      "simulation_one_flock of one flock's behavior, by Nisi, Rosini, Seren");
+      "Simulation of one flock's behavior, by Nisi, Rosini, Seren");
   window.setPosition(sf::Vector2i(50, 70));
   constexpr int frame_rate{60};
   window.setFramerateLimit(frame_rate);
@@ -75,7 +75,7 @@ void graphs(double n, float d, float ds, float s, float a, float c,
   constexpr int pixely = 650;
   sf::RenderWindow window(
       sf::VideoMode(pixelx, pixely),
-      "simulation_one_flock of one flock's behavior, by Nisi, Rosini, Seren");
+      "Simulation of one flock's behavior, by Nisi, Rosini, Seren");
   window.setPosition(sf::Vector2i(10, 40));
   constexpr int frame_rate{60};
   window.setFramerateLimit(frame_rate);
@@ -242,7 +242,7 @@ void graphs(double n, float d, float ds, float s, float a, float c,
     text.setString(approx_time);
     text.setCharacterSize(13);
     text.setFillColor(sf::Color::Black);
-    text.setPosition(287.F, 2.F);
+    text.setPosition(286.F, 2.F);
     renderTextureTime.draw(text);
     time        = std::to_string(sec / 2.f);
     approx_time = time.substr(0, 3);
@@ -262,7 +262,7 @@ void graphs(double n, float d, float ds, float s, float a, float c,
     renderTextureTime.display();
     text.setString("time (s)");
     text.setCharacterSize(12);
-    text.setPosition(307.F, 2.F);
+    text.setPosition(309.F, 2.F);
     renderTextureTime.draw(text);
     renderTextureTime.display();
     const sf::Texture& texture_time = renderTextureTime.getTexture();
@@ -305,7 +305,7 @@ void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
   constexpr int pixely = 600;
   sf::RenderWindow window(
       sf::VideoMode(pixelx, pixely),
-      "simulation_two_flocks of two flocks' behavior, by Nisi, Rosini, Seren");
+      "Simulation of two flocks' behavior, by Nisi, Rosini, Seren");
   window.setPosition(sf::Vector2i(50, 70));
   constexpr int frame_rate{60};
   window.setFramerateLimit(frame_rate);
