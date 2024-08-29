@@ -184,7 +184,7 @@ int main()
         double n;
         std::cin >> n;
         if (n < 3) {
-          throw std::runtime_error{"Not enought boids to estimate parameters"};
+          throw std::runtime_error{"Not enough boids to estimate parameters"};
         }
         if (std::floor(n) != n) {
           throw std::runtime_error{
@@ -295,8 +295,8 @@ int main()
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
       } else if (op == 'g') {
-        pf::simulation_two_flocks(100, 100, 0.03f, 0.0025f, 0.75f, 0.5f, 0.5f,
-                                  0.02f, 0.95f, 360.0f);
+        pf::simulation_two_flocks(300, 300, 0.03f, 0.005f, 1.0f, 0.15f, 0.01f,
+                                  0.05f, 1.0f, 270.0f);
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
       } else {

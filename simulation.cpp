@@ -354,7 +354,7 @@ void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
     boundary_behavior(flock1);
     flocking_behavior_two_flocks(flock1, flock2, d, ds, s, a, c, ds2, s2,
                                  field_of_view);
-    random_boost(flock1, 0.01f, 0.01f);
+    random_boost(flock1, 0.002f, 0.01f);
     speed_control(flock1, 2.0);
 
     for (Boid const& boid : flock2) {
@@ -377,7 +377,7 @@ void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
     boundary_behavior(flock2);
     flocking_behavior_two_flocks(flock2, flock1, d, ds, s, a, c, ds2, s2,
                                  field_of_view);
-    random_boost(flock2, 0.01f, 0.01f);
+    random_boost(flock2, 0.002f, 0.01f);
     speed_control(flock2, 2.0f);
 
     window.display();
