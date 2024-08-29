@@ -127,40 +127,47 @@ int main()
         std::cout << "Select the number of boids: ";
         double n;
         std::cin >> n;
-        if (n < 1) {
-          throw std::runtime_error{"Not enough boids to generate a flock"};
-        }
-        if (std::floor(n) != n) {
+        if (std::floor(n) != n || !(std::cin.good())) {
           throw std::runtime_error{
               "The number of boids must be a natural number"};
         }
+        if (n < 1) {
+          throw std::runtime_error{"Not enough boids to generate a flock"};
+        }
+        
         std::cout << "Set d, ds, s, a, c: ";
         float d;
         float ds;
         float s;
         float a;
         float c;
-        std::cin >> d >> ds >> s >> a >> c;
-        if (d < 0.f || d > std::sqrt(2.f)) {
+        std::cin >> d;
+        if (d < 0.f || d > std::sqrt(2.f) || !(std::cin.good())) {
           throw std::runtime_error{
-              "d must be defined in the range [0, sqrt(2)]"};
+              "d must be a number defined in the range [0, sqrt(2)]"};
         }
-        if (ds < 0.f || ds > d) {
-          throw std::runtime_error{"ds must be defined in the range [0, d]"};
+        std::cin >> ds;
+        if (ds < 0.f || ds > d || !(std::cin.good())) {
+          throw std::runtime_error{
+              "ds must be a nummber defined in the range [0, d]"};
         }
-        if (s < 0.f) {
-          throw std::runtime_error{"s must be non-negative"};
+        std::cin >> s;
+        if (s < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"s must be non-negative number"};
         }
-        if (a < 0.f) {
-          throw std::runtime_error{"a must be non-negative"};
+        std::cin >> a;
+        if (a < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"a must be non-negative number"};
         }
-        if (c < 0.f) {
-          throw std::runtime_error{"c must be non-negative"};
+        std::cin >> c;
+        if (c < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"c must be non-negative number"};
         }
         std::cout << "Set the field of view (in degrees): ";
         float field_of_view;
         std::cin >> field_of_view;
-        if (field_of_view < 0.0f && field_of_view > 360.f) {
+        if (field_of_view < 0.0f || field_of_view > 360.f
+            || !(std::cin.good())) {
           throw std::runtime_error{"The field of view must be an angle defined "
                                    "in the range [0°, 360°]"};
         }
