@@ -10,20 +10,25 @@ int main()
     std::cout << "   |     BOIDS, FLOCKING BEHAVIOR SIMULATION     |\n";
     std::cout << "    ---------------------------------------------\n";
     std::cout << "      by Riccardo Nisi, Emanuele Rosini, Federico Seren\n\n";
+
+    std::cout << "The program simulates coordinated animal motion such as the "
+                 "behavior of bird flocks.\n";
+    std::cout << "It is based on the computer model developed by Craig "
+                 "Reynolds in 1986.\n\n";
     std::cout << "Options:\n"
               << "a. Print on terminal time evolution of "
                  "mean distance from origin, mean speed and mean distance "
                  "between boids\n";
     std::cout
-        << "b. Visualize animated flocking behavior with your parameters\n";
-    std::cout << "c. Visualize animated flocking behavior with "
+        << "b. Visualize animated flocking behavior, with your parameters\n";
+    std::cout << "c. Visualize animated flocking behavior, with "
                  "suggested parameters\n";
     std::cout << "d. Visualize with graphs the time evolution of "
                  "mean distance from origin, mean speed and mean distance "
-                 "between boids (your parameters)\n";
-    std::cout << "e. Visualize with graphs the time evolution of"
+                 "between boids, with your parameters\n";
+    std::cout << "e. Visualize with graphs the time evolution of "
                  "mean distance from origin, mean speed and mean distance "
-                 "between boids (suggested parameters)\n";
+                 "between boids, with suggested parameters\n";
     std::cout << "f. Visualize animated flocking behavior of two flocks of "
                  "different species, with your parameters\n";
     std::cout << "g. Visualize animated flocking behavior of two flocks of "
@@ -32,44 +37,63 @@ int main()
     while (true) {
       std::cin >> op;
       if (op == 'a') {
+        std::cout << "\nParameters to choose:\n";
+        std::cout << "- number of boids (a positive natural number, greater "
+                     "than 2 because it is "
+                     "needed to calculate parameters)\n";
+        std::cout
+            << "- d = the distance within which the rules of flight are "
+               "activated (floating point number in the range [0, sqrt(2)])\n";
+        std::cout << "- ds = the distance within which separation is activated "
+                     "(floating point number in the range [0, d])\n";
+        std::cout << "- s = a positive factor that increases separation\n";
+        std::cout << "- a = a positive factor that increases alignemnt\n";
+        std::cout << "- c = a positive factor that increases cohesion\n";
+        std::cout << "- the field of view of the boids, in degrees (in the "
+                     "range [0°, 360°])\n\n";
         std::cout << "Select the number of boids: ";
         double n;
         std::cin >> n;
+        if (std::floor(n) != n || !(std::cin.good())) {
+          throw std::runtime_error{
+              "The number of boids must be a positive natural number"};
+        }
         if (n < 3) {
           throw std::runtime_error{"Not enough boids to estimate parameters"};
         }
-        if (std::floor(n) != n) {
-          throw std::runtime_error{
-              "The number of boids must be a natural number"};
-        }
         std::cout << "Set d, ds, s, a, c: ";
         float d;
-        float ds;
-        float s;
-        float a;
-        float c;
-        std::cin >> d >> ds >> s >> a >> c;
-        if (d < 0.f || d > std::sqrt(2.f)) {
+        std::cin >> d;
+        if (d < 0.f || d > std::sqrt(2.f) || !(std::cin.good())) {
           throw std::runtime_error{
-              "d must be defined in the range [0, sqrt(2)]"};
+              "d must be a number defined in the range [0, sqrt(2)]"};
         }
-        if (ds < 0.f || ds > d) {
-          throw std::runtime_error{"ds must be defined in the range [0, d]"};
+        float ds;
+        std::cin >> ds;
+        if (ds < 0.f || ds > d || !(std::cin.good())) {
+          throw std::runtime_error{
+              "ds must be a number defined in the range [0, d]"};
         }
-        if (s < 0.f) {
-          throw std::runtime_error{"s must be non-negative"};
+        float s;
+        std::cin >> s;
+        if (s < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"s must be non-negative number"};
         }
-        if (a < 0.f) {
-          throw std::runtime_error{"a must be non-negative"};
+        float a;
+        std::cin >> a;
+        if (a < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"a must be non-negative number"};
         }
-        if (c < 0.f) {
-          throw std::runtime_error{"c must be non-negative"};
+        float c;
+        std::cin >> c;
+        if (c < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"c must be non-negative number"};
         }
-        std::cout << "Set the field of view (in degrees): ";
+        std::cout << "Set the field of view: ";
         float field_of_view;
         std::cin >> field_of_view;
-        assert(field_of_view >= 0.0f && field_of_view <= 360.f);
-        if (field_of_view < 0.0f && field_of_view > 360.f) {
+        if (field_of_view < 0.0f || field_of_view > 360.f
+            || !(std::cin.good())) {
           throw std::runtime_error{"The field of view must be an angle defined "
                                    "in the range [0°, 360°]"};
         }
@@ -77,18 +101,24 @@ int main()
         std::cout << "Set the duration of the simulation in seconds: ";
         double time_tot;
         std::cin >> time_tot;
+        if (!(std::cin.good())) {
+          throw std::runtime_error{"The duration must be a number"};
+        }
         if (time_tot < 0.0f) {
           throw std::runtime_error{
               "The simulation can't last less that 0 seconds"};
         }
-        std::cout << "Set update time of mean parameters ";
+        std::cout << "Set update time of mean parameters: ";
         double time_lapse;
         std::cin >> time_lapse;
+        if (!(std::cin.good())) {
+          throw std::runtime_error{"The duration must be a number"};
+        }
         if (time_lapse < 0.0f) {
           throw std::runtime_error{"The update time can't be negative"};
         }
         if (time_lapse > time_tot) {
-          throw std::runtime_error{"The update time can't be bigger that the "
+          throw std::runtime_error{"The update time can't be bigger than the "
                                    "duration of the simulation"};
         }
         const auto start{std::chrono::steady_clock::now()};
@@ -124,46 +154,54 @@ int main()
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
       } else if (op == 'b') {
+        std::cout << "\nParameters to choose:\n";
+        std::cout << "- number of boids (a positive natural number)\n";
+        std::cout
+            << "- d = the distance within which the rules of flight are "
+               "activated (floating point number in the range [0, sqrt(2)])\n";
+        std::cout << "- ds = the distance within which separation is activated "
+                     "(floating point number in the range [0, d])\n";
+        std::cout << "- s = a positive factor that increases separation\n";
+        std::cout << "- a = a positive factor that increases alignemnt\n";
+        std::cout << "- c = a positive factor that increases cohesion\n";
+        std::cout << "- the field of view of the boids, in degrees (in the "
+                     "range [0°, 360°])\n\n";
         std::cout << "Select the number of boids: ";
         double n;
         std::cin >> n;
-        if (std::floor(n) != n || !(std::cin.good())) {
+        if (n < 1 || std::floor(n) != n || !(std::cin.good())) {
           throw std::runtime_error{
-              "The number of boids must be a natural number"};
+              "The number of boids must be a positive natural number"};
         }
-        if (n < 1) {
-          throw std::runtime_error{"Not enough boids to generate a flock"};
-        }
-        
         std::cout << "Set d, ds, s, a, c: ";
         float d;
-        float ds;
-        float s;
-        float a;
-        float c;
         std::cin >> d;
         if (d < 0.f || d > std::sqrt(2.f) || !(std::cin.good())) {
           throw std::runtime_error{
               "d must be a number defined in the range [0, sqrt(2)]"};
         }
+        float ds;
         std::cin >> ds;
         if (ds < 0.f || ds > d || !(std::cin.good())) {
           throw std::runtime_error{
-              "ds must be a nummber defined in the range [0, d]"};
+              "ds must be a number defined in the range [0, d]"};
         }
+        float s;
         std::cin >> s;
         if (s < 0.f || !(std::cin.good())) {
           throw std::runtime_error{"s must be non-negative number"};
         }
+        float a;
         std::cin >> a;
         if (a < 0.f || !(std::cin.good())) {
           throw std::runtime_error{"a must be non-negative number"};
         }
+        float c;
         std::cin >> c;
         if (c < 0.f || !(std::cin.good())) {
           throw std::runtime_error{"c must be non-negative number"};
         }
-        std::cout << "Set the field of view (in degrees): ";
+        std::cout << "Set the field of view: ";
         float field_of_view;
         std::cin >> field_of_view;
         if (field_of_view < 0.0f || field_of_view > 360.f
@@ -180,43 +218,63 @@ int main()
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
       } else if (op == 'd') {
+        std::cout << "\nParameters to choose:\n";
+        std::cout << "- number of boids (a positive natural number, greater "
+                     "than 2 because it is "
+                     "needed to calculate parameters)\n";
+        std::cout
+            << "- d = the distance within which the rules of flight are "
+               "activated (floating point number in the range [0, sqrt(2)])\n";
+        std::cout << "- ds = the distance within which separation is activated "
+                     "(floating point number in the range [0, d])\n";
+        std::cout << "- s = a positive factor that increases separation\n";
+        std::cout << "- a = a positive factor that increases alignemnt\n";
+        std::cout << "- c = a positive factor that increases cohesion\n";
+        std::cout << "- the field of view of the boids, in degrees (in the "
+                     "range [0°, 360°])\n\n";
         std::cout << "Select the number of boids: ";
         double n;
         std::cin >> n;
+        if (std::floor(n) != n || !(std::cin.good())) {
+          throw std::runtime_error{
+              "The number of boids must be a positive natural number"};
+        }
         if (n < 3) {
           throw std::runtime_error{"Not enough boids to estimate parameters"};
         }
-        if (std::floor(n) != n) {
-          throw std::runtime_error{
-              "The number of boids must be a natural number"};
-        }
         std::cout << "Set d, ds, s, a, c: ";
         float d;
-        float ds;
-        float s;
-        float a;
-        float c;
-        std::cin >> d >> ds >> s >> a >> c;
-        if (d < 0.f || d > std::sqrt(2.f)) {
+        std::cin >> d;
+        if (d < 0.f || d > std::sqrt(2.f) || !(std::cin.good())) {
           throw std::runtime_error{
-              "d must be defined in the range [0, sqrt(2)]"};
+              "d must be a number defined in the range [0, sqrt(2)]"};
         }
-        if (ds < 0.f || ds > d) {
-          throw std::runtime_error{"ds must be defined in the range [0, d]"};
+        float ds;
+        std::cin >> ds;
+        if (ds < 0.f || ds > d || !(std::cin.good())) {
+          throw std::runtime_error{
+              "ds must be a number defined in the range [0, d]"};
         }
-        if (s < 0.f) {
-          throw std::runtime_error{"s must be non-negative"};
+        float s;
+        std::cin >> s;
+        if (s < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"s must be non-negative number"};
         }
-        if (a < 0.f) {
-          throw std::runtime_error{"a must be non-negative"};
+        float a;
+        std::cin >> a;
+        if (a < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"a must be non-negative number"};
         }
-        if (c < 0.f) {
-          throw std::runtime_error{"c must be non-negative"};
+        float c;
+        std::cin >> c;
+        if (c < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"c must be non-negative number"};
         }
-        std::cout << "Set the field of view (in degrees): ";
+        std::cout << "Set the field of view: ";
         float field_of_view;
         std::cin >> field_of_view;
-        if (field_of_view < 0.0f && field_of_view > 360.f) {
+        if (field_of_view < 0.0f || field_of_view > 360.f
+            || !(std::cin.good())) {
           throw std::runtime_error{"The field of view must be an angle defined "
                                    "in the range [0°, 360°]"};
         }
@@ -228,65 +286,89 @@ int main()
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
       } else if (op == 'f') {
-        std::cout << "Select the number of boids for the first flock: ";
+        std::cout << "\nParameters to choose:\n";
+        std::cout << "- number of boids in the two flocks (positive natural "
+                     "numbers)\n";
+        std::cout
+            << "inside a flock: - d = the distance within which the rules of "
+               "flight are "
+               "activated (floating point number in the range [0, sqrt(2)])\n";
+        std::cout << "                - ds = the distance within which "
+                     "separation is activated "
+                     "(floating point number in the range [0, d])\n";
+        std::cout << "                - s = a positive factor that increases "
+                     "separation\n";
+        std::cout << "                - a = a positive factor that increases "
+                     "alignemnt\n";
+        std::cout << "                - c = a positive factor that increases "
+                     "cohesion\n";
+        std::cout << "between flocks: - ds2 = the distance within which "
+                     "separation is activated "
+                     "(floating point number in the range [0, d])\n";
+        std::cout << "                - s2 = a positive factor that increases "
+                     "separation\n";
+        std::cout << "- the field of view of the boids, in degrees (in the "
+                     "range [0°, 360°])\n\n";
+        std::cout << "Select the number of boids in the first flock: ";
         double n1;
         std::cin >> n1;
-        if (n1 < 1) {
-          throw std::runtime_error{"Not enough boids to generate a flock"};
+        if (n1 < 1 || std::floor(n1) != n1 || !(std::cin.good())) {
+          throw std::runtime_error{"The number of boids in a flock must be a "
+                                   "positive natural number"};
         }
-        if (std::floor(n1) != n1) {
-          throw std::runtime_error{
-              "The number of boids must be a natural number"};
-        }
-        std::cout << "Select the number of boids for the second flock: ";
+        std::cout << "Select the number of boids in the second flock: ";
         double n2;
         std::cin >> n2;
-        if (n2 < 1) {
-          throw std::runtime_error{"Not enough boids to generate a flock"};
-        }
-        if (std::floor(n2) != n2) {
-          throw std::runtime_error{
-              "The number of boids must be a natural number"};
+        if (n2 < 1 || std::floor(n2) != n2 || !(std::cin.good())) {
+          throw std::runtime_error{"The number of boids in a flock must be a "
+                                   "positive natural number"};
         }
         std::cout << "Set d, ds, s, a, c, for boids of their "
                      "own species: ";
         float d;
-        float ds;
-        float s;
-        float a;
-        float c;
-        std::cin >> d >> ds >> s >> a >> c;
-        if (d < 0.f || d > std::sqrt(2.f)) {
+        std::cin >> d;
+        if (d < 0.f || d > std::sqrt(2.f) || !(std::cin.good())) {
           throw std::runtime_error{
-              "d must be defined in the range [0, sqrt(2)]"};
+              "d must be a number defined in the range [0, sqrt(2)]"};
         }
-        if (ds < 0.f || ds > d) {
-          throw std::runtime_error{"ds must be defined in the range [0, d]"};
+        float ds;
+        std::cin >> ds;
+        if (ds < 0.f || ds > d || !(std::cin.good())) {
+          throw std::runtime_error{
+              "ds must be a number defined in the range [0, d]"};
         }
-        if (s < 0.f) {
-          throw std::runtime_error{"s must be non-negative"};
+        float s;
+        std::cin >> s;
+        if (s < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"s must be non-negative number"};
         }
-        if (a < 0.f) {
-          throw std::runtime_error{"a must be non-negative"};
+        float a;
+        std::cin >> a;
+        if (a < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"a must be non-negative number"};
         }
-        if (c < 0.f) {
-          throw std::runtime_error{"c must be non-negative"};
+        float c;
+        std::cin >> c;
+        if (c < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"c must be non-negative number"};
         }
         std::cout << "Set ds2 , s2, applied between the two flocks: ";
         float ds2;
-        float s2;
-        std::cin >> ds2 >> s2;
-        if (ds < 0.f || ds > d) {
+        std::cin >> ds2;
+        if (ds2 < 0.f || ds2 > sqrt(2.f) || !(std::cin.good())) {
           throw std::runtime_error{
-              "ds2 must be defined in the range [0, sqrt(2)]"};
+              "ds2 must be a number defined in the range [0, sqrt(2)]"};
         }
-        if (s2 < 0.f) {
-          throw std::runtime_error{"s2 must be non-negative"};
+        float s2;
+        std::cin >> s2;
+        if (s2 < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"s2 must be a non-negative number"};
         }
-        std::cout << "Set the field of view (in degrees): ";
+        std::cout << "Set the field of view: ";
         float field_of_view;
         std::cin >> field_of_view;
-        if (field_of_view < 0.0f && field_of_view > 360.f) {
+        if (field_of_view < 0.0f || field_of_view > 360.f
+            || !(std::cin.good())) {
           throw std::runtime_error{"The field of view must be an angle defined "
                                    "in the range [0°, 360°]"};
         }
