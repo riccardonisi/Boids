@@ -69,8 +69,7 @@ std::vector<Boid> generate_flock(double n)
 Point2D separation(std::vector<Boid> const& flock, Boid const& boid, float s,
                    float ds, float field_of_view)
 {
-  auto n = flock.size();
-  if (n < 2) {
+  if (flock.size() < 1) {
     throw std::runtime_error{"Not enough boids to apply the rules of flight"};
   }
   Point2D sum{0, 0};
@@ -88,7 +87,7 @@ Point2D alignment(std::vector<Boid> const& flock, Boid const& boid, float a,
                   float d, float field_of_view)
 {
   int n{0};
-  if (flock.size() < 2) {
+  if (flock.size() < 1) {
     throw std::runtime_error{"Not enough boids to apply the rules of flight"};
   }
   Point2D sum{0, 0};
@@ -111,7 +110,7 @@ Point2D cohesion(std::vector<Boid> const& flock, Boid const& boid, float c,
                  float d, float field_of_view)
 {
   int n{0};
-  if (flock.size() < 2) {
+  if (flock.size() < 1) {
     throw std::runtime_error{"Not enough boids to apply the rules of flight"};
   }
   Point2D sum{0, 0};

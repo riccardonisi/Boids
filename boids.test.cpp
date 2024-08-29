@@ -200,19 +200,20 @@ TEST_CASE("Testing generation of boids")
 
   SUBCASE("Calling generate_flock() with 5 boids")
   {
-    std::vector<pf::Boid> prova = pf::generate_flock(5);
-    CHECK(prova.size() == 5);
-    CHECK(!(prova[0] == prova[1] && prova[0] == prova[2] && prova[0] == prova[3]
-            && prova[0] == prova[4]));
-    CHECK(!(prova[0].get_pos().x == prova[0].get_pos().y
-            && prova[0].get_pos().x == prova[0].get_vel().x
-            && prova[0].get_pos().x == prova[0].get_vel().y));
+    std::vector<pf::Boid> flock_trial = pf::generate_flock(5);
+    CHECK(flock_trial.size() == 5);
+    CHECK(!(flock_trial[0] == flock_trial[1] && flock_trial[0] == flock_trial[2]
+            && flock_trial[0] == flock_trial[3]
+            && flock_trial[0] == flock_trial[4]));
+    CHECK(!(flock_trial[0].get_pos().x == flock_trial[0].get_pos().y
+            && flock_trial[0].get_pos().x == flock_trial[0].get_vel().x
+            && flock_trial[0].get_pos().x == flock_trial[0].get_vel().y));
   }
 
   SUBCASE("Calling generate_flock() with 50 boids")
   {
-    std::vector<pf::Boid> prova = pf::generate_flock(50);
-    CHECK(prova.size() == 50);
+    std::vector<pf::Boid> flock_trial = pf::generate_flock(50);
+    CHECK(flock_trial.size() == 50);
   }
 }
 
@@ -251,8 +252,8 @@ TEST_CASE("Testing rules of flight")
     CHECK(!is_in_field_of_view(a3, a3, 360.f));
   }
 
-  std::vector<pf::Boid> prova;
-  REQUIRE(prova.size() == 0);
+  std::vector<pf::Boid> flock_trial;
+  REQUIRE(flock_trial.size() == 0);
 
   SUBCASE("Calling separation() with 2 near boids")
   {
@@ -262,9 +263,9 @@ TEST_CASE("Testing rules of flight")
     pf::Point2D v2{0, 0};
     pf::Boid b1{p1, v1};
     pf::Boid b2{p2, v2};
-    prova.push_back(b1);
-    prova.push_back(b2);
-    pf::Point2D v3 = separation(prova, prova[0], 0.5f, 10, 360);
+    flock_trial.push_back(b1);
+    flock_trial.push_back(b2);
+    pf::Point2D v3 = separation(flock_trial, flock_trial[0], 0.5f, 10, 360);
     CHECK(v3.x == doctest::Approx(-1.25f));
     CHECK(v3.y == doctest::Approx(-2.4f));
   }
@@ -272,7 +273,7 @@ TEST_CASE("Testing rules of flight")
   SUBCASE("Calling separation() with 0 boids")
   {
     pf::Boid b{{2.f, 3.f}, {0.4f, 0.9f}};
-    CHECK_THROWS(separation(prova, b, 0.5f, 1, 360));
+    CHECK_THROWS(separation(flock_trial, b, 0.5f, 1, 360));
   }
 
   SUBCASE("Calling separation() with 1 boid")
@@ -280,8 +281,10 @@ TEST_CASE("Testing rules of flight")
     pf::Point2D p1{4.5f, 7.8f};
     pf::Point2D v1{0, 0};
     pf::Boid b1{p1, v1};
-    prova.push_back(b1);
-    CHECK_THROWS(separation(prova, prova[0], 0.5f, 12, 360));
+    flock_trial.push_back(b1);
+    pf::Point2D v_sep = pf::separation(flock_trial, b1, 0.02f, 0.005f, 230);
+    CHECK(v_sep.x == doctest::Approx(0.f));
+    CHECK(v_sep.y == doctest::Approx(0.f));
   }
 
   SUBCASE("Calling separation() with 2 near boids, and 2 far boids")
@@ -289,17 +292,17 @@ TEST_CASE("Testing rules of flight")
     pf::Point2D p{2, 3};
     pf::Point2D v{0, 0};
     pf::Boid b{p, v};
-    prova.push_back(b);
+    flock_trial.push_back(b);
     p = {4.5f, 7.8f};
     b = pf::Boid{p, v};
-    prova.push_back(b);
+    flock_trial.push_back(b);
     p = {100, 7.8f};
     b = pf::Boid{p, v};
-    prova.push_back(b);
+    flock_trial.push_back(b);
     p = {12, 11.5f};
     b = pf::Boid{p, v};
-    prova.push_back(b);
-    pf::Point2D v3 = separation(prova, prova[0], 0.5, 10, 360);
+    flock_trial.push_back(b);
+    pf::Point2D v3 = separation(flock_trial, flock_trial[0], 0.5, 10, 360);
     CHECK(v3.x == doctest::Approx(-1.25f));
     CHECK(v3.y == doctest::Approx(-2.4f));
   }
@@ -309,17 +312,17 @@ TEST_CASE("Testing rules of flight")
     pf::Point2D p{25, 31.2f};
     pf::Point2D v{0, 0};
     pf::Boid b{p, v};
-    prova.push_back(b);
+    flock_trial.push_back(b);
     p = {4.5f, 7.8f};
     b = pf::Boid{p, v};
-    prova.push_back(b);
+    flock_trial.push_back(b);
     p = {1, 7.8f};
     b = pf::Boid{p, v};
-    prova.push_back(b);
+    flock_trial.push_back(b);
     p = {12, 11.5f};
     b = pf::Boid{p, v};
-    prova.push_back(b);
-    pf::Point2D v3 = separation(prova, prova[0], 0.5f, 10, 360);
+    flock_trial.push_back(b);
+    pf::Point2D v3 = separation(flock_trial, flock_trial[0], 0.5f, 10, 360);
     CHECK(v3.x == doctest::Approx(0.f));
     CHECK(v3.y == doctest::Approx(0.f));
   }
@@ -335,10 +338,10 @@ TEST_CASE("Testing rules of flight")
     pf::Boid b1{p1, v1};
     pf::Boid b2{p2, v2};
     pf::Boid b3{p3, v3};
-    prova.push_back(b1);
-    prova.push_back(b2);
-    prova.push_back(b3);
-    pf::Point2D v4 = alignment(prova, prova[1], 3, 10, 360);
+    flock_trial.push_back(b1);
+    flock_trial.push_back(b2);
+    flock_trial.push_back(b3);
+    pf::Point2D v4 = alignment(flock_trial, flock_trial[1], 3, 10, 360);
     CHECK(v4.x == doctest::Approx(8.25f));
     CHECK(v4.y == doctest::Approx(-2.4f));
   }
@@ -348,35 +351,37 @@ TEST_CASE("Testing rules of flight")
     pf::Point2D v1{2, 3};
     pf::Point2D p1{0, 0};
     pf::Boid b{p1, v1};
-    CHECK_THROWS(alignment(prova, b, 2, 10, 360));
+    CHECK_THROWS(alignment(flock_trial, b, 2, 10, 360));
   }
 
   SUBCASE("Calling alignment() with 1 boid")
   {
-    pf::Point2D v1{4.5f, 7.8f};
-    pf::Point2D p1{0, 0};
+    pf::Point2D p1{4.5f, 7.8f};
+    pf::Point2D v1{0, 0};
     pf::Boid b1{p1, v1};
-    prova.push_back(b1);
-    CHECK_THROWS(alignment(prova, prova[0], 2, 20, 360));
+    flock_trial.push_back(b1);
+    pf::Point2D v_sep = pf::alignment(flock_trial, b1, 0.02f, 0.005f, 230);
+    CHECK(v_sep.x == doctest::Approx(0.f));
+    CHECK(v_sep.y == doctest::Approx(0.f));
   }
 
   SUBCASE("Calling alignment() with 3 near boids and 2 far boids")
   {
     pf::Point2D v{2, 3};
     pf::Point2D p{0, 0};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     v = {0.5f, 6.2f};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {23, 18};
     v = {23, 18};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {0, 1};
     v = {4.5f, 7.8f};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {15, 8};
     v = {1.2f, 0.8f};
-    prova.push_back(pf::Boid{p, v});
-    pf::Point2D v4 = alignment(prova, prova[1], 3, 17, 360);
+    flock_trial.push_back(pf::Boid{p, v});
+    pf::Point2D v4 = alignment(flock_trial, flock_trial[1], 3, 17, 360);
     CHECK(v4.x == doctest::Approx(8.25f));
     CHECK(v4.y == doctest::Approx(-2.4f));
   }
@@ -385,18 +390,18 @@ TEST_CASE("Testing rules of flight")
   {
     pf::Point2D v{2, 3};
     pf::Point2D p{0, 0};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {50, 50};
     v = {0.5f, 6.2f};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {2, 1};
     v = {23, 18};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     v = {4.5f, 7.8f};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     v = {1.2f, 0.8f};
-    prova.push_back(pf::Boid{p, v});
-    pf::Point2D v4 = alignment(prova, prova[1], 3, 17, 360);
+    flock_trial.push_back(pf::Boid{p, v});
+    pf::Point2D v4 = alignment(flock_trial, flock_trial[1], 3, 17, 360);
     CHECK(v4.x == doctest::Approx(0.f));
     CHECK(v4.y == doctest::Approx(0.f));
   }
@@ -412,10 +417,10 @@ TEST_CASE("Testing rules of flight")
     pf::Boid b1{p1, v1};
     pf::Boid b2{p2, v2};
     pf::Boid b3{p3, v3};
-    prova.push_back(b1);
-    prova.push_back(b2);
-    prova.push_back(b3);
-    pf::Point2D v4 = cohesion(prova, prova[0], 0.6f, 11, 360);
+    flock_trial.push_back(b1);
+    flock_trial.push_back(b2);
+    flock_trial.push_back(b3);
+    pf::Point2D v4 = cohesion(flock_trial, flock_trial[0], 0.6f, 11, 360);
     CHECK(v4.x == doctest::Approx(0.3f));
     CHECK(v4.y == doctest::Approx(2.4f));
   }
@@ -423,30 +428,32 @@ TEST_CASE("Testing rules of flight")
   SUBCASE("Calling cohesion() with 0 boids")
   {
     pf::Boid b{{2.f, 3.f}, {0.4f, 0.9f}};
-    CHECK_THROWS(cohesion(prova, b, 0.2f, 2, 360));
+    CHECK_THROWS(cohesion(flock_trial, b, 0.2f, 2, 360));
   }
 
   SUBCASE("Calling cohesion() with 1 boid")
   {
-    pf::Point2D p1{4.5f, 7};
+    pf::Point2D p1{4.5f, 7.8f};
     pf::Point2D v1{0, 0};
     pf::Boid b1{p1, v1};
-    prova.push_back(b1);
-    CHECK_THROWS(cohesion(prova, prova[0], 2, 10, 360));
+    flock_trial.push_back(b1);
+    pf::Point2D v_sep = pf::cohesion(flock_trial, b1, 0.02f, 0.005f, 230);
+    CHECK(v_sep.x == doctest::Approx(0.f));
+    CHECK(v_sep.y == doctest::Approx(0.f));
   }
 
   SUBCASE("Calling cohesion() with 3 near boids, and 1 far boid")
   {
     pf::Point2D p{2, 3};
     pf::Point2D v{0, 0};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {0.5f, 6.2f};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {12, 11.5f};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {4.5f, 7.8f};
-    prova.push_back(pf::Boid{p, v});
-    pf::Point2D v4 = cohesion(prova, prova[0], 0.6f, 9, 360);
+    flock_trial.push_back(pf::Boid{p, v});
+    pf::Point2D v4 = cohesion(flock_trial, flock_trial[0], 0.6f, 9, 360);
     CHECK(v4.x == doctest::Approx(0.3f));
     CHECK(v4.y == doctest::Approx(2.4f));
   }
@@ -455,14 +462,14 @@ TEST_CASE("Testing rules of flight")
   {
     pf::Point2D p{2, 3};
     pf::Point2D v{0, 0};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {0.5f, 6.2f};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {12, 11.5f};
-    prova.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {25, 7.8f};
-    prova.push_back(pf::Boid{p, v});
-    pf::Point2D v4 = cohesion(prova, prova[3], 0.6f, 8.5f, 360);
+    flock_trial.push_back(pf::Boid{p, v});
+    pf::Point2D v4 = cohesion(flock_trial, flock_trial[3], 0.6f, 8.5f, 360);
     CHECK(v4.x == doctest::Approx(0.f));
     CHECK(v4.y == doctest::Approx(0.f));
   }
@@ -475,20 +482,20 @@ TEST_CASE("Testing application of the rules of flight")
     pf::Boid b1{{1, 2}, {3, 4}};
     pf::Boid b2{{0.4f, 2}, {0, -0.8f}};
     pf::Boid b3{{5.7f, 3}, {-1, 4}};
-    std::vector<pf::Boid> flock{b1, b2, b3};
-    pf::movement(flock, 0.5f);
-    CHECK(flock[0].get_pos().x == doctest::Approx(2.5f));
-    CHECK(flock[0].get_pos().y == doctest::Approx(4.f));
-    CHECK(flock[0].get_vel().x == doctest::Approx(3.f));
-    CHECK(flock[0].get_vel().y == doctest::Approx(4.f));
-    CHECK(flock[1].get_pos().x == doctest::Approx(0.4f));
-    CHECK(flock[1].get_pos().y == doctest::Approx(1.6f));
-    CHECK(flock[1].get_vel().x == doctest::Approx(0.f));
-    CHECK(flock[1].get_vel().y == doctest::Approx(-0.8f));
-    CHECK(flock[2].get_pos().x == doctest::Approx(5.2f));
-    CHECK(flock[2].get_pos().y == doctest::Approx(5.f));
-    CHECK(flock[2].get_vel().x == doctest::Approx(-1.f));
-    CHECK(flock[2].get_vel().y == doctest::Approx(4.f));
+    std::vector<pf::Boid> flock_trial{b1, b2, b3};
+    pf::movement(flock_trial, 0.5f);
+    CHECK(flock_trial[0].get_pos().x == doctest::Approx(2.5f));
+    CHECK(flock_trial[0].get_pos().y == doctest::Approx(4.f));
+    CHECK(flock_trial[0].get_vel().x == doctest::Approx(3.f));
+    CHECK(flock_trial[0].get_vel().y == doctest::Approx(4.f));
+    CHECK(flock_trial[1].get_pos().x == doctest::Approx(0.4f));
+    CHECK(flock_trial[1].get_pos().y == doctest::Approx(1.6f));
+    CHECK(flock_trial[1].get_vel().x == doctest::Approx(0.f));
+    CHECK(flock_trial[1].get_vel().y == doctest::Approx(-0.8f));
+    CHECK(flock_trial[2].get_pos().x == doctest::Approx(5.2f));
+    CHECK(flock_trial[2].get_pos().y == doctest::Approx(5.f));
+    CHECK(flock_trial[2].get_vel().x == doctest::Approx(-1.f));
+    CHECK(flock_trial[2].get_vel().y == doctest::Approx(4.f));
   }
 
   SUBCASE("Calling boundary_behavior() with 5 boids")
@@ -498,32 +505,32 @@ TEST_CASE("Testing application of the rules of flight")
     pf::Boid b3{{2, 0.5f}, {1, 2}};
     pf::Boid b4{{100, 23}, {1, 2}};
     pf::Boid b5{{-2, -3}, {1, 2}};
-    std::vector<pf::Boid> flock{b1, b2, b3, b4, b5};
-    pf::boundary_behavior(flock);
-    CHECK(flock.size() == 5);
-    CHECK(flock[0].get_pos().x == 0.2f);
-    CHECK(flock[0].get_pos().y == 0.5f);
-    CHECK(flock[0].get_vel().x == 1.f);
-    CHECK(flock[0].get_vel().y == 2.f);
-    CHECK(flock[1].get_pos().x == 0.3f);
-    CHECK(flock[1].get_pos().y == 0.f);
-    CHECK(flock[1].get_vel().x == 1.f);
-    CHECK(flock[1].get_vel().y == 2.f);
-    CHECK(flock[2].get_pos().x == 0.f);
-    CHECK(flock[2].get_pos().y == 0.5f);
-    CHECK(flock[2].get_vel().x == 1.f);
-    CHECK(flock[2].get_vel().y == 2.f);
-    CHECK(flock[3].get_pos().x == 0.f);
-    CHECK(flock[3].get_pos().y == 0.f);
-    CHECK(flock[3].get_vel().x == 1.f);
-    CHECK(flock[3].get_vel().y == 2.f);
-    CHECK(flock[4].get_pos().x == 1.f);
-    CHECK(flock[4].get_pos().y == 1.f);
-    CHECK(flock[4].get_vel().x == 1.f);
-    CHECK(flock[4].get_vel().y == 2.f);
+    std::vector<pf::Boid> flock_trial{b1, b2, b3, b4, b5};
+    pf::boundary_behavior(flock_trial);
+    CHECK(flock_trial.size() == 5);
+    CHECK(flock_trial[0].get_pos().x == 0.2f);
+    CHECK(flock_trial[0].get_pos().y == 0.5f);
+    CHECK(flock_trial[0].get_vel().x == 1.f);
+    CHECK(flock_trial[0].get_vel().y == 2.f);
+    CHECK(flock_trial[1].get_pos().x == 0.3f);
+    CHECK(flock_trial[1].get_pos().y == 0.f);
+    CHECK(flock_trial[1].get_vel().x == 1.f);
+    CHECK(flock_trial[1].get_vel().y == 2.f);
+    CHECK(flock_trial[2].get_pos().x == 0.f);
+    CHECK(flock_trial[2].get_pos().y == 0.5f);
+    CHECK(flock_trial[2].get_vel().x == 1.f);
+    CHECK(flock_trial[2].get_vel().y == 2.f);
+    CHECK(flock_trial[3].get_pos().x == 0.f);
+    CHECK(flock_trial[3].get_pos().y == 0.f);
+    CHECK(flock_trial[3].get_vel().x == 1.f);
+    CHECK(flock_trial[3].get_vel().y == 2.f);
+    CHECK(flock_trial[4].get_pos().x == 1.f);
+    CHECK(flock_trial[4].get_pos().y == 1.f);
+    CHECK(flock_trial[4].get_vel().x == 1.f);
+    CHECK(flock_trial[4].get_vel().y == 2.f);
   }
 
-  SUBCASE("Calling flocking_behavior()")
+  SUBCASE("Calling flock_trialing_behavior()")
   {
     float d{2};
     float ds{1};
@@ -531,73 +538,111 @@ TEST_CASE("Testing application of the rules of flight")
     pf::Boid b2{{0.4f, 2}, {-7, -0.8f}};
     pf::Boid b3{{5.7f, 3}, {1, 4}};
     pf::Boid b4{{1.3f, 2.7f}, {2.2f, -1}};
-    std::vector<pf::Boid> flock{b1, b2, b3, b4};
+    std::vector<pf::Boid> flock_trial{b1, b2, b3, b4};
     float s{0.5f};
     float a{1.2f};
     float c{0.75f};
-    pf::flocking_behavior(flock, d, ds, s, a, c, 360);
-    CHECK(flock[0].get_pos().x == doctest::Approx(1.f));
-    CHECK(flock[0].get_pos().y == doctest::Approx(2.f));
-    CHECK(flock[0].get_vel().x == doctest::Approx(-3.4425f));
-    CHECK(flock[0].get_vel().y == doctest::Approx(-1.9675f));
-    CHECK(flock[1].get_pos().x == doctest::Approx(0.4f));
-    CHECK(flock[1].get_pos().y == doctest::Approx(2.f));
-    CHECK(flock[1].get_vel().x == doctest::Approx(4.7825f));
-    CHECK(flock[1].get_vel().y == doctest::Approx(2.2225f));
-    CHECK(flock[2].get_pos().x == doctest::Approx(5.7f));
-    CHECK(flock[2].get_pos().y == doctest::Approx(3.f));
-    CHECK(flock[2].get_vel().x == doctest::Approx(1.f));
-    CHECK(flock[2].get_vel().y == doctest::Approx(4.f));
-    CHECK(flock[3].get_pos().x == doctest::Approx(1.3f));
-    CHECK(flock[3].get_pos().y == doctest::Approx(2.7f));
-    CHECK(flock[3].get_vel().x == doctest::Approx(-3.14f));
-    CHECK(flock[3].get_vel().y == doctest::Approx(1.945f));
+    pf::flocking_behavior(flock_trial, d, ds, s, a, c, 360);
+    CHECK(flock_trial[0].get_pos().x == doctest::Approx(1.f));
+    CHECK(flock_trial[0].get_pos().y == doctest::Approx(2.f));
+    CHECK(flock_trial[0].get_vel().x == doctest::Approx(-3.4425f));
+    CHECK(flock_trial[0].get_vel().y == doctest::Approx(-1.9675f));
+    CHECK(flock_trial[1].get_pos().x == doctest::Approx(0.4f));
+    CHECK(flock_trial[1].get_pos().y == doctest::Approx(2.f));
+    CHECK(flock_trial[1].get_vel().x == doctest::Approx(4.7825f));
+    CHECK(flock_trial[1].get_vel().y == doctest::Approx(2.2225f));
+    CHECK(flock_trial[2].get_pos().x == doctest::Approx(5.7f));
+    CHECK(flock_trial[2].get_pos().y == doctest::Approx(3.f));
+    CHECK(flock_trial[2].get_vel().x == doctest::Approx(1.f));
+    CHECK(flock_trial[2].get_vel().y == doctest::Approx(4.f));
+    CHECK(flock_trial[3].get_pos().x == doctest::Approx(1.3f));
+    CHECK(flock_trial[3].get_pos().y == doctest::Approx(2.7f));
+    CHECK(flock_trial[3].get_vel().x == doctest::Approx(-3.14f));
+    CHECK(flock_trial[3].get_vel().y == doctest::Approx(1.945f));
   }
 
   SUBCASE("Calling random_boost()")
-  {}
+  {
+    pf::Boid b1{{0, 1}, {1, 1}};
+    pf::Boid b2{{2, 2}, {-2, 1}};
+    pf::Boid b3{{1, 2}, {-2, -2}};
+    pf::Boid b4{{2, 3}, {3, -1}};
+    pf::Boid b5{{2, 9}, {0, 0}};
+    std::vector<pf::Boid> flock_trial{b1, b2, b3, b4, b5};
+    float current_angle_b1 = std::atan2(b1.get_vel().y, b1.get_vel().x);
+    float current_angle_b2 = std::atan2(b2.get_vel().y, b2.get_vel().x);
+    float current_angle_b3 = std::atan2(b3.get_vel().y, b3.get_vel().x);
+    float current_angle_b4 = std::atan2(b4.get_vel().y, b4.get_vel().x);
+    float current_angle_b5 = std::atan2(b5.get_vel().y, b5.get_vel().x);
+    pf::random_boost(flock_trial, 0.1f, 0.01f);
+    CHECK(magnitude(flock_trial[0].get_vel()) == doctest::Approx(1.51421f));
+    CHECK(current_angle_b1 - (std::atan2(b1.get_vel().y, b1.get_vel().x))
+          < (pf::pi_f / 8));
+    CHECK(current_angle_b1 - (std::atan2(b1.get_vel().y, b1.get_vel().x))
+          > (-pf::pi_f / 8));
+    CHECK(magnitude(flock_trial[1].get_vel()) == doctest::Approx(2.33607f));
+    CHECK(current_angle_b2 - (std::atan2(b2.get_vel().y, b2.get_vel().x))
+          < (pf::pi_f / 8));
+    CHECK(current_angle_b2 - (std::atan2(b2.get_vel().y, b2.get_vel().x))
+          > (-pf::pi_f / 8));
+    CHECK(magnitude(flock_trial[2].get_vel()) == doctest::Approx(2.92843f));
+    CHECK(current_angle_b3 - (std::atan2(b3.get_vel().y, b3.get_vel().x))
+          < (pf::pi_f / 8));
+    CHECK(current_angle_b3 - (std::atan2(b3.get_vel().y, b3.get_vel().x))
+          > (-pf::pi_f / 8));
+    CHECK(magnitude(flock_trial[3].get_vel()) == doctest::Approx(3.26228f));
+    CHECK(current_angle_b4 - (std::atan2(b4.get_vel().y, b4.get_vel().x))
+          < (pf::pi_f / 8));
+    CHECK(current_angle_b4 - (std::atan2(b4.get_vel().y, b4.get_vel().x))
+          > (-pf::pi_f / 8));
+    CHECK(magnitude(flock_trial[4].get_vel()) == doctest::Approx(0.1f));
+    CHECK(current_angle_b5 - (std::atan2(b5.get_vel().y, b5.get_vel().x))
+          < (pf::pi_f / 8));
+    CHECK(current_angle_b5 - (std::atan2(b5.get_vel().y, b5.get_vel().x))
+          > (-pf::pi_f / 8));
+  }
 
   SUBCASE("Calling speed_control() with 5 boids")
   {
-    std::vector<pf::Boid> flock;
+    std::vector<pf::Boid> flock_trial;
     pf::Point2D p{0, 0};
     pf::Point2D v{2, 3};
-    flock.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {1, 1};
     v = {0.5f, 1.2f};
-    flock.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     v = {2.3f, 1};
-    flock.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     p = {2, 1};
     v = {1.5f, 2.8f};
-    flock.push_back(pf::Boid{p, v});
+    flock_trial.push_back(pf::Boid{p, v});
     v = {1.2f, 0.8f};
-    flock.push_back(pf::Boid{p, v});
-    pf::speed_control(flock, 2);
-    CHECK(flock.size() == 5);
-    CHECK(flock[0].get_pos().x == 0.f);
-    CHECK(flock[0].get_pos().y == 0.f);
-    CHECK(flock[0].get_vel().x == 2.f);
-    CHECK(flock[0].get_vel().y == 2.f);
-    CHECK(flock[1].get_pos().x == 1.f);
-    CHECK(flock[1].get_pos().y == 1.f);
-    CHECK(flock[1].get_vel().x == 0.5f);
-    CHECK(flock[1].get_vel().y == 1.2f);
-    CHECK(flock[2].get_pos().x == 1.f);
-    CHECK(flock[2].get_pos().y == 1.f);
-    CHECK(flock[2].get_vel().x == 2.f);
-    CHECK(flock[2].get_vel().y == 1.f);
-    CHECK(flock[3].get_pos().x == 2.f);
-    CHECK(flock[3].get_pos().y == 1.f);
-    CHECK(flock[3].get_vel().x == 1.5f);
-    CHECK(flock[3].get_vel().y == 2.f);
-    CHECK(flock[4].get_pos().x == 2.f);
-    CHECK(flock[4].get_pos().y == 1.f);
-    CHECK(flock[4].get_vel().x == 1.2f);
-    CHECK(flock[4].get_vel().y == 0.8f);
+    flock_trial.push_back(pf::Boid{p, v});
+    pf::speed_control(flock_trial, 2);
+    CHECK(flock_trial.size() == 5);
+    CHECK(flock_trial[0].get_pos().x == 0.f);
+    CHECK(flock_trial[0].get_pos().y == 0.f);
+    CHECK(flock_trial[0].get_vel().x == 2.f);
+    CHECK(flock_trial[0].get_vel().y == 2.f);
+    CHECK(flock_trial[1].get_pos().x == 1.f);
+    CHECK(flock_trial[1].get_pos().y == 1.f);
+    CHECK(flock_trial[1].get_vel().x == 0.5f);
+    CHECK(flock_trial[1].get_vel().y == 1.2f);
+    CHECK(flock_trial[2].get_pos().x == 1.f);
+    CHECK(flock_trial[2].get_pos().y == 1.f);
+    CHECK(flock_trial[2].get_vel().x == 2.f);
+    CHECK(flock_trial[2].get_vel().y == 1.f);
+    CHECK(flock_trial[3].get_pos().x == 2.f);
+    CHECK(flock_trial[3].get_pos().y == 1.f);
+    CHECK(flock_trial[3].get_vel().x == 1.5f);
+    CHECK(flock_trial[3].get_vel().y == 2.f);
+    CHECK(flock_trial[4].get_pos().x == 2.f);
+    CHECK(flock_trial[4].get_pos().y == 1.f);
+    CHECK(flock_trial[4].get_vel().x == 1.2f);
+    CHECK(flock_trial[4].get_vel().y == 0.8f);
   }
 
-  SUBCASE("Calling flocking_behavior_two_flocks()")
+  SUBCASE("Calling flock_trialing_behavior_two_flock_trials()")
   {
     float d{2};
     float ds{1};
@@ -605,30 +650,31 @@ TEST_CASE("Testing application of the rules of flight")
     pf::Boid b2{{0.4f, 2}, {-7, -0.8f}};
     pf::Boid b3{{5.7f, 3}, {1, 4}};
     pf::Boid b4{{1.3f, 2.7f}, {2.2f, -1}};
-    std::vector<pf::Boid> flock{b1, b2, b3, b4};
+    std::vector<pf::Boid> flock_trial{b1, b2, b3, b4};
     b1 = pf::Boid{{12, 23}, {1, 2}};
     b2 = pf::Boid{{5.4f, 3.1f}, {0.2f, 1.3f}};
-    std::vector<pf::Boid> flock2{b1, b2};
+    std::vector<pf::Boid> flock_trial2{b1, b2};
     float s{0.5f};
     float a{1.2f};
     float c{0.75f};
-    pf::flocking_behavior_two_flocks(flock, flock2, d, ds, s, a, c, ds, s, 360);
-    CHECK(flock[0].get_pos().x == doctest::Approx(1.f));
-    CHECK(flock[0].get_pos().y == doctest::Approx(2.f));
-    CHECK(flock[0].get_vel().x == doctest::Approx(-3.4425f));
-    CHECK(flock[0].get_vel().y == doctest::Approx(-1.9675f));
-    CHECK(flock[1].get_pos().x == doctest::Approx(0.4f));
-    CHECK(flock[1].get_pos().y == doctest::Approx(2.f));
-    CHECK(flock[1].get_vel().x == doctest::Approx(4.7825f));
-    CHECK(flock[1].get_vel().y == doctest::Approx(2.2225f));
-    CHECK(flock[2].get_pos().x == doctest::Approx(5.7f));
-    CHECK(flock[2].get_pos().y == doctest::Approx(3.f));
-    CHECK(flock[2].get_vel().x == doctest::Approx(1.15f));
-    CHECK(flock[2].get_vel().y == doctest::Approx(3.95f));
-    CHECK(flock[3].get_pos().x == doctest::Approx(1.3f));
-    CHECK(flock[3].get_pos().y == doctest::Approx(2.7f));
-    CHECK(flock[3].get_vel().x == doctest::Approx(-3.14f));
-    CHECK(flock[3].get_vel().y == doctest::Approx(1.945f));
+    pf::flocking_behavior_two_flocks(flock_trial, flock_trial2, d, ds, s, a, c,
+                                     ds, s, 360);
+    CHECK(flock_trial[0].get_pos().x == doctest::Approx(1.f));
+    CHECK(flock_trial[0].get_pos().y == doctest::Approx(2.f));
+    CHECK(flock_trial[0].get_vel().x == doctest::Approx(-3.4425f));
+    CHECK(flock_trial[0].get_vel().y == doctest::Approx(-1.9675f));
+    CHECK(flock_trial[1].get_pos().x == doctest::Approx(0.4f));
+    CHECK(flock_trial[1].get_pos().y == doctest::Approx(2.f));
+    CHECK(flock_trial[1].get_vel().x == doctest::Approx(4.7825f));
+    CHECK(flock_trial[1].get_vel().y == doctest::Approx(2.2225f));
+    CHECK(flock_trial[2].get_pos().x == doctest::Approx(5.7f));
+    CHECK(flock_trial[2].get_pos().y == doctest::Approx(3.f));
+    CHECK(flock_trial[2].get_vel().x == doctest::Approx(1.15f));
+    CHECK(flock_trial[2].get_vel().y == doctest::Approx(3.95f));
+    CHECK(flock_trial[3].get_pos().x == doctest::Approx(1.3f));
+    CHECK(flock_trial[3].get_pos().y == doctest::Approx(2.7f));
+    CHECK(flock_trial[3].get_vel().x == doctest::Approx(-3.14f));
+    CHECK(flock_trial[3].get_vel().y == doctest::Approx(1.945f));
   }
 }
 
@@ -640,8 +686,8 @@ TEST_CASE("Testing boids mean parameters")
     pf::Boid b2{{0.9f, 1.4f}, {1, 2}};
     pf::Boid b3{{3, 0.2f}, {1, 2}};
     pf::Boid b4{{2.3f, 1.1f}, {1, 2}};
-    std::vector<pf::Boid> prova{b1, b2, b3, b4};
-    float mp = pf::mean_position(prova);
+    std::vector<pf::Boid> flock_trial{b1, b2, b3, b4};
+    float mp = pf::mean_position(flock_trial);
     CHECK(mp == doctest::Approx(1.9326f));
   }
 
@@ -651,26 +697,26 @@ TEST_CASE("Testing boids mean parameters")
     pf::Boid b2{{0.9f, 1.4f}, {1, 2}};
     pf::Boid b3{{3, 0.2f}, {1, 2}};
     pf::Boid b4{{2.3f, 1.1f}, {1, 2}};
-    std::vector<pf::Boid> prova{b1, b2, b3, b4};
-    float sp = pf::standdev_position(prova);
+    std::vector<pf::Boid> flock_trial{b1, b2, b3, b4};
+    float sp = pf::standdev_position(flock_trial);
     CHECK(sp == doctest::Approx(1.10003f));
   }
 
   SUBCASE(
       "Calling mean_position() and standdev_position() with 0, 1 and 2 boids")
   {
-    std::vector<pf::Boid> prova;
-    REQUIRE(prova.size() == 0);
-    CHECK_THROWS(pf::mean_position(prova));
-    CHECK_THROWS(pf::standdev_position(prova));
+    std::vector<pf::Boid> flock_trial;
+    REQUIRE(flock_trial.size() == 0);
+    CHECK_THROWS(pf::mean_position(flock_trial));
+    CHECK_THROWS(pf::standdev_position(flock_trial));
     pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
-    prova.push_back(b1);
-    CHECK_THROWS(pf::mean_position(prova));
-    CHECK_THROWS(pf::standdev_position(prova));
+    flock_trial.push_back(b1);
+    CHECK_THROWS(pf::mean_position(flock_trial));
+    CHECK_THROWS(pf::standdev_position(flock_trial));
     b1 = pf::Boid{{4.0f, 2.3f}, {0.4f, 0.3f}};
-    prova.push_back(b1);
-    CHECK_THROWS(pf::mean_position(prova));
-    CHECK_THROWS(pf::standdev_position(prova));
+    flock_trial.push_back(b1);
+    CHECK_THROWS(pf::mean_position(flock_trial));
+    CHECK_THROWS(pf::standdev_position(flock_trial));
   }
 
   SUBCASE("Calling mean_velocity() with 5 boids")
@@ -680,8 +726,8 @@ TEST_CASE("Testing boids mean parameters")
     pf::Boid b3{{1, 2}, {0.2f, 1.1f}};
     pf::Boid b4{{1, 2}, {4, 0.2f}};
     pf::Boid b5{{1, 2}, {0.1f, 0.5f}};
-    std::vector<pf::Boid> prova{b1, b2, b3, b4, b5};
-    float mv = pf::mean_velocity(prova);
+    std::vector<pf::Boid> flock_trial{b1, b2, b3, b4, b5};
+    float mv = pf::mean_velocity(flock_trial);
     CHECK(mv == doctest::Approx(2.2098262f));
   }
 
@@ -692,26 +738,26 @@ TEST_CASE("Testing boids mean parameters")
     pf::Boid b3{{1, 2}, {0.2f, 1.1f}};
     pf::Boid b4{{1, 2}, {4, 0.2f}};
     pf::Boid b5{{1, 2}, {0.1f, 0.5f}};
-    std::vector<pf::Boid> prova{b1, b2, b3, b4, b5};
-    float sv = pf::standdev_velocity(prova);
+    std::vector<pf::Boid> flock_trial{b1, b2, b3, b4, b5};
+    float sv = pf::standdev_velocity(flock_trial);
     CHECK(sv == doctest::Approx(1.91529f));
   }
 
   SUBCASE(
       "Calling mean_velocity() and standdev_velocity() with 0, 1 and 2 boids")
   {
-    std::vector<pf::Boid> prova;
-    REQUIRE(prova.size() == 0);
-    CHECK_THROWS(pf::mean_velocity(prova));
-    CHECK_THROWS(pf::standdev_velocity(prova));
+    std::vector<pf::Boid> flock_trial;
+    REQUIRE(flock_trial.size() == 0);
+    CHECK_THROWS(pf::mean_velocity(flock_trial));
+    CHECK_THROWS(pf::standdev_velocity(flock_trial));
     pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
-    prova.push_back(b1);
-    CHECK_THROWS(pf::mean_velocity(prova));
-    CHECK_THROWS(pf::standdev_velocity(prova));
+    flock_trial.push_back(b1);
+    CHECK_THROWS(pf::mean_velocity(flock_trial));
+    CHECK_THROWS(pf::standdev_velocity(flock_trial));
     b1 = pf::Boid{{4.0f, 2.3f}, {0.4f, 0.3f}};
-    prova.push_back(b1);
-    CHECK_THROWS(pf::mean_velocity(prova));
-    CHECK_THROWS(pf::standdev_velocity(prova));
+    flock_trial.push_back(b1);
+    CHECK_THROWS(pf::mean_velocity(flock_trial));
+    CHECK_THROWS(pf::standdev_velocity(flock_trial));
   }
 
   SUBCASE("Calling mean_distance() with 4 boids")
@@ -720,8 +766,8 @@ TEST_CASE("Testing boids mean parameters")
     pf::Boid b2{{0.9f, 1.4f}, {1, 2}};
     pf::Boid b3{{3, 0.2f}, {1, 2}};
     pf::Boid b4{{2.3f, 1.1f}, {1, 2}};
-    std::vector<pf::Boid> prova{b1, b2, b3, b4};
-    float md = pf::mean_distance(prova);
+    std::vector<pf::Boid> flock_trial{b1, b2, b3, b4};
+    float md = pf::mean_distance(flock_trial);
     CHECK(md == doctest::Approx(1.81865f));
   }
 
@@ -731,33 +777,33 @@ TEST_CASE("Testing boids mean parameters")
     pf::Boid b2{{0.9f, 1.4f}, {1, 2}};
     pf::Boid b3{{3, 0.2f}, {1, 2}};
     pf::Boid b4{{2.3f, 1.1f}, {1, 2}};
-    std::vector<pf::Boid> prova{b1, b2, b3, b4};
-    float sd = pf::standdev_distance(prova);
+    std::vector<pf::Boid> flock_trial{b1, b2, b3, b4};
+    float sd = pf::standdev_distance(flock_trial);
     CHECK(sd == doctest::Approx(0.58396f));
   }
 
   SUBCASE(
       "Calling mean_distance() and standdev_distance() with 0, 1 and 2 boids")
   {
-    std::vector<pf::Boid> prova;
-    REQUIRE(prova.size() == 0);
-    CHECK_THROWS(pf::mean_distance(prova));
-    CHECK_THROWS(pf::standdev_distance(prova));
+    std::vector<pf::Boid> flock_trial;
+    REQUIRE(flock_trial.size() == 0);
+    CHECK_THROWS(pf::mean_distance(flock_trial));
+    CHECK_THROWS(pf::standdev_distance(flock_trial));
     pf::Boid b1{{1, 2}, {0.3f, 0.8f}};
-    prova.push_back(b1);
-    CHECK_THROWS(pf::mean_distance(prova));
-    CHECK_THROWS(pf::standdev_distance(prova));
+    flock_trial.push_back(b1);
+    CHECK_THROWS(pf::mean_distance(flock_trial));
+    CHECK_THROWS(pf::standdev_distance(flock_trial));
     b1 = pf::Boid{{4.0f, 2.3f}, {0.4f, 0.3f}};
-    prova.push_back(b1);
-    CHECK_THROWS(pf::mean_distance(prova));
-    CHECK_THROWS(pf::standdev_distance(prova));
+    flock_trial.push_back(b1);
+    CHECK_THROWS(pf::mean_distance(flock_trial));
+    CHECK_THROWS(pf::standdev_distance(flock_trial));
   }
 }
 
 TEST_CASE("Testing functions useful to make the graphic part")
 {
-  std::vector<pf::Boid> prova;
-  REQUIRE(prova.size() == 0);
+  std::vector<pf::Boid> flock_trial;
+  REQUIRE(flock_trial.size() == 0);
 
   SUBCASE("Calling real_to_pixel()")
   {
