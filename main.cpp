@@ -35,8 +35,8 @@ int main()
         std::cout << "Select the number of boids: ";
         double n;
         std::cin >> n;
-        if (n < 1) {
-          throw std::runtime_error{"Not enought boids to generate a flock"};
+        if (n < 3) {
+          throw std::runtime_error{"Not enough boids to estimate parameters"};
         }
         if (std::floor(n) != n) {
           throw std::runtime_error{
@@ -128,7 +128,7 @@ int main()
         double n;
         std::cin >> n;
         if (n < 1) {
-          throw std::runtime_error{"Not enought boids to generate a flock"};
+          throw std::runtime_error{"Not enough boids to generate a flock"};
         }
         if (std::floor(n) != n) {
           throw std::runtime_error{
@@ -176,8 +176,8 @@ int main()
         std::cout << "Select the number of boids: ";
         double n;
         std::cin >> n;
-        if (n < 1) {
-          throw std::runtime_error{"Not enought boids to generate a flock"};
+        if (n < 3) {
+          throw std::runtime_error{"Not enought boids to estimate parameters"};
         }
         if (std::floor(n) != n) {
           throw std::runtime_error{
@@ -225,7 +225,7 @@ int main()
         double n1;
         std::cin >> n1;
         if (n1 < 1) {
-          throw std::runtime_error{"Not enought boids to generate a flock"};
+          throw std::runtime_error{"Not enough boids to generate a flock"};
         }
         if (std::floor(n1) != n1) {
           throw std::runtime_error{
@@ -235,7 +235,7 @@ int main()
         double n2;
         std::cin >> n2;
         if (n2 < 1) {
-          throw std::runtime_error{"Not enought boids to generate a flock"};
+          throw std::runtime_error{"Not enough boids to generate a flock"};
         }
         if (std::floor(n2) != n2) {
           throw std::runtime_error{
