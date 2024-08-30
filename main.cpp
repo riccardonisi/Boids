@@ -38,19 +38,18 @@ int main()
       std::cin >> op;
       if (op == 'a') {
         std::cout << "\nParameters to choose:\n";
-        std::cout << "- number of boids, a natural number >2 (to "
-                     "calculate statistics)\n  ";
+        std::cout << "- number of boids, a natural number >2 (to calculate "
+                     "statistics)\n";
         std::cout
             << "- d = the distance within which the rules of flight are "
                "activated, floating point number in the range [0, sqrt(2)]\n";
-        std::cout
-            << "- ds = the distance within which separation is activated, "
-               "floating point number in the range [0, d]\n";
+        std::cout << "- ds = the distance within which separation is "
+                     "activated, floating point number in the range [0, d]\n";
         std::cout << "- s = non-negativa factor that increases separation\n";
         std::cout << "- a = non-negative factor that increases alignemnt\n";
         std::cout << "- c = non-negative factor that increases cohesion\n";
-        std::cout << "- the field of view of the boids, in the "
-                     "range [0°, 360°]\n\n";
+        std::cout
+            << "- the field of view of the boids, in the range [0°, 360°]\n\n";
         std::cout << "Provide the number of boids: ";
         double n;
         std::cin >> n;
@@ -155,18 +154,17 @@ int main()
         return EXIT_SUCCESS;
       } else if (op == 'b') {
         std::cout << "\nParameters to choose:\n";
-        std::cout << "- number of boids, a positive natural number\n ";
+        std::cout << "- number of boids, a positive natural number\n";
         std::cout
             << "- d = the distance within which the rules of flight are "
                "activated, floating point number in the range [0, sqrt(2)]\n";
-        std::cout
-            << "- ds = the distance within which separation is activated, "
-               "floating point number in the range [0, d]\n";
+        std::cout << "- ds = the distance within which separation is "
+                     "activated, floating point number in the range [0, d]\n";
         std::cout << "- s = non-negativa factor that increases separation\n";
         std::cout << "- a = non-negative factor that increases alignemnt\n";
         std::cout << "- c = non-negative factor that increases cohesion\n";
-        std::cout << "- the field of view of the boids, in the "
-                     "range [0°, 360°]\n\n";
+        std::cout
+            << "- the field of view of the boids, in the range [0°, 360°]\n\n";
         std::cout << "Provide the number of boids: ";
         double n;
         std::cin >> n;
@@ -220,19 +218,18 @@ int main()
         return EXIT_SUCCESS;
       } else if (op == 'd') {
         std::cout << "\nParameters to choose:\n";
-        std::cout << "- number of boids, a natural number >2 (to "
-                     "calculate statistics)\n  ";
+        std::cout << "- number of boids, a natural number >2 (to calculate "
+                     "statistics)\n";
         std::cout
             << "- d = the distance within which the rules of flight are "
                "activated, floating point number in the range [0, sqrt(2)]\n";
-        std::cout
-            << "- ds = the distance within which separation is activated, "
-               "floating point number in the range [0, d]\n";
+        std::cout << "- ds = the distance within which separation is "
+                     "activated, floating point number in the range [0, d]\n";
         std::cout << "- s = non-negativa factor that increases separation\n";
         std::cout << "- a = non-negative factor that increases alignemnt\n";
         std::cout << "- c = non-negative factor that increases cohesion\n";
-        std::cout << "- the field of view of the boids, in the "
-                     "range [0°, 360°]\n\n";
+        std::cout
+            << "- the field of view of the boids, in the range [0°, 360°]\n\n";
         std::cout << "Provide the number of boids: ";
         double n;
         std::cin >> n;
@@ -288,27 +285,23 @@ int main()
         std::cout << "- number of boids of each flock, positive natural "
                      "numbers\n";
         std::cout
-            << "inside a flock:" << '\n'
-            << "     - d = the distance within which the rules of "
-               "flight are "
+            << "inside a flock:\n"
+            << "     - d = the distance within which the rules of flight are "
                "activated, floating point number in the range [0, sqrt(2)]\n";
-        std::cout << "     - ds = the distance within which "
-                     "separation is activated, "
-                     "floating point number in the range [0, d]\n";
-        std::cout << "     - s = non-negative factor that increases "
-                     "separation\n";
-        std::cout << "     - a = non-negative factor that increases "
-                     "alignemnt\n";
-        std::cout << "     - c = non-negative factor that increases "
-                     "cohesion\n";
-        std::cout << "between flocks:\n ";
-        std::cout << "    - ds2 = the distance within which "
-                     "separation is activated, "
-                     "floating point number in the range [0, d]\n";
-        std::cout << "     - s2 = non-negative factor that increases "
-                     "separation\n";
-        std::cout << "- the field of view of the boids, in the "
-                     "range [0°, 360°]\n\n";
+        std::cout << "     - ds = the distance within which separation is "
+                     "activated, floating point number in the range [0, d]\n";
+        std::cout
+            << "     - s = non-negative factor that increases separation\n";
+        std::cout
+            << "     - a = non-negative factor that increases alignemnt\n";
+        std::cout << "     - c = non-negative factor that increases cohesion\n";
+        std::cout << "between flocks:\n "
+                  << "    - ds2 = the distance within which separation is "
+                     "activated, floating point number in the range [0, d]\n";
+        std::cout
+            << "     - s2 = non-negative factor that increases separation\n";
+        std::cout
+            << "- the field of view of the boids, in the range [0°, 360°]\n\n";
         std::cout << "Provide the number of boids in the first flock: ";
         double n1;
         std::cin >> n1;
@@ -323,8 +316,7 @@ int main()
           throw std::runtime_error{"The number of boids in a flock must be a "
                                    "positive natural number"};
         }
-        std::cout << "Set d, ds, s, a, c, for boids of their "
-                     "own species: ";
+        std::cout << "Set d, ds, s, a, c, for boids of their own species: ";
         float d;
         std::cin >> d;
         if (d < 0.f || d > std::sqrt(2.f) || !(std::cin.good())) {
