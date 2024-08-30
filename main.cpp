@@ -211,8 +211,8 @@ int main()
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
       } else if (op == 'c') {
-        pf::simulation_one_flock(2000, 0.02f, 0.005f, 1.0f, 0.15f, 0.005f,
-                                 230.0f);
+        pf::simulation_one_flock(2000, 0.03f, 0.005f, 1.0f, 0.2f, 0.01f,
+                                 270.0f);
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
       } else if (op == 'd') {
