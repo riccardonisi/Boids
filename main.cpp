@@ -207,12 +207,12 @@ int main()
           throw std::runtime_error{"The field of view must be an angle defined "
                                    "in the range [0°, 360°]"};
         }
-        pf::simulation_one_flock(n, d, ds, s, a, c, field_of_view, 0);
+        pf::simulation_one_flock(n, d, ds, s, a, c, field_of_view, false);
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
       } else if (op == std::string{"c"}) {
         pf::simulation_one_flock(2000, 0.03f, 0.005f, 1.0f, 0.2f, 0.01f, 270.0f,
-                                 0);
+                                 false);
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
       } else if (op == std::string{"d"}) {
@@ -431,10 +431,9 @@ int main()
           throw std::runtime_error{"The field of view must be an angle defined "
                                    "in the range [0°, 360°]"};
         }
-        pf::simulation_one_flock(n, d, ds, s, a, c, field_of_view, 1);
+        pf::simulation_one_flock(n, d, ds, s, a, c, field_of_view, true);
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
-
       } else {
         std::cout << "Unvalid character.\nReinsert: ";
         op = {};

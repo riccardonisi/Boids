@@ -1,12 +1,10 @@
 #include "simulation.hpp"
-#include <iostream>
-#include <memory>
 #include <string>
 
 namespace pf {
 
 void simulation_one_flock(double n, float d, float ds, float s, float a,
-                          float c, float field_of_view, int easter)
+                          float c, float field_of_view, bool easter)
 {
   bool easter_egg      = false;
   constexpr int pixelx = 1000;
@@ -44,15 +42,15 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
       }
     }
 
-    window.clear(sf::Color(0, 160, 200, 200));
-    window.draw(sprite);
-
-    if (easter == 1) {
+    if (easter) {
       if (pf::mean_distance(flock) < 0.0028) {
         window.close();
         easter_egg = true;
       }
     }
+
+    window.clear(sf::Color(0, 160, 200, 200));
+    window.draw(sprite);
 
     for (Boid const& boid : flock) {
       sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
@@ -95,17 +93,17 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
 
     window.display();
   }
+
   if (easter_egg) {
-    std::cout << ";)" << '\n';
+    sf::RenderWindow window_easter(sf::VideoMode(1000, 666), "Easter egg");
+    window_easter.setPosition(sf::Vector2i(10, 40));
+    window_easter.setFramerateLimit(2);
     sf::Texture texture_easter;
     if (!texture_easter.loadFromFile("easter_egg.png")) {
       throw std::runtime_error{"Cannot load background image"};
     }
     sf::Sprite sprite_easter;
-    sprite.setTexture(texture_easter);
-
-    sf::RenderWindow window_easter(
-        sf::VideoMode(texture_easter.getSize().x, texture_easter.getSize().y), "Easter egg");
+    sprite_easter.setTexture(texture_easter);
     while (window_easter.isOpen()) {
       sf::Event event_easter;
       while (window_easter.pollEvent(event_easter)) {
@@ -113,7 +111,7 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
           window_easter.close();
         }
       }
-
+      window_easter.clear();
       window_easter.draw(sprite_easter);
       window_easter.display();
     }
@@ -375,6 +373,12 @@ void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
   sf::Sprite sprite;
   sprite.setTexture(texture);
 
+  sf::Clock clock;
+  sf::Font font;
+  if (!font.loadFromFile("cambria.ttc")) {
+    throw std::runtime_error{"Cannot load font"};
+  }
+
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -431,6 +435,20 @@ void simulation_two_flocks(double n1, double n2, float d, float ds, float s,
                                  field_of_view);
     random_boost(flock2, 0.002f, 0.01f);
     speed_control(flock2, 2.0f);
+
+    sf::Time current_time = clock.restart();
+    float time_lapse      = current_time.asSeconds();
+    float fps             = 1.f / (time_lapse);
+    std::string fps_complete{std::to_string(fps)};
+    std::string fps_approx{fps_complete.substr(0, 2)};
+    fps_approx += " FPS";
+    sf::Text text;
+    text.setFont(font);
+    text.setString(fps_approx);
+    text.setCharacterSize(16);
+    text.setFillColor(sf::Color::Green);
+    text.setPosition(940.F, 10.F);
+    window.draw(text);
 
     window.display();
   }
