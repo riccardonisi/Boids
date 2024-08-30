@@ -28,6 +28,12 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
   sf::Sprite sprite;
   sprite.setTexture(texture);
 
+  sf::Clock clock;
+  sf::Font font;
+  if (!font.loadFromFile("cambria.ttc")) {
+    throw std::runtime_error{"Cannot load font"};
+  }
+
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -39,21 +45,22 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
     window.clear(sf::Color(0, 160, 200, 200));
     window.draw(sprite);
 
-    sf::ConvexShape triangle;
-    triangle.setPointCount(3);
-    triangle.setPoint(0, sf::Vector2f(0, -3.3f));
-    triangle.setPoint(1, sf::Vector2f(-2.0f, 3.3f));
-    triangle.setPoint(2, sf::Vector2f(2.0f, 3.3f));
-    triangle.setFillColor(sf::Color::Black);
-    triangle.setOrigin(0, -3.3f);
-
     for (Boid const& boid : flock) {
       sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
                                             scale_factor_x, scale_factor_y);
+      sf::ConvexShape triangle;
+      triangle.setPointCount(3);
+      triangle.setPoint(0, sf::Vector2f(0, -3.3f));
+      triangle.setPoint(1, sf::Vector2f(-2.0f, 3.3f));
+      triangle.setPoint(2, sf::Vector2f(2.0f, 3.3f));
       triangle.setPosition(pixelPos);
+      triangle.setFillColor(sf::Color::Black);
+      triangle.setOrigin(0, -3.3f);
+
       float targetAngle =
           calculate_rotation_angle(boid.get_vel().x, boid.get_vel().y);
       triangle.setRotation(targetAngle + 90);
+
       window.draw(triangle);
     }
 
@@ -62,6 +69,20 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
     flocking_behavior(flock, d, ds, s, a, c, field_of_view);
     random_boost(flock, 0.01f, 0.01f);
     speed_control(flock, 2);
+
+    sf::Time current_time = clock.restart();
+    float time_lapse      = current_time.asSeconds();
+    float fps             = 1.f / (time_lapse);
+    std::string fps_complete{std::to_string(fps)};
+    std::string fps_approx{fps_complete.substr(0, 2)};
+    fps_approx += " FPS";
+    sf::Text text;
+    text.setFont(font);
+    text.setString(fps_approx);
+    text.setCharacterSize(16);
+    text.setFillColor(sf::Color::Green);
+    text.setPosition(940.F, 10.F);
+    window.draw(text);
 
     window.display();
   }
