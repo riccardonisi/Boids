@@ -219,7 +219,7 @@ void graphs(double n, float d, float ds, float s, float a, float c,
     window.draw(sprite4);
 
     renderTexture.clear(sf::Color(230, 190, 80));
-    max_y = 0.4F;
+    max_y = 0.7F;
     for (int i{0}, size = static_cast<int>(devvel.size()); i != size; ++i) {
       sf::Vector2f pixelPos =
           set_graph_point(i, devvel[static_cast<long unsigned int>(i)], size,
