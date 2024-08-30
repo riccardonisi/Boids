@@ -102,7 +102,7 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
     sf::Sprite sprite_easter;
     sprite_easter.setTexture(texture_easter);
 
-    sf::RenderWindow window_easter(sf::VideoMode(1920, 1280), "Easter egg");
+    sf::RenderWindow window_easter(sf::VideoMode(1200, 800), "Easter egg");
     window_easter.setPosition(sf::Vector2i(0, 0));
     window_easter.setFramerateLimit(2);
 
