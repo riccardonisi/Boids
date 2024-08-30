@@ -1,6 +1,7 @@
 #include "simulation.hpp"
 #include <chrono>
 #include <iostream>
+#include <string>
 
 int main()
 {
@@ -383,7 +384,9 @@ int main()
                      "Zero sound in their ascent,\n"
                      "Zero weight, no earthbound bent.\n"
                      "360 degrees of view,\n"
-                     "Encircle all, the old, the new.\n\n"
+                     "Encircle all, the old, the new.\n"
+                     "In the quite, in the blue,\n"
+                     "A thousand birds, a world askew\n\n"
                      "In the void where light recedes,\n"
                      "A dark embrace begins to feed."
                   << '\n'
