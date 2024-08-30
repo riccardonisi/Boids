@@ -276,7 +276,7 @@ int main()
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
       } else if (op == std::string{"e"}) {
-        pf::graphs(1000, 0.05f, 0.005f, 0.7f, 0.3f, 0.005f, 230.0f);
+        pf::graphs(2000, 0.03f, 0.005f, 1.0f, 0.2f, 0.005f, 230.0f);
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
       } else if (op == std::string{"f"}) {
