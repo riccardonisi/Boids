@@ -32,10 +32,10 @@ int main()
                  "different species, with your parameters\n";
     std::cout << "g. Visualize animated flocking behavior of two flocks of "
                  "different species, with suggested parameters\n";
-    char op{};
+    std::string op{};
     while (true) {
       std::cin >> op;
-      if (op == 'a') {
+      if (op == std::string{"a"}) {
         std::cout << "\nParameters to choose:\n";
         std::cout << "- number of boids, a natural number >2 (to calculate "
                      "statistics)\n";
@@ -151,7 +151,7 @@ int main()
         }
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
-      } else if (op == 'b') {
+      } else if (op == std::string{"b"}) {
         std::cout << "\nParameters to choose:\n";
         std::cout << "- number of boids, a positive natural number\n";
         std::cout
@@ -207,15 +207,15 @@ int main()
           throw std::runtime_error{"The field of view must be an angle defined "
                                    "in the range [0°, 360°]"};
         }
-        pf::simulation_one_flock(n, d, ds, s, a, c, field_of_view);
+        pf::simulation_one_flock(n, d, ds, s, a, c, field_of_view, 0);
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
-      } else if (op == 'c') {
-        pf::simulation_one_flock(2000, 0.03f, 0.005f, 1.0f, 0.2f, 0.01f,
-                                 270.0f);
+      } else if (op == std::string{"c"}) {
+        pf::simulation_one_flock(2000, 0.03f, 0.005f, 1.0f, 0.2f, 0.01f, 270.0f,
+                                 0);
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
-      } else if (op == 'd') {
+      } else if (op == std::string{"d"}) {
         std::cout << "\nParameters to choose:\n";
         std::cout << "- number of boids, a natural number >2 (to calculate "
                      "statistics)\n";
@@ -275,11 +275,11 @@ int main()
         pf::graphs(n, d, ds, s, a, c, field_of_view);
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
-      } else if (op == 'e') {
+      } else if (op == std::string{"e"}) {
         pf::graphs(1000, 0.05f, 0.005f, 0.7f, 0.3f, 0.005f, 230.0f);
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
-      } else if (op == 'f') {
+      } else if (op == std::string{"f"}) {
         std::cout << "\nParameters to choose:\n";
         std::cout << "- number of boids of each flock, positive natural "
                      "numbers\n";
@@ -367,11 +367,74 @@ int main()
                                   field_of_view);
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
-      } else if (op == 'g') {
+      } else if (op == std::string{"g"}) {
         pf::simulation_two_flocks(300, 300, 0.03f, 0.005f, 1.0f, 0.15f, 0.01f,
                                   0.05f, 1.0f, 270.0f);
         std::cout << '\n' << '\n';
         return EXIT_SUCCESS;
+      } else if (op == std::string{"h"}) {
+        std::cout << "\nEaster egg found. Now solve the puzzle:\n\n"
+                     "One thousand birds in measured flight,\n"
+                     "Across the pale, unfolding light.\n"
+                     "1.4 hearts, syncopated, beat,\n"
+                     "Amidst the whispers of the street.\n"
+                     "0.1 dreams in silent drift,\n"
+                     "Through morning's veil, they lightly sift.\n"
+                     "Zero sound in their ascent,\n"
+                     "Zero weight, no earthbound bent.\n"
+                     "360 degrees of view,\n"
+                     "Encircle all, the old, the new.\n\n"
+                     "In the void where light recedes,\n"
+                     "A dark embrace begins to feed."
+                  << '\n'
+                  << '\n';
+        std::cout << "Provide the number of boids: ";
+        double n;
+        std::cin >> n;
+        if (n < 1 || std::floor(n) != n || !(std::cin.good())) {
+          throw std::runtime_error{
+              "The number of boids must be a positive natural number"};
+        }
+        std::cout << "Set d, ds, s, a, c: ";
+        float d;
+        std::cin >> d;
+        if (d < 0.f || d > std::sqrt(2.f) || !(std::cin.good())) {
+          throw std::runtime_error{
+              "d must be a number defined in the range [0, sqrt(2)]"};
+        }
+        float ds;
+        std::cin >> ds;
+        if (ds < 0.f || ds > d || !(std::cin.good())) {
+          throw std::runtime_error{
+              "ds must be a number defined in the range [0, d]"};
+        }
+        float s;
+        std::cin >> s;
+        if (s < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"s must be non-negative number"};
+        }
+        float a;
+        std::cin >> a;
+        if (a < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"a must be non-negative number"};
+        }
+        float c;
+        std::cin >> c;
+        if (c < 0.f || !(std::cin.good())) {
+          throw std::runtime_error{"c must be non-negative number"};
+        }
+        std::cout << "Set the field of view: ";
+        float field_of_view;
+        std::cin >> field_of_view;
+        if (field_of_view < 0.0f || field_of_view > 360.f
+            || !(std::cin.good())) {
+          throw std::runtime_error{"The field of view must be an angle defined "
+                                   "in the range [0°, 360°]"};
+        }
+        pf::simulation_one_flock(n, d, ds, s, a, c, field_of_view, 1);
+        std::cout << '\n' << '\n';
+        return EXIT_SUCCESS;
+
       } else {
         std::cout << "Unvalid character.\nReinsert: ";
         op = {};

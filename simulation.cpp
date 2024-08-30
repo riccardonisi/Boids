@@ -1,11 +1,14 @@
 #include "simulation.hpp"
+#include <iostream>
+#include <memory>
 #include <string>
 
 namespace pf {
 
 void simulation_one_flock(double n, float d, float ds, float s, float a,
-                          float c, float field_of_view)
+                          float c, float field_of_view, int easter)
 {
+  bool easter_egg      = false;
   constexpr int pixelx = 1000;
   constexpr int pixely = 600;
   sf::RenderWindow window(
@@ -43,6 +46,13 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
 
     window.clear(sf::Color(0, 160, 200, 200));
     window.draw(sprite);
+
+    if (easter == 1) {
+      if (pf::mean_distance(flock) < 0.0028) {
+        window.close();
+        easter_egg = true;
+      }
+    }
 
     for (Boid const& boid : flock) {
       sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
@@ -84,6 +94,29 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
     window.draw(text);
 
     window.display();
+  }
+  if (easter_egg) {
+    std::cout << ";)" << '\n';
+    sf::Texture texture_easter;
+    if (!texture_easter.loadFromFile("easter_egg.png")) {
+      throw std::runtime_error{"Cannot load background image"};
+    }
+    sf::Sprite sprite_easter;
+    sprite.setTexture(texture_easter);
+
+    sf::RenderWindow window_easter(
+        sf::VideoMode(texture_easter.getSize().x, texture_easter.getSize().y), "Easter egg");
+    while (window_easter.isOpen()) {
+      sf::Event event_easter;
+      while (window_easter.pollEvent(event_easter)) {
+        if (event_easter.type == sf::Event::Closed) {
+          window_easter.close();
+        }
+      }
+
+      window_easter.draw(sprite_easter);
+      window_easter.display();
+    }
   }
 }
 
@@ -218,7 +251,7 @@ void graphs(double n, float d, float ds, float s, float a, float c,
     window.draw(sprite4);
 
     renderTexture.clear(sf::Color(230, 190, 80));
-    max_y = 0.7F;
+    max_y = 0.4F;
     for (int i{0}, size = static_cast<int>(devvel.size()); i != size; ++i) {
       sf::Vector2f pixelPos =
           set_graph_point(i, devvel[static_cast<long unsigned int>(i)], size,

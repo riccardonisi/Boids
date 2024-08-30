@@ -14,7 +14,7 @@ inline sf::Vector2f real_to_pixel(float x, float y, float scale_factor_x,
 
 inline float calculate_rotation_angle(float direction_x, float direction_y)
 {
-  return std::atan2(direction_y, direction_x) * 180.0f / pi_f; // In gradi
+  return std::atan2(direction_y, direction_x) * 180.0f / pi_f; 
 }
 
 inline sf::Vector2f set_graph_point(int i, float value_y, int size,
@@ -28,7 +28,7 @@ inline sf::Vector2f set_graph_point(int i, float value_y, int size,
 }
 
 void simulation_one_flock(double n, float d, float ds, float s, float a,
-                          float c, float field_of_view);
+                          float c, float field_of_view, int easter);
 
 void graphs(double n, float d, float ds, float s, float a, float c,
             float field_of_view);
