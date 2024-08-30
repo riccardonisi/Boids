@@ -6,7 +6,7 @@ namespace pf {
 void simulation_one_flock(double n, float d, float ds, float s, float a,
                           float c, float field_of_view, bool easter)
 {
-  bool easter_egg      = true;
+  bool easter_egg      = false;
   constexpr int pixelx = 1000;
   constexpr int pixely = 600;
   sf::RenderWindow window(
