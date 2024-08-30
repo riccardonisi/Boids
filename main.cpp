@@ -44,7 +44,7 @@ int main()
                "activated, floating point number in the range [0, sqrt(2)]\n";
         std::cout << "- ds = the distance within which separation is "
                      "activated, floating point number in the range [0, d]\n";
-        std::cout << "- s = non-negativa factor that increases separation\n";
+        std::cout << "- s = non-negative factor that increases separation\n";
         std::cout << "- a = non-negative factor that increases alignemnt\n";
         std::cout << "- c = non-negative factor that increases cohesion\n";
         std::cout
@@ -159,7 +159,7 @@ int main()
                "activated, floating point number in the range [0, sqrt(2)]\n";
         std::cout << "- ds = the distance within which separation is "
                      "activated, floating point number in the range [0, d]\n";
-        std::cout << "- s = non-negativa factor that increases separation\n";
+        std::cout << "- s = non-negative factor that increases separation\n";
         std::cout << "- a = non-negative factor that increases alignemnt\n";
         std::cout << "- c = non-negative factor that increases cohesion\n";
         std::cout
@@ -224,7 +224,7 @@ int main()
                "activated, floating point number in the range [0, sqrt(2)]\n";
         std::cout << "- ds = the distance within which separation is "
                      "activated, floating point number in the range [0, d]\n";
-        std::cout << "- s = non-negativa factor that increases separation\n";
+        std::cout << "- s = non-negative factor that increases separation\n";
         std::cout << "- a = non-negative factor that increases alignemnt\n";
         std::cout << "- c = non-negative factor that increases cohesion\n";
         std::cout

@@ -6,7 +6,7 @@ namespace pf {
 void simulation_one_flock(double n, float d, float ds, float s, float a,
                           float c, float field_of_view, bool easter)
 {
-  bool easter_egg      = false;
+  bool easter_egg      = true;
   constexpr int pixelx = 1000;
   constexpr int pixely = 600;
   sf::RenderWindow window(
@@ -95,15 +95,17 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
   }
 
   if (easter_egg) {
-    sf::RenderWindow window_easter(sf::VideoMode(1000, 666), "Easter egg");
-    window_easter.setPosition(sf::Vector2i(10, 40));
-    window_easter.setFramerateLimit(2);
     sf::Texture texture_easter;
     if (!texture_easter.loadFromFile("easter_egg.png")) {
       throw std::runtime_error{"Cannot load background image"};
     }
     sf::Sprite sprite_easter;
     sprite_easter.setTexture(texture_easter);
+
+    sf::RenderWindow window_easter(sf::VideoMode(1920, 1280), "Easter egg");
+    window_easter.setPosition(sf::Vector2i(0, 0));
+    window_easter.setFramerateLimit(2);
+
     while (window_easter.isOpen()) {
       sf::Event event_easter;
       while (window_easter.pollEvent(event_easter)) {
