@@ -1,5 +1,4 @@
 #include "simulation.hpp"
-#include <memory>
 #include <string>
 
 namespace pf {

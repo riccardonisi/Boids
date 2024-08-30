@@ -61,4 +61,4 @@ inline float distance(Point2D const& a, Point2D const& b)
 
 } // namespace pf
 
-#endif // POINT2D_HPP
+#endif

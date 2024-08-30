@@ -5,8 +5,7 @@ namespace pf {
 float mean_position(std::vector<Boid> const& flock)
 {
   if (flock.size() < 3) {
-    throw std::runtime_error{
-        "Not enough boids to estimate parameters"};
+    throw std::runtime_error{"Not enough boids to estimate parameters"};
   }
   float sum{0};
   for (const Boid& boid : flock) {
@@ -18,8 +17,7 @@ float mean_position(std::vector<Boid> const& flock)
 float standdev_position(std::vector<Boid> const& flock)
 {
   if (flock.size() < 3) {
-    throw std::runtime_error{
-        "Not enough boids to estimate parameters"};
+    throw std::runtime_error{"Not enough boids to estimate parameters"};
   }
   float sum{0};
   const float mean_pos{mean_position(flock)};
@@ -32,8 +30,7 @@ float standdev_position(std::vector<Boid> const& flock)
 float mean_velocity(std::vector<Boid> const& flock)
 {
   if (flock.size() < 3) {
-    throw std::runtime_error{
-        "Not enough boids to estimate parameters"};
+    throw std::runtime_error{"Not enough boids to estimate parameters"};
   }
   float sum{0};
   for (const Boid& boid : flock) {
@@ -45,8 +42,7 @@ float mean_velocity(std::vector<Boid> const& flock)
 float standdev_velocity(std::vector<Boid> const& flock)
 {
   if (flock.size() < 3) {
-    throw std::runtime_error{
-        "Not enough boids to estimate parameters"};
+    throw std::runtime_error{"Not enough boids to estimate parameters"};
   }
   float sum{0};
   const float mean_vel{mean_velocity(flock)};
@@ -59,8 +55,7 @@ float standdev_velocity(std::vector<Boid> const& flock)
 float mean_distance(std::vector<Boid> const& flock)
 {
   if (flock.size() < 3) {
-    throw std::runtime_error{
-        "Not enough boids to estimate parameters"};
+    throw std::runtime_error{"Not enough boids to estimate parameters"};
   }
   float sum{0};
   for (size_t i{0}; i != flock.size(); ++i) {
@@ -76,8 +71,7 @@ float mean_distance(std::vector<Boid> const& flock)
 float standdev_distance(std::vector<Boid> const& flock)
 {
   if (flock.size() < 3) {
-    throw std::runtime_error{
-        "Not enough boids to estimate parameters"};
+    throw std::runtime_error{"Not enough boids to estimate parameters"};
   }
   float sum{0};
   const float mean_dist{mean_distance(flock)};

@@ -1,5 +1,4 @@
 #include "simulation.hpp"
-#include <cassert>
 #include <chrono>
 #include <iostream>
 
