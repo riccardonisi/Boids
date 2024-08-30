@@ -39,22 +39,21 @@ void simulation_one_flock(double n, float d, float ds, float s, float a,
     window.clear(sf::Color(0, 160, 200, 200));
     window.draw(sprite);
 
+    sf::ConvexShape triangle;
+    triangle.setPointCount(3);
+    triangle.setPoint(0, sf::Vector2f(0, -3.3f));
+    triangle.setPoint(1, sf::Vector2f(-2.0f, 3.3f));
+    triangle.setPoint(2, sf::Vector2f(2.0f, 3.3f));
+    triangle.setFillColor(sf::Color::Black);
+    triangle.setOrigin(0, -3.3f);
+
     for (Boid const& boid : flock) {
       sf::Vector2f pixelPos = real_to_pixel(boid.get_pos().x, boid.get_pos().y,
                                             scale_factor_x, scale_factor_y);
-      sf::ConvexShape triangle;
-      triangle.setPointCount(3);
-      triangle.setPoint(0, sf::Vector2f(0, -3.3f));
-      triangle.setPoint(1, sf::Vector2f(-2.0f, 3.3f));
-      triangle.setPoint(2, sf::Vector2f(2.0f, 3.3f));
       triangle.setPosition(pixelPos);
-      triangle.setFillColor(sf::Color::Black);
-      triangle.setOrigin(0, -3.3f);
-
       float targetAngle =
           calculate_rotation_angle(boid.get_vel().x, boid.get_vel().y);
       triangle.setRotation(targetAngle + 90);
-
       window.draw(triangle);
     }
 
